@@ -1,0 +1,90 @@
+{
+  "name": "solin",
+  "version": "0.1.0",
+  "description": "Advanced Solidity static analysis tool combining linting and security detection",
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "bin": {
+    "solin": "dist/cli.js"
+  },
+  "files": [
+    "dist/",
+    "README.md",
+    "LICENSE"
+  ],
+  "scripts": {
+    "build": "tsc && esbuild lib/cli/index.ts --bundle --platform=node --outfile=dist/cli.js --external:@solidity-parser/parser",
+    "dev": "tsc --watch",
+    "test": "jest",
+    "test:watch": "jest --watch",
+    "test:coverage": "jest --coverage",
+    "lint": "eslint lib test --ext .ts",
+    "lint:fix": "eslint lib test --ext .ts --fix",
+    "format": "prettier --write \"**/*.{ts,js,json,md}\"",
+    "format:check": "prettier --check \"**/*.{ts,js,json,md}\"",
+    "typecheck": "tsc --noEmit",
+    "clean": "rm -rf dist coverage .solin-cache",
+    "prepare": "husky install",
+    "prepublishOnly": "npm run clean && npm run build && npm test"
+  },
+  "keywords": [
+    "solidity",
+    "linter",
+    "security",
+    "static-analysis",
+    "ethereum",
+    "smart-contracts",
+    "analyzer",
+    "detector",
+    "vulnerability"
+  ],
+  "author": "Solin Contributors",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/yourusername/solin.git"
+  },
+  "bugs": {
+    "url": "https://github.com/yourusername/solin/issues"
+  },
+  "homepage": "https://github.com/yourusername/solin#readme",
+  "engines": {
+    "node": ">=18.0.0",
+    "npm": ">=8.0.0"
+  },
+  "dependencies": {
+    "@solidity-parser/parser": "^0.20.2",
+    "ajv": "^8.12.0",
+    "chalk": "^5.3.0",
+    "commander": "^12.0.0",
+    "cosmiconfig": "^9.0.0",
+    "glob": "^10.3.10",
+    "ignore": "^5.3.0"
+  },
+  "devDependencies": {
+    "@types/jest": "^29.5.11",
+    "@types/node": "^20.10.6",
+    "@typescript-eslint/eslint-plugin": "^6.17.0",
+    "@typescript-eslint/parser": "^6.17.0",
+    "esbuild": "^0.19.11",
+    "eslint": "^8.56.0",
+    "eslint-config-prettier": "^9.1.0",
+    "eslint-plugin-jest": "^27.6.1",
+    "husky": "^8.0.3",
+    "jest": "^29.7.0",
+    "lint-staged": "^15.2.0",
+    "prettier": "^3.1.1",
+    "ts-jest": "^29.1.1",
+    "typescript": "^5.3.3"
+  },
+  "lint-staged": {
+    "*.ts": [
+      "eslint --fix",
+      "prettier --write",
+      "jest --findRelatedTests"
+    ],
+    "*.{js,json,md}": [
+      "prettier --write"
+    ]
+  }
+}
