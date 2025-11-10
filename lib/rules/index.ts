@@ -10,5 +10,6 @@ export { NamingConventionRule } from './lint/naming-convention';
 export { VisibilityModifiersRule } from './lint/visibility-modifiers';
 export { StateMutabilityRule } from './lint/state-mutability';
 export { UnusedVariablesRule } from './lint/unused-variables';
+export { FunctionComplexityRule } from './lint/function-complexity';
 export { TxOriginRule } from './security/tx-origin';
 export { UncheckedCallsRule } from './security/unchecked-calls';
