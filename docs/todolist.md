@@ -2,7 +2,7 @@
 
 > **Last Updated**: 2025-01-10
 > **Current Phase**: Phase 2 - Lint Rules (In Progress)
-> **Overall Progress**: 24/251 tasks (9.6%)
+> **Overall Progress**: 33/251 tasks (13.1%)
 
 ## Status Legend
 
@@ -650,7 +650,7 @@
 ## Phase 2: Lint Rules
 
 **Timeline**: Weeks 6-11 (6 weeks)
-**Progress**: 5/81 tasks (6.2%)
+**Progress**: 6/81 tasks (7.4%)
 **Priority**: P1 (High)
 **Status**: In Progress - Core lint rules implemented
 
@@ -687,7 +687,7 @@
 ### 2.3: Best Practices Rules (Weeks 7-8)
 
 **25 rules, 2 weeks**
-**Progress**: 4/25 rules completed
+**Progress**: 5/25 rules completed
 
 - [x] ✅ **LINT-BP-001**: no-empty-blocks
   - **Status**: DONE
@@ -732,6 +732,29 @@
     - Loop variable usage in conditions (TODO)
     - Function argument usage detection (TODO)
     - Variable shadowing support (TODO)
+
+- [x] ✅ **LINT-BP-005**: function-complexity
+  - **Status**: DONE
+  - **Completed**: 2025-01-10
+  - **File**: `lib/rules/lint/function-complexity.ts`
+  - **Test File**: `test/unit/rules/lint/function-complexity.test.ts`
+  - **Test Results**: ✅ 19 tests passing
+  - **Description**: Detects functions with high complexity based on multiple metrics
+  - **Features**:
+    - Cyclomatic complexity calculation (default max: 10)
+    - Function line count checking (default max: 50)
+    - Parameter count validation (default max: 7)
+    - Configurable thresholds per rule
+    - Multiple issue reporting (all violated metrics)
+  - **Complexity Calculation**:
+    - Base complexity: 1
+    - Decision points: if, for, while, do-while (+1 each)
+    - Logical operators: &&, || (+1 each)
+    - Ternary operator: ?: (+1)
+  - **Implementation Notes**:
+    - ASTWalker-based traversal for complexity calculation
+    - AST location-based line counting
+    - Configuration merging with nullish coalescing
 
 ### 2.4: Code Style Rules (Weeks 9-10)
 
