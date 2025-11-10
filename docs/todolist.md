@@ -2,7 +2,7 @@
 
 > **Last Updated**: 2025-01-10
 > **Current Phase**: Phase 2 - Lint Rules (In Progress)
-> **Overall Progress**: 33/251 tasks (13.1%)
+> **Overall Progress**: 34/251 tasks (13.5%)
 
 ## Status Legend
 
@@ -650,7 +650,7 @@
 ## Phase 2: Lint Rules
 
 **Timeline**: Weeks 6-11 (6 weeks)
-**Progress**: 6/81 tasks (7.4%)
+**Progress**: 7/81 tasks (8.6%)
 **Priority**: P1 (High)
 **Status**: In Progress - Core lint rules implemented
 
@@ -687,7 +687,7 @@
 ### 2.3: Best Practices Rules (Weeks 7-8)
 
 **25 rules, 2 weeks**
-**Progress**: 5/25 rules completed
+**Progress**: 6/25 rules completed
 
 - [x] ✅ **LINT-BP-001**: no-empty-blocks
   - **Status**: DONE
@@ -755,6 +755,28 @@
     - ASTWalker-based traversal for complexity calculation
     - AST location-based line counting
     - Configuration merging with nullish coalescing
+
+- [x] ✅ **LINT-BP-006**: magic-numbers
+  - **Status**: DONE
+  - **Completed**: 2025-01-10
+  - **File**: `lib/rules/lint/magic-numbers.ts`
+  - **Test File**: `test/unit/rules/lint/magic-numbers.test.ts`
+  - **Test Results**: ✅ 19 tests passing
+  - **Description**: Detects unexplained numeric literals that should be replaced with named constants
+  - **Features**:
+    - Numeric literal detection (NumberLiteral, Literal nodes)
+    - Configurable allowed numbers (default: 0, 1, -1)
+    - Comprehensive coverage (conditions, arithmetic, assignments, arrays)
+    - Named constant recommendations
+  - **Default Allowed Numbers**:
+    - 0: Universal zero value
+    - 1: Common increment/decrement
+    - -1: Array index and sentinel value
+  - **Implementation Notes**:
+    - Direct AST traversal (no ASTWalker needed)
+    - Parse numeric values using parseFloat()
+    - Simple filtering against allowed list
+    - Configuration merging via array format
 
 ### 2.4: Code Style Rules (Weeks 9-10)
 
