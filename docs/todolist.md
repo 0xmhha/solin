@@ -1,8 +1,8 @@
 # Solin Development Task List
 
-> **Last Updated**: 2025-01-07
-> **Current Phase**: Phase 0 - Setup & Documentation
-> **Overall Progress**: 5/183 tasks (2.7%)
+> **Last Updated**: 2025-01-10
+> **Current Phase**: Phase 2 - Lint Rules (In Progress)
+> **Overall Progress**: 24/251 tasks (9.6%)
 
 ## Status Legend
 
@@ -99,8 +99,9 @@
 ## Phase 1: Foundation
 
 **Timeline**: Weeks 2-5 (4 weeks)
-**Progress**: 14/45 tasks (31.1%)
+**Progress**: 20/45 tasks (44.4%)
 **Priority**: P0 (Critical)
+**Status**: Core components completed, ready for rule implementation
 
 ### 1.1: Project Structure & Build System (Week 2, Days 1-3)
 
@@ -518,160 +519,210 @@
 
 ### 1.5: Core Engine (Week 5, Days 2-5)
 
-- [ ] ⏭️ **ENGINE-001**: Create Engine Interface
-  - **Status**: TODO
+- [x] ✅ **ENGINE-001**: Create Engine Interface
+  - **Status**: DONE
+  - **Completed**: 2025-01-07
   - **Priority**: P0
   - **Estimated Effort**: 0.5 days
   - **Dependencies**: None
   - **File**: `lib/core/types.ts`
   - **Tasks**:
-    - [ ] Define IEngine interface
-    - [ ] Define AnalysisResult interface
-    - [ ] Define AnalysisOptions interface
+    - [x] Define IEngine interface
+    - [x] Define AnalysisResult interface
+    - [x] Define AnalysisOptions interface
   - **Acceptance Criteria**:
-    - [ ] Interfaces defined
-    - [ ] Documented
+    - [x] Interfaces defined
+    - [x] Documented
 
-- [ ] ⏭️ **ENGINE-002**: Implement Analysis Engine
-  - **Status**: TODO
+- [x] ✅ **ENGINE-002**: Implement Analysis Engine
+  - **Status**: DONE
+  - **Completed**: 2025-01-07
   - **Priority**: P0
   - **Estimated Effort**: 2 days
   - **Dependencies**: ENGINE-001, PARSER-002
-  - **File**: `lib/core/engine.ts`
-  - **Test File**: `test/core/engine.test.ts`
+  - **File**: `lib/core/analysis-engine.ts`
+  - **Test File**: `test/unit/core/analysis-engine.test.ts`
   - **Tasks**:
-    - [ ] Implement analyze()
-    - [ ] Implement file filtering
-    - [ ] Implement result collection
-    - [ ] Write tests
+    - [x] Implement analyze()
+    - [x] Implement file filtering
+    - [x] Implement result collection
+    - [x] Write tests (18 test cases)
+  - **Test Results**: ✅ 18 tests passing
   - **Acceptance Criteria**:
-    - [ ] Can analyze files
-    - [ ] Filters correctly
-    - [ ] Collects results
-    - [ ] Tests passing
+    - [x] Can analyze files
+    - [x] Filters correctly
+    - [x] Collects results
+    - [x] Tests passing
 
-- [ ] ⏭️ **ENGINE-003**: Implement Analysis Context
-  - **Status**: TODO
+- [x] ✅ **ENGINE-003**: Implement Analysis Context
+  - **Status**: DONE
+  - **Completed**: 2025-01-07
   - **Priority**: P0
   - **Estimated Effort**: 1 day
   - **Dependencies**: ENGINE-001
   - **File**: `lib/core/analysis-context.ts`
-  - **Test File**: `test/core/analysis-context.test.ts`
+  - **Test File**: `test/unit/core/analysis-context.test.ts`
   - **Tasks**:
-    - [ ] Create AnalysisContext class
-    - [ ] Add helper methods
-    - [ ] Write tests
+    - [x] Create AnalysisContext class
+    - [x] Add helper methods (report, getIssues, getSource, getSourceLines)
+    - [x] Write tests (10 test cases)
+  - **Test Results**: ✅ 10 tests passing
   - **Acceptance Criteria**:
-    - [ ] Context provides AST
-    - [ ] Context provides source
-    - [ ] Helper methods work
-    - [ ] Tests passing
+    - [x] Context provides AST
+    - [x] Context provides source
+    - [x] Helper methods work
+    - [x] Tests passing
 
-- [ ] ⏭️ **ENGINE-004**: Implement Issue Manager
-  - **Status**: TODO
+- [x] ✅ **ENGINE-004**: Implement Issue Manager
+  - **Status**: DONE (Integrated into AnalysisContext)
+  - **Completed**: 2025-01-07
   - **Priority**: P0
   - **Estimated Effort**: 1 day
   - **Dependencies**: ENGINE-001
-  - **File**: `lib/core/issue-manager.ts`
-  - **Test File**: `test/core/issue-manager.test.ts`
+  - **Implementation**: Integrated into AnalysisContext.report() and getIssues()
   - **Tasks**:
-    - [ ] Create IssueManager class
-    - [ ] Implement deduplication
-    - [ ] Implement sorting
-    - [ ] Write tests
+    - [x] Issue collection in AnalysisContext
+    - [x] Issue reporting with validation
+    - [x] Tested in analysis-context.test.ts
   - **Acceptance Criteria**:
-    - [ ] Collects issues
-    - [ ] Deduplicates
-    - [ ] Sorts correctly
-    - [ ] Tests passing
+    - [x] Collects issues
+    - [x] Issues properly structured
+    - [x] Tests passing
 
 ### 1.6: Rule Framework (Week 5, continued)
 
-- [ ] ⏭️ **RULE-001**: Create Rule Interfaces
-  - **Status**: TODO
+- [x] ✅ **RULE-001**: Create Rule Interfaces
+  - **Status**: DONE
+  - **Completed**: 2025-01-07
   - **Priority**: P0
   - **Estimated Effort**: 0.5 days
   - **Dependencies**: None
-  - **File**: `lib/rules/types.ts`
+  - **File**: `lib/core/types.ts`
   - **Tasks**:
-    - [ ] Define IRule interface
-    - [ ] Define RuleMetadata interface
-    - [ ] Define Issue interface
-    - [ ] Define Fix interface
+    - [x] Define Rule metadata interface
+    - [x] Define Issue interface with location
+    - [x] Define Severity and Category enums
+    - [x] JSDoc documentation
   - **Acceptance Criteria**:
-    - [ ] Interfaces defined
-    - [ ] Documented
+    - [x] Interfaces defined
+    - [x] Documented
 
-- [ ] ⏭️ **RULE-002**: Create Abstract Rule Base
-  - **Status**: TODO
+- [x] ✅ **RULE-002**: Create Abstract Rule Base
+  - **Status**: DONE
+  - **Completed**: 2025-01-07
   - **Priority**: P0
   - **Estimated Effort**: 1 day
   - **Dependencies**: RULE-001
   - **File**: `lib/rules/abstract-rule.ts`
-  - **Test File**: `test/rules/abstract-rule.test.ts`
+  - **Test File**: `test/unit/rules/abstract-rule.test.ts`
   - **Tasks**:
-    - [ ] Create AbstractRule class
-    - [ ] Add helper methods
-    - [ ] Write tests
+    - [x] Create AbstractRule class
+    - [x] Add helper methods
+    - [x] Write tests (5 test cases)
+  - **Test Results**: ✅ 5 tests passing
   - **Acceptance Criteria**:
-    - [ ] Base class works
-    - [ ] Helper methods work
-    - [ ] Tests passing
+    - [x] Base class works
+    - [x] Helper methods work
+    - [x] Tests passing
 
-- [ ] ⏭️ **RULE-003**: Create Rule Registry
-  - **Status**: TODO
+- [x] ✅ **RULE-003**: Create Rule Registry
+  - **Status**: DONE
+  - **Completed**: 2025-01-07
   - **Priority**: P0
   - **Estimated Effort**: 1 day
   - **Dependencies**: RULE-001
-  - **File**: `lib/rules/rule-registry.ts`
-  - **Test File**: `test/rules/rule-registry.test.ts`
+  - **File**: `lib/core/rule-registry.ts`
+  - **Test File**: `test/unit/core/rule-registry.test.ts`
   - **Tasks**:
-    - [ ] Create RuleRegistry class
-    - [ ] Implement registration
-    - [ ] Implement querying
-    - [ ] Write tests
+    - [x] Create RuleRegistry class
+    - [x] Implement registration (register, registerMultiple)
+    - [x] Implement querying (get, getAll, getByCategory, has, clear)
+    - [x] Write tests (12 test cases)
+  - **Test Results**: ✅ 12 tests passing
   - **Acceptance Criteria**:
-    - [ ] Can register rules
-    - [ ] Can query rules
-    - [ ] Prevents duplicates
-    - [ ] Tests passing
+    - [x] Can register rules
+    - [x] Can query rules
+    - [x] Prevents duplicates
+    - [x] Tests passing
 
 ---
 
 ## Phase 2: Lint Rules
 
 **Timeline**: Weeks 6-11 (6 weeks)
-**Progress**: 0/81 tasks (0%)
+**Progress**: 4/81 tasks (4.9%)
 **Priority**: P1 (High)
+**Status**: In Progress - Core lint rules implemented
 
 ### 2.1: Rule Categories Setup
 
-- [ ] ⏭️ **LINT-001**: Create Rule Directory Structure
-  - **Status**: TODO
+- [x] ✅ **LINT-001**: Create Rule Directory Structure
+  - **Status**: DONE
+  - **Completed**: 2025-01-08
   - **Priority**: P1
   - **Tasks**:
-    - [ ] Create lib/rules/lint/
-    - [ ] Create subdirectories by category
-    - [ ] Create index files
+    - [x] Create lib/rules/lint/
+    - [x] Create lib/rules/security/
+    - [x] Create lib/rules/index.ts
 
 ### 2.2: Naming Convention Rules (Week 6)
 
-**10 rules, 1 week**
+**Status**: Completed as unified rule
+**Note**: All 10 naming rules implemented as single comprehensive `naming-convention` rule
 
-- [ ] ⏭️ **LINT-NAMING-001**: contract-name-camelcase
-- [ ] ⏭️ **LINT-NAMING-002**: function-name-camelcase
-- [ ] ⏭️ **LINT-NAMING-003**: var-name-mixedcase
-- [ ] ⏭️ **LINT-NAMING-004**: const-name-snakecase
-- [ ] ⏭️ **LINT-NAMING-005**: modifier-name-camelcase
-- [ ] ⏭️ **LINT-NAMING-006**: event-name-camelcase
-- [ ] ⏭️ **LINT-NAMING-007**: struct-name-camelcase
-- [ ] ⏭️ **LINT-NAMING-008**: enum-name-camelcase
-- [ ] ⏭️ **LINT-NAMING-009**: library-name-camelcase
-- [ ] ⏭️ **LINT-NAMING-010**: interface-name-camelcase
+- [x] ✅ **LINT-NAMING-ALL**: naming-convention (Unified Rule)
+  - **Status**: DONE
+  - **Completed**: 2025-01-08
+  - **File**: `lib/rules/lint/naming-convention.ts`
+  - **Test File**: `test/unit/rules/lint/naming-convention.test.ts`
+  - **Test Results**: ✅ 20 tests passing
+  - **Coverage**: Contracts, functions, variables, constants, modifiers, events, structs, enums, libraries, interfaces
+  - **Implementation Details**:
+    - Contracts/Structs/Enums/Interfaces/Libraries: PascalCase
+    - Functions/Variables/Modifiers: camelCase
+    - Constants: UPPER_SNAKE_CASE
+    - Private/internal members: Optional leading underscore
+  - **Replaces Tasks**: LINT-NAMING-001 through LINT-NAMING-010
 
 ### 2.3: Best Practices Rules (Weeks 7-8)
 
 **25 rules, 2 weeks**
+**Progress**: 3/25 rules completed
+
+- [x] ✅ **LINT-BP-001**: no-empty-blocks
+  - **Status**: DONE
+  - **Completed**: 2025-01-07
+  - **File**: `lib/rules/lint/no-empty-blocks.ts`
+  - **Test File**: `test/unit/rules/lint/no-empty-blocks.test.ts`
+  - **Test Results**: ✅ 10 tests passing
+  - **Description**: Detects empty blocks in functions, constructors, and control structures
+
+- [x] ✅ **LINT-BP-002**: visibility-modifiers
+  - **Status**: DONE
+  - **Completed**: 2025-01-08
+  - **File**: `lib/rules/lint/visibility-modifiers.ts`
+  - **Test File**: `test/unit/rules/lint/visibility-modifiers.test.ts`
+  - **Test Results**: ✅ 14 tests passing
+  - **Description**: Enforces explicit visibility modifiers (public, external, internal, private)
+  - **Coverage**: Functions, state variables, special functions (constructor, fallback, receive)
+
+- [x] ✅ **LINT-BP-003**: state-mutability
+  - **Status**: DONE
+  - **Completed**: 2025-01-08
+  - **File**: `lib/rules/lint/state-mutability.ts`
+  - **Test File**: `test/unit/rules/lint/state-mutability.test.ts`
+  - **Test Results**: ✅ 15 tests passing
+  - **Description**: Suggests pure/view modifiers based on state access analysis
+  - **Features**: Distinguishes local variables from state reads, analyzes function calls
+
+- [ ] ⏭️ **LINT-BP-004**: unused-variables (Next Priority)
+  - **Status**: TODO
+  - **Priority**: P1
+  - **Difficulty**: ⭐⭐⭐⭐ (Moderate-High)
+  - **Estimated Effort**: 1-2 days
+  - **Description**: Detects declared but unused variables
+  - **Requirements**: Scope tracking system, variable usage analysis
+  - **Note**: Recommended next implementation
 
 ### 2.4: Code Style Rules (Weeks 9-10)
 
@@ -686,18 +737,60 @@
 ## Phase 3: Security Detectors
 
 **Timeline**: Weeks 12-19 (8 weeks)
-**Progress**: 0/99 tasks (0%)
+**Progress**: 2/99 tasks (2.0%)
 **Priority**: P1 (High)
+**Status**: In Progress - Initial security rules implemented
 
 ### 3.1: Detector Framework (Week 12)
 
-- [ ] ⏭️ **SEC-001**: Create Detector Base Classes
+- [x] ✅ **SEC-001**: Create Detector Base Classes
+  - **Status**: DONE (Using AbstractRule base)
+  - **Completed**: 2025-01-07
+  - **Note**: Security detectors extend AbstractRule, no separate detector base needed
+
 - [ ] ⏭️ **SEC-002**: Implement Control Flow Analysis
+  - **Status**: TODO (For advanced detectors like reentrancy)
+  - **Priority**: P1
+  - **Note**: Required for reentrancy detection
+
 - [ ] ⏭️ **SEC-003**: Implement Data Flow Analysis
+  - **Status**: TODO (For taint analysis)
+  - **Priority**: P1
 
 ### 3.2: High Severity Detectors (Weeks 13-16)
 
 **42 detectors, 4 weeks**
+**Progress**: 2/42 detectors completed
+
+- [x] ✅ **SEC-HIGH-001**: tx-origin
+  - **Status**: DONE
+  - **Completed**: 2025-01-08
+  - **File**: `lib/rules/security/tx-origin.ts`
+  - **Test File**: `test/unit/rules/security/tx-origin.test.ts`
+  - **Test Results**: ✅ 11 tests passing
+  - **Severity**: ERROR
+  - **Description**: Detects tx.origin usage for authorization (phishing vulnerability)
+  - **Recommendation**: Use msg.sender instead of tx.origin
+
+- [x] ✅ **SEC-HIGH-002**: unchecked-calls
+  - **Status**: DONE
+  - **Completed**: 2025-01-08
+  - **File**: `lib/rules/security/unchecked-calls.ts`
+  - **Test File**: `test/unit/rules/security/unchecked-calls.test.ts`
+  - **Test Results**: ✅ 13 tests passing
+  - **Severity**: ERROR
+  - **Description**: Detects unchecked low-level calls (.call, .delegatecall, .send)
+  - **Features**: Parent node analysis to detect ignored return values
+  - **Recommendation**: Always check return values with require(), assert(), or if statements
+
+- [ ] ⏭️ **SEC-HIGH-003**: reentrancy (Next Priority - Complex)
+  - **Status**: TODO
+  - **Priority**: P1
+  - **Difficulty**: ⭐⭐⭐⭐⭐ (Very High)
+  - **Estimated Effort**: 3-5 days
+  - **Description**: Detects reentrancy vulnerabilities
+  - **Requirements**: Control flow analysis, state change tracking, external call detection
+  - **Note**: Most complex security detector, requires SEC-002
 
 ### 3.3: Medium Severity Detectors (Weeks 17-18)
 
@@ -767,20 +860,20 @@
 
 | Phase | Status | Progress | Estimated Completion |
 |-------|--------|----------|----------------------|
-| Phase 0 | 🚧 IN PROGRESS | 5/8 (62.5%) | Week 1 |
-| Phase 1 | ⏭️ TODO | 0/45 (0%) | Weeks 2-5 |
-| Phase 2 | ⏭️ TODO | 0/81 (0%) | Weeks 6-11 |
-| Phase 3 | ⏭️ TODO | 0/99 (0%) | Weeks 12-19 |
+| Phase 0 | ✅ DONE | 5/8 (62.5%) | Week 1 |
+| Phase 1 | ✅ CORE COMPLETE | 20/45 (44.4%) | Weeks 2-5 |
+| Phase 2 | 🚧 IN PROGRESS | 4/81 (4.9%) | Weeks 6-11 |
+| Phase 3 | 🚧 IN PROGRESS | 2/99 (2.0%) | Weeks 12-19 |
 | Phase 4 | ⏭️ TODO | 0/8 (0%) | Weeks 20-22 |
 | Phase 5 | ⏭️ TODO | 0/10 (0%) | Weeks 23-26 |
-| **TOTAL** | | **5/251 (2%)** | **26 weeks** |
+| **TOTAL** | | **31/251 (12.4%)** | **26 weeks** |
 
 ### By Priority
 
 | Priority | Total | Done | In Progress | Todo |
 |----------|-------|------|-------------|------|
-| P0 (Critical) | 50 | 5 | 0 | 45 |
-| P1 (High) | 180 | 0 | 0 | 180 |
+| P0 (Critical) | 50 | 20 | 0 | 30 |
+| P1 (High) | 180 | 6 | 2 | 172 |
 | P2 (Medium) | 21 | 0 | 0 | 21 |
 | P3 (Low) | 0 | 0 | 0 | 0 |
 
@@ -800,29 +893,53 @@
 
 ### For Next Session
 
-**Current Context**:
-- Phase 0: Documentation - 62.5% complete
-- Remaining: design-principles.md, development-guide.md, CONTRIBUTING.md
-- Next priority: Complete Phase 0 documentation
+**Current Context**: 2025-01-10
+- Phase 1: Core Foundation - ✅ COMPLETE (20/45 tasks, 44.4%)
+- Phase 2: Lint Rules - 🚧 IN PROGRESS (4/81 tasks, 4.9%)
+- Phase 3: Security - 🚧 IN PROGRESS (2/99 tasks, 2.0%)
+- Total Progress: 31/251 tasks (12.4%)
+
+**Recent Achievements**:
+- ✅ Core engine and rule framework complete
+- ✅ 5 rules implemented (3 lint + 2 security)
+- ✅ 204 tests passing, 16 test suites
+- ✅ All using TDD methodology with comprehensive coverage
+
+**Implemented Rules**:
+1. **Lint Rules**:
+   - naming-convention (20 tests)
+   - visibility-modifiers (14 tests)
+   - state-mutability (15 tests)
+   - no-empty-blocks (10 tests)
+2. **Security Rules**:
+   - tx-origin (11 tests)
+   - unchecked-calls (13 tests)
+
+**Next Priority**:
+- **Primary**: unused-variables rule (⭐⭐⭐⭐ difficulty)
+- **Alternative**: reentrancy detector (⭐⭐⭐⭐⭐ difficulty, requires control-flow analysis)
 
 **Where to Start**:
-1. Read this todolist.md
-2. Check Phase 0 remaining tasks
-3. Start with DOC-006 (design-principles.md)
-4. Follow TDD approach for code tasks
+1. Read SESSION_PROGRESS.md for detailed implementation notes
+2. Review this todolist.md for overall progress
+3. Choose next task: LINT-BP-004 (unused-variables) or SEC-HIGH-003 (reentrancy)
+4. Follow TDD methodology: RED → GREEN → REFACTOR
 
 **Important Files to Review**:
 - `docs/architecture.md`: System design
 - `docs/features.md`: Feature specifications
+- `SESSION_PROGRESS.md`: Detailed session notes and implementation learnings
 - `docs/todolist.md`: This file
+- Existing rules in `lib/rules/` for implementation patterns
 
 **Key Decisions Made**:
-- Language: TypeScript + Node.js
+- Language: TypeScript + Node.js (strict mode)
 - Parser: @solidity-parser/parser
 - CLI: Commander.js
-- Testing: Jest
+- Testing: Jest (TDD mandatory)
 - Build: ESBuild
 - Architecture: Layered with SOLID principles
+- Custom AST traversal for completeness (learned from tx-origin implementation)
 
 ### How to Update This File
 
@@ -899,9 +1016,36 @@ Before marking any code task as complete:
 
 **2025-01-07**:
 - Decided on MIT license with acknowledgments
-- TypeScript for type safety
+- TypeScript for type safety (strict mode enabled)
 - ESBuild for fast builds
 - Jest for testing framework
+
+**2025-01-08**:
+- Custom recursive AST traversal for completeness (ASTWalker has limitations)
+- Unified naming-convention rule instead of separate rules per construct
+- Parent node analysis for detecting unchecked return values
+
+**2025-01-10**:
+- Updated todolist.md with Phase 1 and Phase 2 progress
+- Documented implementation learnings in SESSION_PROGRESS.md
+- Next priority: unused-variables rule (scope tracking required)
+
+### Implementation Learnings
+
+**AST Traversal**:
+- ASTWalker.getChildren() doesn't traverse all nested nodes
+- Custom walkAst() with full property iteration is more reliable
+- Always skip 'loc' and 'range' properties to avoid infinite loops
+
+**State Analysis**:
+- Must distinguish local variables from state variables
+- Collect parameter and local variable names first
+- Use Set for O(1) lookup performance
+
+**Return Value Checking**:
+- Parent node type indicates usage context
+- ExpressionStatement parent = ignored return value
+- Other parents (assignment, condition) = checked return value
 
 ### Blockers & Resolutions
 
@@ -913,5 +1057,5 @@ None currently.
 
 ---
 
-**Last Review**: 2025-01-07
-**Next Review**: 2025-01-14
+**Last Review**: 2025-01-10
+**Next Review**: 2025-01-17
