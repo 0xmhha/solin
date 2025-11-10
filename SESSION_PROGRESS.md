@@ -1,9 +1,9 @@
 # Solin Development Progress
 
 **Last Updated**: 2025-11-10
-**Current Phase**: Phase 1 Complete (Foundation)
-**Test Status**: 131 tests passing (11 test suites)
-**Latest Commit**: `434922c` - feat: implement core analysis engine and rule system
+**Current Phase**: Phase 2 In Progress (Rule Implementation)
+**Test Status**: 191 tests passing (15 test suites)
+**Latest Commit**: `7eb0547` - feat: implement tx-origin security rule
 
 ---
 
@@ -153,6 +153,108 @@
 
 ---
 
+## Completed Work (Phase 2: Rule Implementation)
+
+### 1. Naming Convention Rule ✅
+**File**: `lib/rules/lint/naming-convention.ts`
+**Commit**: `d9e71e7`
+
+#### Features
+- Contract names: PascalCase enforcement
+- Function names: camelCase enforcement (excludes constructor, fallback, receive)
+- Constants: UPPER_SNAKE_CASE enforcement
+- Private variables: _leadingUnderscore enforcement
+- Edge case handling for interfaces and single-letter names
+
+#### Implementation Details
+- Uses AST walker for traversal
+- Regex-based pattern matching for naming conventions
+- Special function detection (constructor, fallback, receive)
+- Coverage: 89.58% statements, 79.41% branches
+
+#### Tests
+- 20 comprehensive tests
+- All naming patterns covered
+- Edge cases validated
+- All passing ✅
+
+### 2. Visibility Modifiers Rule ✅
+**File**: `lib/rules/lint/visibility-modifiers.ts`
+**Commit**: `ae1bdcc`
+
+#### Features
+- Functions must have explicit visibility (public, external, internal, private)
+- State variables should have explicit visibility
+- Exceptions for special functions (constructor, fallback, receive)
+- Constants allowed implicit visibility (internal by default)
+
+#### Implementation Details
+- AST node type checking for FunctionDefinition and StateVariableDeclaration
+- Visibility property validation
+- Special function filtering
+- Coverage: High test coverage maintained
+
+#### Tests
+- 14 comprehensive tests
+- Function and state variable scenarios
+- Interface and library edge cases
+- All passing ✅
+
+### 3. State Mutability Rule ✅
+**File**: `lib/rules/lint/state-mutability.ts`
+**Commit**: `9fecf6b`
+
+#### Features
+- Suggests `pure` for functions not accessing state
+- Suggests `view` for functions only reading state
+- Smart parameter and local variable tracking
+- Payable function exclusion
+- Special function handling
+
+#### Implementation Details
+- Parameter and local variable name collection
+- State access analysis (reads vs writes)
+- VariableDeclarationStatement and VariableDeclaration handling
+- Built-in identifier filtering (msg, block, tx, etc.)
+- Custom walkAst for function body analysis
+
+#### Tests
+- 15 comprehensive tests
+- Pure, view, and payable scenarios
+- Local variable vs state variable distinction
+- All passing ✅
+
+### 4. Tx.Origin Security Rule ✅
+**File**: `lib/rules/security/tx-origin.ts`
+**Commit**: `7eb0547`
+**Category**: SECURITY
+**Severity**: ERROR
+
+#### Features
+- Detects all tx.origin usage patterns
+- Prevents phishing attack vulnerabilities
+- Recommends using msg.sender instead
+- First security-category rule implementation
+
+#### Implementation Details
+- Custom recursive AST traversal
+- MemberAccess node detection (tx.origin pattern)
+- Complete AST coverage through direct property iteration
+- Replaced ASTWalker with custom walkAst for thoroughness
+
+#### Tests
+- 11 comprehensive tests
+- All contexts: require, if statements, comparisons, assignments, returns, function calls
+- Edge cases: empty contracts, no tx.origin usage
+- All passing ✅
+
+#### Security Impact
+- Critical: Prevents phishing attack vectors
+- Best Practice: Enforces msg.sender for authorization
+- Real-world Protection: Addresses known vulnerability pattern
+
+---
+
 ## Project Structure
 
 ```
@@ -181,15 +283,29 @@ solin/
 │   └── rules/               # Rule implementations
 │       ├── abstract-rule.ts
 │       ├── lint/
-│       │   └── no-empty-blocks.ts
+│       │   ├── no-empty-blocks.ts
+│       │   ├── naming-convention.ts       # NEW
+│       │   ├── visibility-modifiers.ts    # NEW
+│       │   └── state-mutability.ts        # NEW
+│       ├── security/
+│       │   └── tx-origin.ts               # NEW
 │       └── index.ts
 ├── test/
-│   ├── unit/                # Unit tests (10 suites)
+│   ├── unit/                # Unit tests (14 suites)
+│   │   ├── rules/
+│   │   │   ├── lint/
+│   │   │   │   ├── no-empty-blocks.test.ts
+│   │   │   │   ├── naming-convention.test.ts       # NEW
+│   │   │   │   ├── visibility-modifiers.test.ts    # NEW
+│   │   │   │   └── state-mutability.test.ts        # NEW
+│   │   │   └── security/
+│   │   │       └── tx-origin.test.ts               # NEW
 │   ├── integration/         # Integration tests (1 suite)
 │   ├── helpers/
 │   └── setup.ts
 └── docs/
-    └── todolist.md          # Detailed roadmap
+    ├── todolist.md          # Detailed roadmap
+    └── SESSION_PROGRESS.md  # This file
 ```
 
 ---
@@ -380,21 +496,57 @@ for (const file of result.files) {
 
 ## Next Session Start Point
 
-### Immediate Tasks
+### Progress Summary
+**Completed**: 4 rules (3 Lint + 1 Security)
+- ✅ naming-convention (Lint)
+- ✅ visibility-modifiers (Lint)
+- ✅ state-mutability (Lint)
+- ✅ tx-origin (Security)
 
-1. **Create next lint rules** (recommended order):
+**Test Stats**: 191 tests passing (15 suites) - +60 tests from session start
+
+### Immediate Tasks (Priority Order)
+
+1. **Next Security Rule: unchecked-calls** ⭐⭐⭐
    ```
-   Priority 1: naming-convention
-   Priority 2: visibility-modifiers
-   Priority 3: state-mutability
+   Priority: HIGH
+   Difficulty: Medium
+   Category: SECURITY
+   Severity: ERROR
+
+   Features:
+   - Detect low-level call (.call, .delegatecall, .send) without return value check
+   - Ensure require(), assert(), or if statement validates return value
+   - Prevent silent failures in fund transfers
+
+   Implementation approach:
+   - Find FunctionCall nodes with low-level call methods
+   - Track return value usage in parent nodes
+   - Report if return value is ignored
    ```
 
-2. **Each rule follows TDD**:
+2. **Alternative: unused-variables** ⭐⭐⭐⭐
    ```
-   1. Write test in test/unit/rules/lint/
-   2. Implement rule in lib/rules/lint/
+   Priority: MEDIUM
+   Difficulty: High
+   Category: LINT
+
+   Features:
+   - Detect unused function parameters
+   - Detect unused state variables
+   - Detect unused imports
+
+   Requires: Scope tracking and usage analysis
+   ```
+
+3. **Each rule follows TDD**:
+   ```
+   1. Write test in test/unit/rules/security/ or test/unit/rules/lint/
+   2. Implement rule in lib/rules/security/ or lib/rules/lint/
    3. Register in lib/rules/index.ts
    4. Run tests: npm test
+   5. Verify all 191+ tests pass
+   6. Commit with descriptive message
    ```
 
 3. **Rule template**:
@@ -480,13 +632,21 @@ Common Solidity AST node types for rule implementation:
 # Current branch
 git branch  # master
 
-# Recent commit
-git log --oneline -1
+# Recent commits
+git log --oneline -5
+# 7eb0547 feat: implement tx-origin security rule
+# 9fecf6b feat: implement state-mutability rule
+# ae1bdcc feat: implement visibility-modifiers rule
+# d9e71e7 feat: implement naming-convention rule
 # 434922c feat: implement core analysis engine and rule system
+
+# All tests passing
+npm test  # 191 tests, 15 suites ✅
 
 # Files ignored
 # - CLAUDE.md
 # - .claude/
+# - debug-*.js (temporary debug scripts)
 ```
 
 ---
@@ -591,8 +751,26 @@ When starting next session:
 ### Q: Why visitor pattern for AST?
 **A**: Clean separation of traversal logic from rule logic. Easy to add new rules without modifying walker.
 
+### Q: Why custom walkAst instead of ASTWalker in tx-origin rule?
+**A**: ASTWalker's getChildren() method missed some nested nodes. Custom recursive traversal ensures complete AST coverage by iterating all object properties. Trade-off: slightly more code for 100% detection guarantee.
+
+### Q: How to handle local vs state variables in analysis?
+**A**: Collect function parameters and local variable declarations first, then exclude them when detecting state access. Use Set<string> for O(1) lookup. See state-mutability rule implementation.
+
+### Q: When to use ERROR vs WARNING severity?
+**A**: ERROR for security vulnerabilities (tx-origin, unchecked-calls). WARNING for best practices and code quality (naming, visibility). INFO for suggestions.
+
 ---
 
 **Ready for next session!** 🚀
 
-Start with implementing `naming-convention` rule or another lint rule of your choice.
+**Recommended next step**: Implement `unchecked-calls` security rule (⭐⭐⭐ difficulty)
+
+**Alternative**: Continue with lint rules or tackle advanced `unused-variables` (⭐⭐⭐⭐ difficulty)
+
+**Quick Start**:
+```bash
+npm test  # Verify 191 tests passing
+git status  # Should be clean
+git log --oneline -5  # Review recent work
+```
