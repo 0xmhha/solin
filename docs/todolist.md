@@ -650,7 +650,7 @@
 ## Phase 2: Lint Rules
 
 **Timeline**: Weeks 6-11 (6 weeks)
-**Progress**: 4/81 tasks (4.9%)
+**Progress**: 5/81 tasks (6.2%)
 **Priority**: P1 (High)
 **Status**: In Progress - Core lint rules implemented
 
@@ -687,7 +687,7 @@
 ### 2.3: Best Practices Rules (Weeks 7-8)
 
 **25 rules, 2 weeks**
-**Progress**: 3/25 rules completed
+**Progress**: 4/25 rules completed
 
 - [x] ✅ **LINT-BP-001**: no-empty-blocks
   - **Status**: DONE
@@ -715,14 +715,23 @@
   - **Description**: Suggests pure/view modifiers based on state access analysis
   - **Features**: Distinguishes local variables from state reads, analyzes function calls
 
-- [ ] ⏭️ **LINT-BP-004**: unused-variables (Next Priority)
-  - **Status**: TODO
-  - **Priority**: P1
-  - **Difficulty**: ⭐⭐⭐⭐ (Moderate-High)
-  - **Estimated Effort**: 1-2 days
-  - **Description**: Detects declared but unused variables
-  - **Requirements**: Scope tracking system, variable usage analysis
-  - **Note**: Recommended next implementation
+- [x] ✅ **LINT-BP-004**: unused-variables
+  - **Status**: DONE
+  - **Completed**: 2025-01-10
+  - **File**: `lib/rules/lint/unused-variables.ts`
+  - **Test File**: `test/unit/rules/lint/unused-variables.test.ts`
+  - **Test Results**: ✅ 17 tests passing, 4 tests skipped (edge cases)
+  - **Description**: Detects declared but unused local variables and function parameters
+  - **Features**:
+    - Local variable detection
+    - Function parameter detection
+    - Underscore prefix support (intentionally unused)
+    - Excludes state variables (may be accessed externally)
+  - **Known Limitations**:
+    - Nested scope usage detection (TODO)
+    - Loop variable usage in conditions (TODO)
+    - Function argument usage detection (TODO)
+    - Variable shadowing support (TODO)
 
 ### 2.4: Code Style Rules (Weeks 9-10)
 
