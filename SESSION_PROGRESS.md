@@ -2,8 +2,8 @@
 
 **Last Updated**: 2025-11-10
 **Current Phase**: Phase 2 In Progress (Rule Implementation)
-**Test Status**: 191 tests passing (15 test suites)
-**Latest Commit**: `7eb0547` - feat: implement tx-origin security rule
+**Test Status**: 204 tests passing (16 test suites)
+**Latest Commit**: `61f3d85` - feat: implement unchecked-calls security rule
 
 ---
 
@@ -253,6 +253,42 @@
 - Best Practice: Enforces msg.sender for authorization
 - Real-world Protection: Addresses known vulnerability pattern
 
+### 5. Unchecked Calls Security Rule ✅
+**File**: `lib/rules/security/unchecked-calls.ts`
+**Commit**: `61f3d85`
+**Category**: SECURITY
+**Severity**: ERROR
+
+#### Features
+- Detects unchecked .call(), .delegatecall(), .send() calls
+- Prevents silent failures in fund transfers
+- Enforces explicit error handling
+- Excludes .transfer() (auto-reverts on failure)
+
+#### Implementation Details
+- Custom recursive AST traversal
+- FunctionCall node detection with MemberAccess pattern
+- Parent node analysis (ExpressionStatement = unchecked)
+- Return value usage tracking
+
+#### Detection Logic
+- Identifies low-level call methods: call, delegatecall, send
+- Checks if parent is ExpressionStatement (ignored return value)
+- Considers assignment, return, function args as "checked"
+- Simple but effective heuristic approach
+
+#### Tests
+- 13 comprehensive tests
+- All low-level call types covered (.call, .delegatecall, .send)
+- Checked vs unchecked patterns validated
+- Edge cases: .transfer(), return value in expressions
+- All passing ✅
+
+#### Security Impact
+- Critical: Prevents silent failures in fund transfers
+- Best Practice: Enforces require()/assert()/if checks
+- Real-world Protection: Protects against lost funds
+
 ---
 
 ## Project Structure
@@ -288,10 +324,11 @@ solin/
 │       │   ├── visibility-modifiers.ts    # NEW
 │       │   └── state-mutability.ts        # NEW
 │       ├── security/
-│       │   └── tx-origin.ts               # NEW
+│       │   ├── tx-origin.ts               # NEW
+│       │   └── unchecked-calls.ts         # NEW
 │       └── index.ts
 ├── test/
-│   ├── unit/                # Unit tests (14 suites)
+│   ├── unit/                # Unit tests (15 suites)
 │   │   ├── rules/
 │   │   │   ├── lint/
 │   │   │   │   ├── no-empty-blocks.test.ts
@@ -299,7 +336,8 @@ solin/
 │   │   │   │   ├── visibility-modifiers.test.ts    # NEW
 │   │   │   │   └── state-mutability.test.ts        # NEW
 │   │   │   └── security/
-│   │   │       └── tx-origin.test.ts               # NEW
+│   │   │       ├── tx-origin.test.ts               # NEW
+│   │   │       └── unchecked-calls.test.ts         # NEW
 │   ├── integration/         # Integration tests (1 suite)
 │   ├── helpers/
 │   └── setup.ts
@@ -497,35 +535,22 @@ for (const file of result.files) {
 ## Next Session Start Point
 
 ### Progress Summary
-**Completed**: 4 rules (3 Lint + 1 Security)
+**Completed**: 5 rules (3 Lint + 2 Security)
 - ✅ naming-convention (Lint)
 - ✅ visibility-modifiers (Lint)
 - ✅ state-mutability (Lint)
 - ✅ tx-origin (Security)
+- ✅ unchecked-calls (Security)
 
-**Test Stats**: 191 tests passing (15 suites) - +60 tests from session start
+**Test Stats**: 204 tests passing (16 suites) - +73 tests from session start
 
 ### Immediate Tasks (Priority Order)
 
-1. **Next Security Rule: unchecked-calls** ⭐⭐⭐
-   ```
-   Priority: HIGH
-   Difficulty: Medium
-   Category: SECURITY
-   Severity: ERROR
+**Phase 2B (Security Rules) - COMPLETED!** ✅
+- ✅ tx-origin
+- ✅ unchecked-calls
 
-   Features:
-   - Detect low-level call (.call, .delegatecall, .send) without return value check
-   - Ensure require(), assert(), or if statement validates return value
-   - Prevent silent failures in fund transfers
-
-   Implementation approach:
-   - Find FunctionCall nodes with low-level call methods
-   - Track return value usage in parent nodes
-   - Report if return value is ignored
-   ```
-
-2. **Alternative: unused-variables** ⭐⭐⭐⭐
+1. **Next: unused-variables** ⭐⭐⭐⭐
    ```
    Priority: MEDIUM
    Difficulty: High
@@ -633,15 +658,17 @@ Common Solidity AST node types for rule implementation:
 git branch  # master
 
 # Recent commits
-git log --oneline -5
+git log --oneline -7
+# 61f3d85 feat: implement unchecked-calls security rule
+# a29ef6b chore: remove temporary debug scripts
+# 596a136 docs: update SESSION_PROGRESS.md with Phase 2 achievements
 # 7eb0547 feat: implement tx-origin security rule
 # 9fecf6b feat: implement state-mutability rule
 # ae1bdcc feat: implement visibility-modifiers rule
 # d9e71e7 feat: implement naming-convention rule
-# 434922c feat: implement core analysis engine and rule system
 
 # All tests passing
-npm test  # 191 tests, 15 suites ✅
+npm test  # 204 tests, 16 suites ✅
 
 # Files ignored
 # - CLAUDE.md
@@ -764,13 +791,18 @@ When starting next session:
 
 **Ready for next session!** 🚀
 
-**Recommended next step**: Implement `unchecked-calls` security rule (⭐⭐⭐ difficulty)
+**Major Milestone Achieved**: Phase 2B (Security Rules) COMPLETED! ✅
 
-**Alternative**: Continue with lint rules or tackle advanced `unused-variables` (⭐⭐⭐⭐ difficulty)
+**Recommended next step**: Implement `unused-variables` lint rule (⭐⭐⭐⭐ difficulty, requires scope tracking)
+
+**Alternative Options**:
+- Continue with remaining lint rules (function-complexity, etc.)
+- Implement gas optimization rules (cache-array-length, pack-variables)
+- Build formatters and CLI enhancement (Phase 3)
 
 **Quick Start**:
 ```bash
-npm test  # Verify 191 tests passing
+npm test  # Verify 204 tests passing
 git status  # Should be clean
-git log --oneline -5  # Review recent work
+git log --oneline -7  # Review recent work
 ```
