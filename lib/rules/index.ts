@@ -11,5 +11,6 @@ export { VisibilityModifiersRule } from './lint/visibility-modifiers';
 export { StateMutabilityRule } from './lint/state-mutability';
 export { UnusedVariablesRule } from './lint/unused-variables';
 export { FunctionComplexityRule } from './lint/function-complexity';
+export { MagicNumbersRule } from './lint/magic-numbers';
 export { TxOriginRule } from './security/tx-origin';
 export { UncheckedCallsRule } from './security/unchecked-calls';
