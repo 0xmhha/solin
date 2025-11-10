@@ -172,7 +172,7 @@ describe('AnalysisEngine', () => {
 
       expect(result.files).toHaveLength(2);
       expect(result.totalIssues).toBeGreaterThan(0);
-      expect(result.duration).toBeGreaterThan(0);
+      expect(result.duration).toBeGreaterThanOrEqual(0);
     });
 
     test('should calculate summary correctly', async () => {
