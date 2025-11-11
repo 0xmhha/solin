@@ -2,7 +2,7 @@
 
 > **Last Updated**: 2025-01-10
 > **Current Phase**: Phase 2 - Lint Rules (In Progress)
-> **Overall Progress**: 37/251 tasks (14.7%)
+> **Overall Progress**: 38/251 tasks (15.1%)
 
 ## Status Legend
 
@@ -650,7 +650,7 @@
 ## Phase 2: Lint Rules
 
 **Timeline**: Weeks 6-11 (6 weeks)
-**Progress**: 10/81 tasks (12.3%)
+**Progress**: 11/81 tasks (13.6%)
 **Priority**: P1 (High)
 **Status**: In Progress - Core lint rules implemented
 
@@ -854,6 +854,30 @@
     - Storage arrays: ~100 gas per iteration
     - Memory/calldata arrays: ~3 gas per iteration
     - Example: 100 iterations = 10,000 gas saved (storage)
+
+- [x] ✅ **LINT-BP-009**: unused-state-variables
+  - **Status**: DONE
+  - **Completed**: 2025-01-10
+  - **File**: `lib/rules/lint/unused-state-variables.ts`
+  - **Test File**: `test/unit/rules/lint/unused-state-variables.test.ts`
+  - **Test Results**: ✅ 17 tests passing
+  - **Description**: Detects state variables declared but never used
+  - **Features**:
+    - State variable collection from ContractDefinition.subNodes
+    - Public variable auto-exclusion (auto-generated getter)
+    - Usage tracking in functions, modifiers, events, constructors
+    - Complex type support (structs, mappings, arrays)
+    - Code quality and deployment gas optimization
+  - **Implementation Notes**:
+    - Critical: Skip StateVariableDeclaration when finding usages!
+    - ContractDefinition.subNodes contains StateVariableDeclaration nodes
+    - Public variables always "used" due to auto-generated getter
+    - variable.visibility property for visibility check
+    - Identifier.name matching for usage detection
+  - **Gas & Quality Impact**:
+    - Deployment cost: ~20,000 gas per unused state variable
+    - Example: 5 unused variables = 100,000 gas wasted
+    - Code quality: Remove dead code, improve maintainability
 
 ---
 

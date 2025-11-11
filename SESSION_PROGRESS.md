@@ -2,8 +2,8 @@
 
 **Last Updated**: 2025-01-10
 **Current Phase**: Phase 2 In Progress (Rule Implementation)
-**Test Status**: 310 tests passing (22 test suites), 4 tests skipped
-**Latest Commit**: `de7c7c6` - feat: implement cache-array-length gas optimization rule
+**Test Status**: 327 tests passing (23 test suites), 4 tests skipped
+**Latest Commit**: TBD - feat: implement unused-state-variables lint rule
 
 ---
 
@@ -734,6 +734,82 @@ rules: {
 
 ---
 
+### 12. Unused State Variables Lint Rule ✅
+**File**: `lib/rules/lint/unused-state-variables.ts`
+**Commit**: TBD
+**Category**: LINT (Code Quality + Gas Optimization)
+**Severity**: WARNING
+
+#### Features
+- **State Variable Collection**: Identifies all state variables in contracts
+- **Public Variable Handling**: Auto-excludes public variables (auto-generated getter)
+- **Usage Detection**: Tracks references in functions, modifiers, events, constructors
+- **Complex Support**: Handles structs, mappings, arrays
+- **Gas & Quality**: Improves both code quality and reduces deployment costs
+
+#### Detection Logic
+1. Collect all state variables from ContractDefinition.subNodes
+2. Mark public variables as "used" (have auto-generated getter)
+3. Walk entire AST to find Identifier references:
+   - Skip StateVariableDeclaration nodes (avoid counting declaration as usage)
+   - Mark variables as "used" when Identifier.name matches
+4. Report variables that remain unused
+
+#### Implementation Details
+- Recursive AST traversal through ContractDefinition.subNodes
+- StateVariableInfo tracking: name, isPublic, isUsed, location
+- Special handling: Skip StateVariableDeclaration in usage search
+- Visibility detection: variable.visibility === 'public'
+- Location preservation for accurate error reporting
+
+#### Error Messages
+- **Unused state variable**: "State variable '{name}' is declared but never used. Remove it to save storage and deployment costs."
+
+#### Tests
+- **17 test cases total** ✅
+- **All 17 tests passing** ✅
+- Test categories:
+  - Metadata validation (1 test)
+  - Unused state variables detection (3 tests)
+  - Used state variables (skipped) (6 tests)
+  - Complex usage patterns (3 tests)
+  - Edge cases (3 tests)
+
+#### Supported Scenarios
+- ✅ Unused private variable (reported)
+- ✅ Multiple unused variables (all reported)
+- ✅ Unused constant variable (reported)
+- ✅ Variable used in function (skipped)
+- ✅ Variable read in function (skipped)
+- ✅ Public variable (skipped - auto-generated getter)
+- ✅ Variable used in event (skipped)
+- ✅ Variable used in modifier (skipped)
+- ✅ Variable used in constructor (skipped)
+- ✅ Struct member variables (skipped if used)
+- ✅ Mapping variables (skipped if used)
+- ✅ Array variables (skipped if used)
+- ✅ Mixed used/unused variables (only unused reported)
+- ✅ Contract with no state variables (no reports)
+- ✅ Variable in return statement (skipped)
+- ✅ Variable in require statement (skipped)
+
+#### Implementation Learnings
+- **Critical**: Must skip StateVariableDeclaration when finding usages!
+  - Declaration itself contains Identifier node
+  - Would mark all variables as "used" if not skipped
+- ContractDefinition.subNodes contains StateVariableDeclaration
+- Public variables have auto-generated getters → always "used"
+- variable.visibility property for visibility check
+- Identifier.name matches variable name for usage detection
+
+#### Code Quality & Gas Impact
+- **Deployment Cost**: Each unused state variable costs ~20,000 gas (storage slot allocation)
+- **Code Quality**: Removes dead code, improves maintainability
+- **Example**: 5 unused variables = 100,000 gas wasted on deployment
+- **Best Practice**: Keep codebase clean, remove unused declarations
+
+---
+
 ## Project Structure
 
 ```
@@ -769,7 +845,10 @@ solin/
 │       │   ├── unused-variables.ts        # NEW
 │       │   ├── function-complexity.ts     # NEW
 │       │   ├── magic-numbers.ts           # NEW
-│       │   └── require-revert-reason.ts   # NEW
+│       │   ├── require-revert-reason.ts   # NEW
+│       │   ├── constant-immutable.ts      # NEW
+│       │   ├── cache-array-length.ts      # NEW
+│       │   └── unused-state-variables.ts  # NEW
 │       ├── security/
 │       │   ├── tx-origin.ts               # NEW
 │       │   └── unchecked-calls.ts         # NEW
@@ -785,7 +864,10 @@ solin/
 │   │   │   │   ├── unused-variables.test.ts        # NEW
 │   │   │   │   ├── function-complexity.test.ts     # NEW
 │   │   │   │   ├── magic-numbers.test.ts           # NEW
-│   │   │   │   └── require-revert-reason.test.ts   # NEW
+│   │   │   │   ├── require-revert-reason.test.ts   # NEW
+│   │   │   │   ├── constant-immutable.test.ts      # NEW
+│   │   │   │   ├── cache-array-length.test.ts      # NEW
+│   │   │   │   └── unused-state-variables.test.ts  # NEW
 │   │   │   └── security/
 │   │   │       ├── tx-origin.test.ts               # NEW
 │   │   │       └── unchecked-calls.test.ts         # NEW
@@ -986,7 +1068,7 @@ for (const file of result.files) {
 ## Next Session Start Point
 
 ### Progress Summary
-**Completed**: 11 rules (9 Lint + 2 Security)
+**Completed**: 12 rules (10 Lint + 2 Security)
 - ✅ naming-convention (Lint)
 - ✅ visibility-modifiers (Lint)
 - ✅ state-mutability (Lint)
@@ -995,11 +1077,12 @@ for (const file of result.files) {
 - ✅ magic-numbers (Lint)
 - ✅ require-revert-reason (Lint)
 - ✅ constant-immutable (Lint)
-- ✅ cache-array-length (Lint) - **NEW!**
+- ✅ cache-array-length (Lint)
+- ✅ unused-state-variables (Lint) - **NEW!**
 - ✅ tx-origin (Security)
 - ✅ unchecked-calls (Security)
 
-**Test Stats**: 310 tests passing (22 suites), 4 skipped - +179 tests from session start
+**Test Stats**: 327 tests passing (23 suites), 4 skipped - +196 tests from session start
 
 ### Immediate Tasks (Priority Order)
 
@@ -1014,6 +1097,7 @@ for (const file of result.files) {
 - ✅ require-revert-reason (error message validation)
 - ✅ constant-immutable (gas optimization for state variables)
 - ✅ cache-array-length (gas optimization for loop array access)
+- ✅ unused-state-variables (code quality + deployment gas optimization)
 
 1. **Next Recommendations**:
 
