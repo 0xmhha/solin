@@ -2,8 +2,8 @@
 
 **Last Updated**: 2025-01-10
 **Current Phase**: Phase 2 In Progress (Rule Implementation)
-**Test Status**: 275 tests passing (20 test suites), 4 tests skipped
-**Latest Commit**: `1f73688` - feat: implement require-revert-reason lint rule
+**Test Status**: 293 tests passing (21 test suites), 4 tests skipped
+**Latest Commit**: `d071caa` - feat: implement constant-immutable lint rule
 
 ---
 
@@ -568,6 +568,92 @@ rules: {
 
 ---
 
+### 10. Constant Immutable Lint Rule ✅
+**File**: `lib/rules/lint/constant-immutable.ts`
+**Commit**: `d071caa`
+**Category**: LINT
+**Severity**: WARNING
+
+#### Features
+- **Constant Detection**: Identifies variables initialized at declaration and never modified
+- **Immutable Detection**: Identifies variables assigned only in constructor
+- **Gas Optimization Guidance**: Provides clear recommendations for gas savings
+- **Unary Operation Tracking**: Detects increment/decrement operators (++, --)
+- **Smart Filtering**: Skips already constant/immutable variables
+
+#### Detection Logic
+1. Collect all state variable declarations from ContractDefinition
+2. Track variable properties:
+   - Has declaration-time initialization
+   - Is already constant or immutable
+   - Number of constructor assignments
+   - Number of function assignments
+3. Analyze assignment patterns:
+   - BinaryOperation (=) for regular assignments
+   - UnaryOperation (++, --) for increment/decrement
+4. Report based on patterns:
+   - Declaration init only → suggest constant
+   - Constructor assignment only → suggest immutable
+   - Multiple contexts or already marked → skip
+
+#### Implementation Details
+- State variable info tracking with comprehensive metadata
+- Constructor detection via FunctionDefinition.isConstructor
+- Separate tracking for constructor vs function assignments
+- Support for isDeclaredConst and isConstant properties
+- UnaryOperation.subExpression for increment/decrement target
+
+#### Error Messages
+- **Constant suggestion**: "State variable '{name}' is initialized at declaration and never modified. Consider declaring it as 'constant' for gas optimization."
+- **Immutable suggestion**: "State variable '{name}' is only assigned in the constructor. Consider declaring it as 'immutable' for gas optimization."
+
+#### Tests
+- **18 test cases total** ✅
+- **All 18 tests passing** ✅
+- Test categories:
+  - Metadata validation (1 test)
+  - Constant suggestions (4 tests)
+  - Immutable suggestions (4 tests)
+  - Edge cases (5 tests)
+  - Mixed scenarios (3 tests)
+  - Gas optimization guidance (1 test)
+
+#### Supported Scenarios
+- ✅ Variable initialized at declaration (suggest constant)
+- ✅ Multiple initialized variables (suggest constant for each)
+- ✅ Already constant variables (skip)
+- ✅ Variables modified in functions (skip)
+- ✅ Variable assigned in constructor only (suggest immutable)
+- ✅ Multiple constructor-assigned variables (suggest immutable for each)
+- ✅ Already immutable variables (skip)
+- ✅ Variables modified after constructor (skip)
+- ✅ Uninitialized variables without constructor (skip)
+- ✅ Contract without state variables (no reports)
+- ✅ Contract without constructor (analyze correctly)
+- ✅ Private and public variables (both analyzed)
+- ✅ Complex initialization expressions (suggest constant)
+- ✅ Mixed constant/immutable/mutable variables
+- ✅ Multiple constructor assignments (suggest immutable)
+- ✅ Declaration init + constructor assignment (skip)
+- ✅ Increment/decrement operators (tracked as modifications)
+
+#### Implementation Learnings
+- StateVariableDeclaration.variables array contains variable nodes
+- Variable properties: isConstant, isImmutable, isDeclaredConst
+- UnaryOperation with operators ++ and -- modify state variables
+- UnaryOperation.subExpression contains the target identifier
+- Constructor assignments tracked separately from function assignments
+- Declaration initialization prevents immutable suggestion
+- Both declaration init and constructor assignment means variable can't be constant/immutable
+
+#### Gas Optimization Impact
+- **constant**: Replaces SLOAD (2100+ gas) with direct value substitution
+- **immutable**: Replaces SLOAD with cheaper bytecode constant (saves ~2000 gas per access)
+- Critical for frequently accessed state variables
+- Especially important in loops and external view functions
+
+---
+
 ## Project Structure
 
 ```
@@ -820,18 +906,19 @@ for (const file of result.files) {
 ## Next Session Start Point
 
 ### Progress Summary
-**Completed**: 9 rules (7 Lint + 2 Security)
+**Completed**: 10 rules (8 Lint + 2 Security)
 - ✅ naming-convention (Lint)
 - ✅ visibility-modifiers (Lint)
 - ✅ state-mutability (Lint)
 - ✅ unused-variables (Lint)
 - ✅ function-complexity (Lint)
 - ✅ magic-numbers (Lint)
-- ✅ require-revert-reason (Lint) - **NEW!**
+- ✅ require-revert-reason (Lint)
+- ✅ constant-immutable (Lint) - **NEW!**
 - ✅ tx-origin (Security)
 - ✅ unchecked-calls (Security)
 
-**Test Stats**: 275 tests passing (20 suites), 4 skipped - +144 tests from session start
+**Test Stats**: 293 tests passing (21 suites), 4 skipped - +162 tests from session start
 
 ### Immediate Tasks (Priority Order)
 
@@ -844,6 +931,7 @@ for (const file of result.files) {
 - ✅ function-complexity (cyclomatic complexity, line count, parameter count)
 - ✅ magic-numbers (unexplained numeric literals)
 - ✅ require-revert-reason (error message validation)
+- ✅ constant-immutable (gas optimization for state variables)
 
 1. **Next Recommendations**:
 
