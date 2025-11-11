@@ -16,5 +16,6 @@ export { RequireRevertReasonRule } from './lint/require-revert-reason';
 export { ConstantImmutableRule } from './lint/constant-immutable';
 export { CacheArrayLengthRule } from './lint/cache-array-length';
 export { UnusedStateVariablesRule } from './lint/unused-state-variables';
+export { LoopInvariantCodeRule } from './lint/loop-invariant-code';
 export { TxOriginRule } from './security/tx-origin';
 export { UncheckedCallsRule } from './security/unchecked-calls';

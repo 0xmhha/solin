@@ -2,7 +2,7 @@
 
 > **Last Updated**: 2025-01-10
 > **Current Phase**: Phase 2 - Lint Rules (In Progress)
-> **Overall Progress**: 38/251 tasks (15.1%)
+> **Overall Progress**: 39/251 tasks (15.5%)
 
 ## Status Legend
 
@@ -650,7 +650,7 @@
 ## Phase 2: Lint Rules
 
 **Timeline**: Weeks 6-11 (6 weeks)
-**Progress**: 11/81 tasks (13.6%)
+**Progress**: 12/81 tasks (14.8%)
 **Priority**: P1 (High)
 **Status**: In Progress - Core lint rules implemented
 
@@ -878,6 +878,33 @@
     - Deployment cost: ~20,000 gas per unused state variable
     - Example: 5 unused variables = 100,000 gas wasted
     - Code quality: Remove dead code, improve maintainability
+
+- [x] ✅ **LINT-GAS-002**: loop-invariant-code
+  - **Status**: DONE
+  - **Completed**: 2025-01-10
+  - **File**: `lib/rules/lint/loop-invariant-code.ts`
+  - **Test File**: `test/unit/rules/lint/loop-invariant-code.test.ts`
+  - **Test Results**: ✅ 12 tests passing
+  - **Description**: Detects loop-invariant code that can be moved outside loops
+  - **Features**:
+    - State variable reads in loops (not modified)
+    - Function parameter usage in loops
+    - Loop variable tracking (i, j, etc.)
+    - Modification analysis (assignments, ++, --)
+    - Array index access skip (items[i] handled separately)
+    - Nested loop support
+  - **Implementation Notes**:
+    - State variable collection from ContractDefinition.subNodes
+    - Function parameter extraction (multiple AST structure support)
+    - Loop variable extraction from ForStatement.initExpression
+    - Identifier usage and modification tracking
+    - BinaryOperation and UnaryOperation detection
+    - IndexAccess check to skip array variables
+  - **Gas Optimization Impact**:
+    - Storage variables: ~100-2100 gas per iteration
+    - Function parameters: ~3-20 gas per iteration
+    - Example: 100 iterations = 10,000+ gas saved
+    - Best practice: Cache all loop-invariant values
 
 ---
 

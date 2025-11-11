@@ -2,8 +2,8 @@
 
 **Last Updated**: 2025-01-10
 **Current Phase**: Phase 2 In Progress (Rule Implementation)
-**Test Status**: 327 tests passing (23 test suites), 4 tests skipped
-**Latest Commit**: TBD - feat: implement unused-state-variables lint rule
+**Test Status**: 339 tests passing (24 test suites), 4 tests skipped
+**Latest Commit**: TBD - feat: implement loop-invariant-code gas optimization rule
 
 ---
 
@@ -810,6 +810,86 @@ rules: {
 
 ---
 
+### 13. Loop Invariant Code Gas Optimization Rule ✅
+**File**: `lib/rules/lint/loop-invariant-code.ts`
+**Commit**: TBD
+**Category**: LINT (Gas Optimization)
+**Severity**: WARNING
+
+#### Features
+- **State Variable Detection**: Finds state variables read but not modified in loops
+- **Function Parameter Detection**: Identifies parameters used repeatedly in loops
+- **Loop Variable Tracking**: Tracks loop counter variables (i, j, etc.)
+- **Modification Analysis**: Detects variables modified in loop body
+- **Array Index Skip**: Skips array variables being indexed (handled by cache-array-length)
+- **Nested Loop Support**: Handles nested loops correctly
+
+#### Detection Logic
+1. Collect all state variables from ContractDefinition
+2. Walk AST to find functions with loops (ForStatement, WhileStatement)
+3. For each function:
+   - Collect function parameters
+   - Find all loops in function body
+4. For each loop:
+   - Extract loop variables (for loop init variables)
+   - Find all identifiers used in loop body
+   - Find all identifiers modified in loop body
+   - Report identifiers that are:
+     - State variables OR function parameters
+     - Used but not modified
+     - Not loop variables
+     - Not array index access
+
+#### Implementation Details
+- State variable collection from ContractDefinition.subNodes
+- Function parameter extraction (handles multiple AST structures)
+- Loop variable identification from ForStatement.initExpression
+- Identifier usage tracking via recursive AST traversal
+- Modification detection: BinaryOperation (=, +=, etc.), UnaryOperation (++, --)
+- Array index access check: IndexAccess with base as identifier
+
+#### Error Messages
+- **Loop-invariant variable**: "Loop-invariant variable '{name}' is read on every iteration. Cache it in a local variable before the loop to save gas."
+
+#### Tests
+- **12 test cases total** ✅
+- **All 12 tests passing** ✅
+- Test categories:
+  - Metadata validation (1 test)
+  - State variable reads in loops (3 tests)
+  - Valid loop code (4 tests)
+  - Complex scenarios (2 tests)
+  - Edge cases (2 tests)
+
+#### Supported Scenarios
+- ✅ Repeated state variable read (reported)
+- ✅ Multiple invariant reads (reported)
+- ✅ While loops (reported)
+- ✅ State var cached before loop (skipped)
+- ✅ Variable modified in loop (skipped)
+- ✅ Loop-dependent calculations (skipped)
+- ✅ Array element access only (skipped)
+- ✅ Nested loops (reported)
+- ✅ Function parameters as invariants (reported)
+- ✅ Empty loop body (no reports)
+- ✅ Function without loops (no reports)
+
+#### Implementation Learnings
+- Function parameters: Try both `parameters.parameters` and direct array access
+- Loop variables: Extract from ForStatement.initExpression.variables
+- Array index check: Avoid reporting array being indexed (items[i])
+- Modification tracking: Need BinaryOperation (assignments) and UnaryOperation (++/--)
+- Compound assignments: +=, -=, *=, /=, %= all modify variables
+
+#### Gas Optimization Impact
+- **Storage Variables**: ~100-2100 gas saved per iteration depending on variable type
+- **Function Parameters**: ~3-20 gas saved per iteration (stack vs repeated access)
+- **Example**: Loop with 100 iterations reading state variable = 10,000+ gas saved
+- **Best Practice**: Cache all loop-invariant values before loop
+- **Critical**: Especially important for storage variables
+
+---
+
 ## Project Structure
 
 ```
@@ -848,7 +928,8 @@ solin/
 │       │   ├── require-revert-reason.ts   # NEW
 │       │   ├── constant-immutable.ts      # NEW
 │       │   ├── cache-array-length.ts      # NEW
-│       │   └── unused-state-variables.ts  # NEW
+│       │   ├── unused-state-variables.ts  # NEW
+│       │   └── loop-invariant-code.ts     # NEW
 │       ├── security/
 │       │   ├── tx-origin.ts               # NEW
 │       │   └── unchecked-calls.ts         # NEW
@@ -867,7 +948,8 @@ solin/
 │   │   │   │   ├── require-revert-reason.test.ts   # NEW
 │   │   │   │   ├── constant-immutable.test.ts      # NEW
 │   │   │   │   ├── cache-array-length.test.ts      # NEW
-│   │   │   │   └── unused-state-variables.test.ts  # NEW
+│   │   │   │   ├── unused-state-variables.test.ts  # NEW
+│   │   │   │   └── loop-invariant-code.test.ts     # NEW
 │   │   │   └── security/
 │   │   │       ├── tx-origin.test.ts               # NEW
 │   │   │       └── unchecked-calls.test.ts         # NEW
@@ -1068,7 +1150,7 @@ for (const file of result.files) {
 ## Next Session Start Point
 
 ### Progress Summary
-**Completed**: 12 rules (10 Lint + 2 Security)
+**Completed**: 13 rules (11 Lint + 2 Security)
 - ✅ naming-convention (Lint)
 - ✅ visibility-modifiers (Lint)
 - ✅ state-mutability (Lint)
@@ -1078,11 +1160,12 @@ for (const file of result.files) {
 - ✅ require-revert-reason (Lint)
 - ✅ constant-immutable (Lint)
 - ✅ cache-array-length (Lint)
-- ✅ unused-state-variables (Lint) - **NEW!**
+- ✅ unused-state-variables (Lint)
+- ✅ loop-invariant-code (Lint) - **NEW!**
 - ✅ tx-origin (Security)
 - ✅ unchecked-calls (Security)
 
-**Test Stats**: 327 tests passing (23 suites), 4 skipped - +196 tests from session start
+**Test Stats**: 339 tests passing (24 suites), 4 skipped - +208 tests from session start
 
 ### Immediate Tasks (Priority Order)
 
@@ -1098,6 +1181,7 @@ for (const file of result.files) {
 - ✅ constant-immutable (gas optimization for state variables)
 - ✅ cache-array-length (gas optimization for loop array access)
 - ✅ unused-state-variables (code quality + deployment gas optimization)
+- ✅ loop-invariant-code (gas optimization for loop-invariant variables)
 
 1. **Next Recommendations**:
 
