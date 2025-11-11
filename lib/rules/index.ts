@@ -14,5 +14,6 @@ export { FunctionComplexityRule } from './lint/function-complexity';
 export { MagicNumbersRule } from './lint/magic-numbers';
 export { RequireRevertReasonRule } from './lint/require-revert-reason';
 export { ConstantImmutableRule } from './lint/constant-immutable';
+export { CacheArrayLengthRule } from './lint/cache-array-length';
 export { TxOriginRule } from './security/tx-origin';
 export { UncheckedCallsRule } from './security/unchecked-calls';
