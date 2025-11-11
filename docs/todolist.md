@@ -2,7 +2,7 @@
 
 > **Last Updated**: 2025-01-10
 > **Current Phase**: Phase 2 - Lint Rules (In Progress)
-> **Overall Progress**: 34/251 tasks (13.5%)
+> **Overall Progress**: 35/251 tasks (13.9%)
 
 ## Status Legend
 
@@ -650,7 +650,7 @@
 ## Phase 2: Lint Rules
 
 **Timeline**: Weeks 6-11 (6 weeks)
-**Progress**: 7/81 tasks (8.6%)
+**Progress**: 8/81 tasks (9.9%)
 **Priority**: P1 (High)
 **Status**: In Progress - Core lint rules implemented
 
@@ -687,7 +687,7 @@
 ### 2.3: Best Practices Rules (Weeks 7-8)
 
 **25 rules, 2 weeks**
-**Progress**: 6/25 rules completed
+**Progress**: 7/25 rules completed
 
 - [x] ✅ **LINT-BP-001**: no-empty-blocks
   - **Status**: DONE
@@ -777,6 +777,25 @@
     - Parse numeric values using parseFloat()
     - Simple filtering against allowed list
     - Configuration merging via array format
+
+- [x] ✅ **LINT-BP-007**: require-revert-reason
+  - **Status**: DONE
+  - **Completed**: 2025-01-10
+  - **File**: `lib/rules/lint/require-revert-reason.ts`
+  - **Test File**: `test/unit/rules/lint/require-revert-reason.test.ts`
+  - **Test Results**: ✅ 16 tests passing
+  - **Description**: Detects require() and revert() statements without error messages
+  - **Features**:
+    - require() validation (needs 2 arguments: condition + message)
+    - revert() validation (needs 1 argument: message)
+    - Empty string message detection
+    - Custom error support (Solidity 0.8.4+)
+    - assert() exclusion (used for internal errors)
+  - **Implementation Notes**:
+    - FunctionCall node analysis with function name extraction
+    - Argument count validation
+    - Empty string detection for both StringLiteral and Literal nodes
+    - Custom errors identified by single argument that is not a string literal
 
 ### 2.4: Code Style Rules (Weeks 9-10)
 
