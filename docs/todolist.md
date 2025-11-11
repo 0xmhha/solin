@@ -2,7 +2,7 @@
 
 > **Last Updated**: 2025-01-10
 > **Current Phase**: Phase 2 - Lint Rules (In Progress)
-> **Overall Progress**: 35/251 tasks (13.9%)
+> **Overall Progress**: 36/251 tasks (14.3%)
 
 ## Status Legend
 
@@ -650,7 +650,7 @@
 ## Phase 2: Lint Rules
 
 **Timeline**: Weeks 6-11 (6 weeks)
-**Progress**: 8/81 tasks (9.9%)
+**Progress**: 9/81 tasks (11.1%)
 **Priority**: P1 (High)
 **Status**: In Progress - Core lint rules implemented
 
@@ -687,7 +687,7 @@
 ### 2.3: Best Practices Rules (Weeks 7-8)
 
 **25 rules, 2 weeks**
-**Progress**: 7/25 rules completed
+**Progress**: 8/25 rules completed
 
 - [x] ✅ **LINT-BP-001**: no-empty-blocks
   - **Status**: DONE
@@ -796,6 +796,29 @@
     - Argument count validation
     - Empty string detection for both StringLiteral and Literal nodes
     - Custom errors identified by single argument that is not a string literal
+
+- [x] ✅ **LINT-BP-008**: constant-immutable
+  - **Status**: DONE
+  - **Completed**: 2025-01-10
+  - **File**: `lib/rules/lint/constant-immutable.ts`
+  - **Test File**: `test/unit/rules/lint/constant-immutable.test.ts`
+  - **Test Results**: ✅ 18 tests passing
+  - **Description**: Detects state variables that should be constant or immutable for gas optimization
+  - **Features**:
+    - Constant detection (declaration-time initialized only)
+    - Immutable detection (constructor-only assigned)
+    - Unary operation tracking (++, --)
+    - Gas optimization guidance
+    - Smart filtering (skips already constant/immutable)
+  - **Implementation Notes**:
+    - State variable tracking with comprehensive metadata
+    - Constructor detection via FunctionDefinition.isConstructor
+    - Separate tracking for constructor vs function assignments
+    - Support for isDeclaredConst and isConstant properties
+    - UnaryOperation.subExpression for increment/decrement target
+  - **Gas Optimization Impact**:
+    - constant: Replaces SLOAD (2100+ gas) with direct value substitution
+    - immutable: Replaces SLOAD with cheaper bytecode constant (~2000 gas savings per access)
 
 ### 2.4: Code Style Rules (Weeks 9-10)
 
@@ -935,11 +958,11 @@
 |-------|--------|----------|----------------------|
 | Phase 0 | ✅ DONE | 5/8 (62.5%) | Week 1 |
 | Phase 1 | ✅ CORE COMPLETE | 20/45 (44.4%) | Weeks 2-5 |
-| Phase 2 | 🚧 IN PROGRESS | 4/81 (4.9%) | Weeks 6-11 |
+| Phase 2 | 🚧 IN PROGRESS | 9/81 (11.1%) | Weeks 6-11 |
 | Phase 3 | 🚧 IN PROGRESS | 2/99 (2.0%) | Weeks 12-19 |
 | Phase 4 | ⏭️ TODO | 0/8 (0%) | Weeks 20-22 |
 | Phase 5 | ⏭️ TODO | 0/10 (0%) | Weeks 23-26 |
-| **TOTAL** | | **31/251 (12.4%)** | **26 weeks** |
+| **TOTAL** | | **36/251 (14.3%)** | **26 weeks** |
 
 ### By Priority
 
@@ -968,14 +991,14 @@
 
 **Current Context**: 2025-01-10
 - Phase 1: Core Foundation - ✅ COMPLETE (20/45 tasks, 44.4%)
-- Phase 2: Lint Rules - 🚧 IN PROGRESS (4/81 tasks, 4.9%)
+- Phase 2: Lint Rules - 🚧 IN PROGRESS (9/81 tasks, 11.1%)
 - Phase 3: Security - 🚧 IN PROGRESS (2/99 tasks, 2.0%)
-- Total Progress: 31/251 tasks (12.4%)
+- Total Progress: 36/251 tasks (14.3%)
 
 **Recent Achievements**:
 - ✅ Core engine and rule framework complete
-- ✅ 5 rules implemented (3 lint + 2 security)
-- ✅ 204 tests passing, 16 test suites
+- ✅ 10 rules implemented (8 lint + 2 security)
+- ✅ 293 tests passing, 21 test suites
 - ✅ All using TDD methodology with comprehensive coverage
 
 **Implemented Rules**:
@@ -983,6 +1006,11 @@
    - naming-convention (20 tests)
    - visibility-modifiers (14 tests)
    - state-mutability (15 tests)
+   - unused-variables (17 tests, 4 skipped edge cases)
+   - function-complexity (19 tests)
+   - magic-numbers (19 tests)
+   - require-revert-reason (16 tests)
+   - constant-immutable (18 tests) - **NEW!**
    - no-empty-blocks (10 tests)
 2. **Security Rules**:
    - tx-origin (11 tests)
