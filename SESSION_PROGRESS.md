@@ -2,8 +2,8 @@
 
 **Last Updated**: 2025-01-10
 **Current Phase**: Phase 2 In Progress (Rule Implementation)
-**Test Status**: 259 tests passing (19 test suites), 4 tests skipped
-**Latest Commit**: `63e78ea` - feat: implement magic-numbers lint rule
+**Test Status**: 275 tests passing (20 test suites), 4 tests skipped
+**Latest Commit**: `1f73688` - feat: implement require-revert-reason lint rule
 
 ---
 
@@ -499,6 +499,75 @@ rules: {
 
 ---
 
+### 9. Require Revert Reason Lint Rule ✅
+**File**: `lib/rules/lint/require-revert-reason.ts`
+**Commit**: `1f73688`
+**Category**: LINT
+**Severity**: WARNING
+
+#### Features
+- **require() Validation**: Detects require() without error message (second argument)
+- **revert() Validation**: Detects revert() without error message
+- **Empty Message Detection**: Reports require/revert with empty string messages
+- **Custom Error Support**: Allows custom errors (Solidity 0.8.4+)
+- **assert() Exclusion**: Does not check assert() statements (internal errors)
+
+#### Detection Logic
+1. Find all FunctionCall nodes in AST
+2. Check if function name is 'require' or 'revert'
+3. For require(): verify arguments.length >= 2 (condition + message)
+4. For revert(): verify arguments.length >= 1 (message)
+5. Check if message argument is empty string
+6. Custom errors (revert CustomError()) are allowed
+
+#### Implementation Details
+- Direct AST traversal (no ASTWalker needed)
+- Function name extraction from expression.name
+- Argument count validation
+- Empty string detection for StringLiteral and Literal nodes
+- Custom error support through different AST structure
+
+#### Error Messages
+- **require() without message**: "require() statement should have an error message."
+- **require() with empty message**: "require() statement has an empty error message."
+- **revert() without message**: "revert() statement should have an error message."
+- **revert() with empty message**: "revert() statement has an empty error message."
+
+#### Tests
+- **16 test cases total** ✅
+- **All 16 tests passing** ✅
+- Test categories:
+  - Metadata validation (1 test)
+  - require() statements (4 tests)
+  - revert() statements (3 tests)
+  - Custom errors (2 tests)
+  - assert() statements (1 test)
+  - Edge cases (5 tests)
+
+#### Supported Scenarios
+- ✅ require() with message (allowed)
+- ✅ require() without message (reported)
+- ✅ require() with empty string (reported)
+- ✅ Multiple requires in same function
+- ✅ revert() with message (allowed)
+- ✅ revert() without message (reported)
+- ✅ revert() with empty string (reported)
+- ✅ revert CustomError() - custom errors (allowed)
+- ✅ revert CustomError(params) - with parameters (allowed)
+- ✅ assert() statements (ignored)
+- ✅ require() with complex conditions
+- ✅ require() with variable messages
+- ✅ Nested require/revert statements
+
+#### Implementation Learnings
+- FunctionCall.expression.name contains function identifier
+- require() needs 2+ arguments, revert() needs 1+ argument
+- Custom errors have different AST structure than string messages
+- StringLiteral and Literal nodes both need empty string checks
+- assert() is intentionally excluded from checks
+
+---
+
 ## Project Structure
 
 ```
@@ -533,13 +602,14 @@ solin/
 │       │   ├── state-mutability.ts        # NEW
 │       │   ├── unused-variables.ts        # NEW
 │       │   ├── function-complexity.ts     # NEW
-│       │   └── magic-numbers.ts           # NEW
+│       │   ├── magic-numbers.ts           # NEW
+│       │   └── require-revert-reason.ts   # NEW
 │       ├── security/
 │       │   ├── tx-origin.ts               # NEW
 │       │   └── unchecked-calls.ts         # NEW
 │       └── index.ts
 ├── test/
-│   ├── unit/                # Unit tests (19 suites)
+│   ├── unit/                # Unit tests (20 suites)
 │   │   ├── rules/
 │   │   │   ├── lint/
 │   │   │   │   ├── no-empty-blocks.test.ts
@@ -548,7 +618,8 @@ solin/
 │   │   │   │   ├── state-mutability.test.ts        # NEW
 │   │   │   │   ├── unused-variables.test.ts        # NEW
 │   │   │   │   ├── function-complexity.test.ts     # NEW
-│   │   │   │   └── magic-numbers.test.ts           # NEW
+│   │   │   │   ├── magic-numbers.test.ts           # NEW
+│   │   │   │   └── require-revert-reason.test.ts   # NEW
 │   │   │   └── security/
 │   │   │       ├── tx-origin.test.ts               # NEW
 │   │   │       └── unchecked-calls.test.ts         # NEW
@@ -749,17 +820,18 @@ for (const file of result.files) {
 ## Next Session Start Point
 
 ### Progress Summary
-**Completed**: 8 rules (6 Lint + 2 Security)
+**Completed**: 9 rules (7 Lint + 2 Security)
 - ✅ naming-convention (Lint)
 - ✅ visibility-modifiers (Lint)
 - ✅ state-mutability (Lint)
 - ✅ unused-variables (Lint)
 - ✅ function-complexity (Lint)
-- ✅ magic-numbers (Lint) - **NEW!**
+- ✅ magic-numbers (Lint)
+- ✅ require-revert-reason (Lint) - **NEW!**
 - ✅ tx-origin (Security)
 - ✅ unchecked-calls (Security)
 
-**Test Stats**: 259 tests passing (19 suites), 4 skipped - +128 tests from session start
+**Test Stats**: 275 tests passing (20 suites), 4 skipped - +144 tests from session start
 
 ### Immediate Tasks (Priority Order)
 
@@ -771,6 +843,7 @@ for (const file of result.files) {
 - ✅ unused-variables (with known limitations)
 - ✅ function-complexity (cyclomatic complexity, line count, parameter count)
 - ✅ magic-numbers (unexplained numeric literals)
+- ✅ require-revert-reason (error message validation)
 
 1. **Next Recommendations**:
 
