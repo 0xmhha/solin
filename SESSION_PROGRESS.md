@@ -2,8 +2,8 @@
 
 **Last Updated**: 2025-01-10
 **Current Phase**: Phase 2 In Progress (Rule Implementation)
-**Test Status**: 293 tests passing (21 test suites), 4 tests skipped
-**Latest Commit**: `d071caa` - feat: implement constant-immutable lint rule
+**Test Status**: 310 tests passing (22 test suites), 4 tests skipped
+**Latest Commit**: `de7c7c6` - feat: implement cache-array-length gas optimization rule
 
 ---
 
@@ -654,6 +654,86 @@ rules: {
 
 ---
 
+### 11. Cache Array Length Lint Rule ✅
+**File**: `lib/rules/lint/cache-array-length.ts`
+**Commit**: `de7c7c6`
+**Category**: LINT (Gas Optimization)
+**Severity**: WARNING
+
+#### Features
+- **For Loop Detection**: Identifies array.length in for loop conditions
+- **While Loop Detection**: Identifies array.length in while loop conditions
+- **Array Modification Check**: Skips if array is modified (push, pop)
+- **Nested Loop Support**: Handles nested loops correctly
+- **Struct Member Arrays**: Supports arrays accessed via structs (data.items.length)
+- **Gas Savings Guidance**: Provides clear gas optimization information
+
+#### Detection Logic
+1. Find ForStatement and WhileStatement nodes
+2. Analyze condition expressions for MemberAccess(.length)
+3. Extract array name from expression
+4. Check if array is modified in loop body:
+   - array.push() → array is modified, skip
+   - array.pop() → array is modified, skip
+   - Different array modified → report issue
+5. Report uncached array.length access
+
+#### Implementation Details
+- Recursive AST traversal to find loops
+- MemberAccess detection for .length property
+- Array name extraction supporting nested access (struct.array.length)
+- Loop body analysis for array modifications
+- Method call detection for push/pop operations
+
+#### Error Messages
+- **Uncached array.length**: "Array length '{arrayName}.length' is read on every iteration. Cache it in a local variable before the loop to save gas (~100 gas per iteration for storage arrays)."
+
+#### Tests
+- **17 test cases total** ✅
+- **All 17 tests passing** ✅
+- Test categories:
+  - Metadata validation (1 test)
+  - For loops with array.length (5 tests)
+  - While loops with array.length (2 tests)
+  - Array modifications (3 tests)
+  - Edge cases (5 tests)
+  - Gas optimization guidance (1 test)
+
+#### Supported Scenarios
+- ✅ for loop with array.length (reported)
+- ✅ Multiple comparison operators (<, <=, >, >=)
+- ✅ Multiple uncached arrays in same function
+- ✅ Already cached length (skipped)
+- ✅ Nested loops (both reported)
+- ✅ while loop with array.length (reported)
+- ✅ Cached length in while loop (skipped)
+- ✅ Array modified with push() (skipped)
+- ✅ Array modified with pop() (skipped)
+- ✅ Different array modified (reported)
+- ✅ Function without loops (no reports)
+- ✅ Loop without array.length (no reports)
+- ✅ Memory arrays (reported)
+- ✅ Calldata arrays (reported)
+- ✅ Array accessed via struct (reported)
+
+#### Implementation Learnings
+- ForStatement.conditionExpression contains loop condition
+- WhileStatement.condition contains loop condition
+- MemberAccess with memberName='length' indicates array length access
+- Need to extract array name from nested MemberAccess (struct.array)
+- FunctionCall with MemberAccess expression indicates method call
+- Method name from expression.memberName
+- push() and pop() are the main array-modifying methods in loops
+
+#### Gas Optimization Impact
+- **Storage arrays**: ~100 gas saved per iteration
+- **Memory arrays**: ~3 gas saved per iteration (MLOAD vs direct access)
+- **Calldata arrays**: ~3 gas saved per iteration
+- **Critical for large loops**: 1000 iterations = 100,000 gas savings
+- **Example**: Loop with 100 iterations on storage array = 10,000 gas saved
+
+---
+
 ## Project Structure
 
 ```
@@ -906,7 +986,7 @@ for (const file of result.files) {
 ## Next Session Start Point
 
 ### Progress Summary
-**Completed**: 10 rules (8 Lint + 2 Security)
+**Completed**: 11 rules (9 Lint + 2 Security)
 - ✅ naming-convention (Lint)
 - ✅ visibility-modifiers (Lint)
 - ✅ state-mutability (Lint)
@@ -914,11 +994,12 @@ for (const file of result.files) {
 - ✅ function-complexity (Lint)
 - ✅ magic-numbers (Lint)
 - ✅ require-revert-reason (Lint)
-- ✅ constant-immutable (Lint) - **NEW!**
+- ✅ constant-immutable (Lint)
+- ✅ cache-array-length (Lint) - **NEW!**
 - ✅ tx-origin (Security)
 - ✅ unchecked-calls (Security)
 
-**Test Stats**: 293 tests passing (21 suites), 4 skipped - +162 tests from session start
+**Test Stats**: 310 tests passing (22 suites), 4 skipped - +179 tests from session start
 
 ### Immediate Tasks (Priority Order)
 
@@ -932,6 +1013,7 @@ for (const file of result.files) {
 - ✅ magic-numbers (unexplained numeric literals)
 - ✅ require-revert-reason (error message validation)
 - ✅ constant-immutable (gas optimization for state variables)
+- ✅ cache-array-length (gas optimization for loop array access)
 
 1. **Next Recommendations**:
 
