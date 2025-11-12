@@ -19,3 +19,4 @@ export { UnusedStateVariablesRule } from './lint/unused-state-variables';
 export { LoopInvariantCodeRule } from './lint/loop-invariant-code';
 export { TxOriginRule } from './security/tx-origin';
 export { UncheckedCallsRule } from './security/unchecked-calls';
+export { TimestampDependenceRule } from './security/timestamp-dependence';
