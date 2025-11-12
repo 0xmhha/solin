@@ -2,7 +2,7 @@
 
 > **Last Updated**: 2025-01-12
 > **Current Phase**: Phase 2 - Lint Rules (In Progress)
-> **Overall Progress**: 39/251 tasks (15.5%)
+> **Overall Progress**: 40/251 tasks (15.9%)
 
 ## Status Legend
 
@@ -912,7 +912,7 @@
 ## Phase 3: Security Detectors
 
 **Timeline**: Weeks 12-19 (8 weeks)
-**Progress**: 4/99 tasks (4.0%)
+**Progress**: 5/99 tasks (5.1%)
 **Priority**: P1 (High)
 **Status**: In Progress - Core security rules implemented
 
@@ -935,7 +935,7 @@
 ### 3.2: High Severity Detectors (Weeks 13-16)
 
 **42 detectors, 4 weeks**
-**Progress**: 4/42 detectors completed
+**Progress**: 5/42 detectors completed
 
 - [x] ✅ **SEC-HIGH-001**: tx-origin
   - **Status**: DONE
@@ -991,7 +991,28 @@
     - Multiple contracts support
   - **Recommendation**: Explicitly initialize all state variables for clarity and safety
 
-- [ ] ⏭️ **SEC-HIGH-005**: reentrancy (Next Priority - Complex)
+- [x] ✅ **SEC-HIGH-005**: arbitrary-send
+  - **Status**: DONE
+  - **Completed**: 2025-01-12
+  - **File**: `lib/rules/security/arbitrary-send.ts`
+  - **Test File**: `test/unit/rules/security/arbitrary-send.test.ts`
+  - **Test Results**: ✅ 16 tests passing
+  - **Severity**: ERROR (HIGH)
+  - **Description**: Detects send()/transfer() to arbitrary addresses controlled by external input
+  - **Features**:
+    - Function parameter detection (recipient can be set by caller)
+    - Mapping/array value detection (user-controlled indices)
+    - Storage variable analysis (mutable state variables)
+    - Constructor-only variable tracking (effectively immutable)
+    - Type conversion unwrapping (payable, address casts)
+    - Safe pattern exclusions:
+      - msg.sender (user withdrawing their own funds)
+      - constant addresses (compile-time fixed)
+      - immutable addresses (constructor-set only)
+      - hardcoded address literals (0x...)
+  - **Recommendation**: Use withdrawal patterns (pull over push), implement access controls, whitelist recipients
+
+- [ ] ⏭️ **SEC-HIGH-006**: reentrancy (Next Priority - Complex)
   - **Status**: TODO
   - **Priority**: P1
   - **Difficulty**: ⭐⭐⭐⭐⭐ (Very High)
@@ -1071,10 +1092,10 @@
 | Phase 0 | ✅ DONE | 5/8 (62.5%) | Week 1 |
 | Phase 1 | ✅ CORE COMPLETE | 20/45 (44.4%) | Weeks 2-5 |
 | Phase 2 | 🚧 IN PROGRESS | 10/81 (12.3%) | Weeks 6-11 |
-| Phase 3 | 🚧 IN PROGRESS | 3/99 (3.0%) | Weeks 12-19 |
+| Phase 3 | 🚧 IN PROGRESS | 5/99 (5.1%) | Weeks 12-19 |
 | Phase 4 | ⏭️ TODO | 0/8 (0%) | Weeks 20-22 |
 | Phase 5 | ⏭️ TODO | 0/10 (0%) | Weeks 23-26 |
-| **TOTAL** | | **38/251 (15.1%)** | **26 weeks** |
+| **TOTAL** | | **40/251 (15.9%)** | **26 weeks** |
 
 ### By Priority
 
@@ -1104,13 +1125,13 @@
 **Current Context**: 2025-01-12
 - Phase 1: Core Foundation - ✅ COMPLETE (20/45 tasks, 44.4%)
 - Phase 2: Lint Rules - 🚧 IN PROGRESS (10/81 tasks, 12.3%)
-- Phase 3: Security - 🚧 IN PROGRESS (3/99 tasks, 3.0%)
-- Total Progress: 38/251 tasks (15.1%)
+- Phase 3: Security - 🚧 IN PROGRESS (5/99 tasks, 5.1%)
+- Total Progress: 40/251 tasks (15.9%)
 
 **Recent Achievements**:
 - ✅ Core engine and rule framework complete
-- ✅ 12 rules implemented (9 lint + 3 security)
-- ✅ 325 tests passing, 23 test suites
+- ✅ 14 rules implemented (9 lint + 5 security)
+- ✅ 387 tests passing, 27 test suites
 - ✅ All using TDD methodology with comprehensive coverage
 - ✅ GitHub repository created: https://github.com/0xmhha/solin
 - ✅ Git author history corrected (0xmhha <mhha@wemade.com>)
@@ -1127,16 +1148,16 @@
    - constant-immutable (18 tests)
    - cache-array-length (17 tests)
    - no-empty-blocks (10 tests)
-2. **Security Rules** (3 rules):
+2. **Security Rules** (5 rules):
    - tx-origin (11 tests)
    - unchecked-calls (13 tests)
-   - timestamp-dependence (15 tests) - **NEW!**
+   - timestamp-dependence (15 tests)
+   - uninitialized-state (17 tests)
+   - arbitrary-send (16 tests) - **NEW!**
 
 **Next Priority**:
 - **Primary**: More security detectors (continue Phase 3)
-  - uninitialized-state (⭐⭐⭐ difficulty)
-  - arbitrary-send (⭐⭐⭐⭐ difficulty)
-  - delegatecall-in-loop (⭐⭐⭐ difficulty)
+  - Next HIGH severity: delegatecall-in-loop, shadowing-variables, or selfdestruct (⭐⭐⭐-⭐⭐⭐⭐ difficulty)
 - **Alternative**: More lint rules (continue Phase 2)
   - code style rules (indentation, spacing, etc.)
   - additional best practices rules
