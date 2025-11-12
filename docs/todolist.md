@@ -2,7 +2,7 @@
 
 > **Last Updated**: 2025-01-12
 > **Current Phase**: Phase 2 - Lint Rules (In Progress)
-> **Overall Progress**: 42/251 tasks (16.7%)
+> **Overall Progress**: 43/251 tasks (17.1%)
 
 ## Status Legend
 
@@ -912,7 +912,7 @@
 ## Phase 3: Security Detectors
 
 **Timeline**: Weeks 12-19 (8 weeks)
-**Progress**: 7/99 tasks (7.1%)
+**Progress**: 8/99 tasks (8.1%)
 **Priority**: P1 (High)
 **Status**: In Progress - Core security rules implemented
 
@@ -935,7 +935,7 @@
 ### 3.2: High Severity Detectors (Weeks 13-16)
 
 **42 detectors, 4 weeks**
-**Progress**: 7/42 detectors completed
+**Progress**: 8/42 detectors completed
 
 - [x] ✅ **SEC-HIGH-001**: tx-origin
   - **Status**: DONE
@@ -1048,7 +1048,24 @@
       - Variables with unique names in inheritance chain
   - **Recommendation**: Rename variables to avoid shadowing, use unique descriptive names, consider prefixing with scope
 
-- [ ] ⏭️ **SEC-HIGH-008**: reentrancy (Next Priority - Complex)
+- [x] ✅ **SEC-HIGH-008**: selfdestruct
+  - **Status**: DONE
+  - **Completed**: 2025-01-12
+  - **File**: `lib/rules/security/selfdestruct.ts`
+  - **Test File**: `test/unit/rules/security/selfdestruct.test.ts`
+  - **Test Results**: ✅ 14 tests passing
+  - **Severity**: ERROR (HIGH)
+  - **Description**: Detects selfdestruct and deprecated suicide usage (contract destruction, rugpull/griefing risks)
+  - **Features**:
+    - Direct selfdestruct call detection
+    - Deprecated 'suicide' alias detection
+    - All function visibility levels (public, external, private, internal)
+    - Detection with or without access control
+    - Safe pattern exclusions:
+      - Contracts without selfdestruct (no false positives)
+  - **Recommendation**: Remove selfdestruct from production code, use pausable patterns or circuit breakers instead, implement multi-signature with time-delays if absolutely necessary
+
+- [ ] ⏭️ **SEC-HIGH-009**: reentrancy (Next Priority - Complex)
   - **Status**: TODO
   - **Priority**: P1
   - **Difficulty**: ⭐⭐⭐⭐⭐ (Very High)
@@ -1166,8 +1183,8 @@
 
 **Recent Achievements**:
 - ✅ Core engine and rule framework complete
-- ✅ 16 rules implemented (9 lint + 7 security)
-- ✅ 418 tests passing, 29 test suites
+- ✅ 17 rules implemented (9 lint + 8 security)
+- ✅ 432 tests passing, 30 test suites
 - ✅ All using TDD methodology with comprehensive coverage
 - ✅ GitHub repository created: https://github.com/0xmhha/solin
 - ✅ Git author history corrected (0xmhha <mhha@wemade.com>)
@@ -1184,18 +1201,19 @@
    - constant-immutable (18 tests)
    - cache-array-length (17 tests)
    - no-empty-blocks (10 tests)
-2. **Security Rules** (7 rules):
+2. **Security Rules** (8 rules):
    - tx-origin (11 tests)
    - unchecked-calls (13 tests)
    - timestamp-dependence (15 tests)
    - uninitialized-state (17 tests)
    - arbitrary-send (16 tests)
    - delegatecall-in-loop (16 tests)
-   - shadowing-variables (15 tests) - **NEW!**
+   - shadowing-variables (15 tests)
+   - selfdestruct (14 tests) - **NEW!**
 
 **Next Priority**:
 - **Primary**: More security detectors (continue Phase 3)
-  - Next HIGH severity: selfdestruct, controlled-delegatecall, or integer-overflow (⭐⭐⭐-⭐⭐⭐⭐ difficulty)
+  - Next HIGH severity: controlled-delegatecall or integer-overflow (⭐⭐⭐-⭐⭐⭐⭐ difficulty)
 - **Alternative**: More lint rules (continue Phase 2)
   - code style rules (indentation, spacing, etc.)
   - additional best practices rules
