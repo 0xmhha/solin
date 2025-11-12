@@ -1,8 +1,8 @@
 # Solin Development Task List
 
-> **Last Updated**: 2025-01-10
+> **Last Updated**: 2025-01-12
 > **Current Phase**: Phase 2 - Lint Rules (In Progress)
-> **Overall Progress**: 39/251 tasks (15.5%)
+> **Overall Progress**: 38/251 tasks (15.1%)
 
 ## Status Legend
 
@@ -31,6 +31,7 @@
 **Timeline**: Week 1
 **Progress**: 5/8 tasks (62.5%)
 **Priority**: P0 (Critical)
+**Status**: Core documentation complete
 
 ### Documentation
 
@@ -911,9 +912,9 @@
 ## Phase 3: Security Detectors
 
 **Timeline**: Weeks 12-19 (8 weeks)
-**Progress**: 2/99 tasks (2.0%)
+**Progress**: 3/99 tasks (3.0%)
 **Priority**: P1 (High)
-**Status**: In Progress - Initial security rules implemented
+**Status**: In Progress - Core security rules implemented
 
 ### 3.1: Detector Framework (Week 12)
 
@@ -934,7 +935,7 @@
 ### 3.2: High Severity Detectors (Weeks 13-16)
 
 **42 detectors, 4 weeks**
-**Progress**: 2/42 detectors completed
+**Progress**: 3/42 detectors completed
 
 - [x] ✅ **SEC-HIGH-001**: tx-origin
   - **Status**: DONE
@@ -957,7 +958,23 @@
   - **Features**: Parent node analysis to detect ignored return values
   - **Recommendation**: Always check return values with require(), assert(), or if statements
 
-- [ ] ⏭️ **SEC-HIGH-003**: reentrancy (Next Priority - Complex)
+- [x] ✅ **SEC-HIGH-003**: timestamp-dependence
+  - **Status**: DONE
+  - **Completed**: 2025-01-12
+  - **File**: `lib/rules/security/timestamp-dependence.ts`
+  - **Test File**: `test/unit/rules/security/timestamp-dependence.test.ts`
+  - **Test Results**: ✅ 15 tests passing
+  - **Severity**: WARNING
+  - **Description**: Detects dangerous block.timestamp usage (miners can manipulate ±15 seconds)
+  - **Features**:
+    - Randomness detection (modulo operator %)
+    - Equality/inequality comparisons (==, !=)
+    - Deprecated 'now' keyword detection
+    - Nested expression support (TupleExpression)
+    - Safe pattern allowance (>=, <=, >, <, -, +)
+  - **Recommendation**: Use >= or <= for time conditions, avoid randomness, consider Chainlink VRF
+
+- [ ] ⏭️ **SEC-HIGH-004**: reentrancy (Next Priority - Complex)
   - **Status**: TODO
   - **Priority**: P1
   - **Difficulty**: ⭐⭐⭐⭐⭐ (Very High)
@@ -1037,17 +1054,17 @@
 | Phase 0 | ✅ DONE | 5/8 (62.5%) | Week 1 |
 | Phase 1 | ✅ CORE COMPLETE | 20/45 (44.4%) | Weeks 2-5 |
 | Phase 2 | 🚧 IN PROGRESS | 10/81 (12.3%) | Weeks 6-11 |
-| Phase 3 | 🚧 IN PROGRESS | 2/99 (2.0%) | Weeks 12-19 |
+| Phase 3 | 🚧 IN PROGRESS | 3/99 (3.0%) | Weeks 12-19 |
 | Phase 4 | ⏭️ TODO | 0/8 (0%) | Weeks 20-22 |
 | Phase 5 | ⏭️ TODO | 0/10 (0%) | Weeks 23-26 |
-| **TOTAL** | | **37/251 (14.7%)** | **26 weeks** |
+| **TOTAL** | | **38/251 (15.1%)** | **26 weeks** |
 
 ### By Priority
 
 | Priority | Total | Done | In Progress | Todo |
 |----------|-------|------|-------------|------|
 | P0 (Critical) | 50 | 20 | 0 | 30 |
-| P1 (High) | 180 | 6 | 2 | 172 |
+| P1 (High) | 180 | 7 | 2 | 171 |
 | P2 (Medium) | 21 | 0 | 0 | 21 |
 | P3 (Low) | 0 | 0 | 0 | 0 |
 
@@ -1067,21 +1084,22 @@
 
 ### For Next Session
 
-**Current Context**: 2025-01-10
+**Current Context**: 2025-01-12
 - Phase 1: Core Foundation - ✅ COMPLETE (20/45 tasks, 44.4%)
 - Phase 2: Lint Rules - 🚧 IN PROGRESS (10/81 tasks, 12.3%)
-- Phase 3: Security - 🚧 IN PROGRESS (2/99 tasks, 2.0%)
-- Total Progress: 37/251 tasks (14.7%)
+- Phase 3: Security - 🚧 IN PROGRESS (3/99 tasks, 3.0%)
+- Total Progress: 38/251 tasks (15.1%)
 
 **Recent Achievements**:
 - ✅ Core engine and rule framework complete
-- ✅ 11 rules implemented (9 lint + 2 security)
-- ✅ 310 tests passing, 22 test suites
+- ✅ 12 rules implemented (9 lint + 3 security)
+- ✅ 325 tests passing, 23 test suites
 - ✅ All using TDD methodology with comprehensive coverage
 - ✅ GitHub repository created: https://github.com/0xmhha/solin
+- ✅ Git author history corrected (0xmhha <mhha@wemade.com>)
 
 **Implemented Rules**:
-1. **Lint Rules**:
+1. **Lint Rules** (9 rules):
    - naming-convention (20 tests)
    - visibility-modifiers (14 tests)
    - state-mutability (15 tests)
@@ -1090,20 +1108,27 @@
    - magic-numbers (19 tests)
    - require-revert-reason (16 tests)
    - constant-immutable (18 tests)
-   - cache-array-length (17 tests) - **NEW!**
+   - cache-array-length (17 tests)
    - no-empty-blocks (10 tests)
-2. **Security Rules**:
+2. **Security Rules** (3 rules):
    - tx-origin (11 tests)
    - unchecked-calls (13 tests)
+   - timestamp-dependence (15 tests) - **NEW!**
 
 **Next Priority**:
-- **Primary**: unused-variables rule (⭐⭐⭐⭐ difficulty)
-- **Alternative**: reentrancy detector (⭐⭐⭐⭐⭐ difficulty, requires control-flow analysis)
+- **Primary**: More security detectors (continue Phase 3)
+  - uninitialized-state (⭐⭐⭐ difficulty)
+  - arbitrary-send (⭐⭐⭐⭐ difficulty)
+  - delegatecall-in-loop (⭐⭐⭐ difficulty)
+- **Alternative**: More lint rules (continue Phase 2)
+  - code style rules (indentation, spacing, etc.)
+  - additional best practices rules
+- **Complex**: reentrancy detector (⭐⭐⭐⭐⭐ difficulty, requires control-flow analysis)
 
 **Where to Start**:
 1. Read SESSION_PROGRESS.md for detailed implementation notes
 2. Review this todolist.md for overall progress
-3. Choose next task: LINT-BP-004 (unused-variables) or SEC-HIGH-003 (reentrancy)
+3. Choose next security detector from Phase 3.2 or continue Phase 2 lint rules
 4. Follow TDD methodology: RED → GREEN → REFACTOR
 
 **Important Files to Review**:
@@ -1238,5 +1263,5 @@ None currently.
 
 ---
 
-**Last Review**: 2025-01-10
-**Next Review**: 2025-01-17
+**Last Review**: 2025-01-12
+**Next Review**: 2025-01-19
