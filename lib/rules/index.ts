@@ -20,3 +20,4 @@ export { LoopInvariantCodeRule } from './lint/loop-invariant-code';
 export { TxOriginRule } from './security/tx-origin';
 export { UncheckedCallsRule } from './security/unchecked-calls';
 export { TimestampDependenceRule } from './security/timestamp-dependence';
+export { UninitializedStateRule } from './security/uninitialized-state';
