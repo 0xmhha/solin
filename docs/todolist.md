@@ -2,7 +2,7 @@
 
 > **Last Updated**: 2025-01-12
 > **Current Phase**: Phase 2 - Lint Rules (In Progress)
-> **Overall Progress**: 40/251 tasks (15.9%)
+> **Overall Progress**: 41/251 tasks (16.3%)
 
 ## Status Legend
 
@@ -912,7 +912,7 @@
 ## Phase 3: Security Detectors
 
 **Timeline**: Weeks 12-19 (8 weeks)
-**Progress**: 5/99 tasks (5.1%)
+**Progress**: 6/99 tasks (6.1%)
 **Priority**: P1 (High)
 **Status**: In Progress - Core security rules implemented
 
@@ -935,7 +935,7 @@
 ### 3.2: High Severity Detectors (Weeks 13-16)
 
 **42 detectors, 4 weeks**
-**Progress**: 5/42 detectors completed
+**Progress**: 6/42 detectors completed
 
 - [x] ✅ **SEC-HIGH-001**: tx-origin
   - **Status**: DONE
@@ -1012,7 +1012,24 @@
       - hardcoded address literals (0x...)
   - **Recommendation**: Use withdrawal patterns (pull over push), implement access controls, whitelist recipients
 
-- [ ] ⏭️ **SEC-HIGH-006**: reentrancy (Next Priority - Complex)
+- [x] ✅ **SEC-HIGH-006**: delegatecall-in-loop
+  - **Status**: DONE
+  - **Completed**: 2025-01-12
+  - **File**: `lib/rules/security/delegatecall-in-loop.ts`
+  - **Test File**: `test/unit/rules/security/delegatecall-in-loop.test.ts`
+  - **Test Results**: ✅ 16 tests passing
+  - **Severity**: WARNING
+  - **Description**: Detects delegatecall usage within loops (gas exhaustion, state inconsistency, DoS risks)
+  - **Features**:
+    - All loop type detection (for, while, do-while)
+    - Nested loop tracking with depth reporting
+    - Direct delegatecall detection in loop body
+    - Safe pattern exclusions:
+      - delegatecall outside loops
+      - Other call types in loops (call, staticcall, send, transfer)
+  - **Recommendation**: Avoid delegatecall in loops, use single delegatecall outside loop, implement strict gas limits and bounds
+
+- [ ] ⏭️ **SEC-HIGH-007**: reentrancy (Next Priority - Complex)
   - **Status**: TODO
   - **Priority**: P1
   - **Difficulty**: ⭐⭐⭐⭐⭐ (Very High)
@@ -1092,10 +1109,10 @@
 | Phase 0 | ✅ DONE | 5/8 (62.5%) | Week 1 |
 | Phase 1 | ✅ CORE COMPLETE | 20/45 (44.4%) | Weeks 2-5 |
 | Phase 2 | 🚧 IN PROGRESS | 10/81 (12.3%) | Weeks 6-11 |
-| Phase 3 | 🚧 IN PROGRESS | 5/99 (5.1%) | Weeks 12-19 |
+| Phase 3 | 🚧 IN PROGRESS | 6/99 (6.1%) | Weeks 12-19 |
 | Phase 4 | ⏭️ TODO | 0/8 (0%) | Weeks 20-22 |
 | Phase 5 | ⏭️ TODO | 0/10 (0%) | Weeks 23-26 |
-| **TOTAL** | | **40/251 (15.9%)** | **26 weeks** |
+| **TOTAL** | | **41/251 (16.3%)** | **26 weeks** |
 
 ### By Priority
 
@@ -1125,13 +1142,13 @@
 **Current Context**: 2025-01-12
 - Phase 1: Core Foundation - ✅ COMPLETE (20/45 tasks, 44.4%)
 - Phase 2: Lint Rules - 🚧 IN PROGRESS (10/81 tasks, 12.3%)
-- Phase 3: Security - 🚧 IN PROGRESS (5/99 tasks, 5.1%)
-- Total Progress: 40/251 tasks (15.9%)
+- Phase 3: Security - 🚧 IN PROGRESS (6/99 tasks, 6.1%)
+- Total Progress: 41/251 tasks (16.3%)
 
 **Recent Achievements**:
 - ✅ Core engine and rule framework complete
-- ✅ 14 rules implemented (9 lint + 5 security)
-- ✅ 387 tests passing, 27 test suites
+- ✅ 15 rules implemented (9 lint + 6 security)
+- ✅ 403 tests passing, 28 test suites
 - ✅ All using TDD methodology with comprehensive coverage
 - ✅ GitHub repository created: https://github.com/0xmhha/solin
 - ✅ Git author history corrected (0xmhha <mhha@wemade.com>)
@@ -1148,16 +1165,17 @@
    - constant-immutable (18 tests)
    - cache-array-length (17 tests)
    - no-empty-blocks (10 tests)
-2. **Security Rules** (5 rules):
+2. **Security Rules** (6 rules):
    - tx-origin (11 tests)
    - unchecked-calls (13 tests)
    - timestamp-dependence (15 tests)
    - uninitialized-state (17 tests)
-   - arbitrary-send (16 tests) - **NEW!**
+   - arbitrary-send (16 tests)
+   - delegatecall-in-loop (16 tests) - **NEW!**
 
 **Next Priority**:
 - **Primary**: More security detectors (continue Phase 3)
-  - Next HIGH severity: delegatecall-in-loop, shadowing-variables, or selfdestruct (⭐⭐⭐-⭐⭐⭐⭐ difficulty)
+  - Next HIGH severity: shadowing-variables, selfdestruct, or controlled-delegatecall (⭐⭐⭐-⭐⭐⭐⭐ difficulty)
 - **Alternative**: More lint rules (continue Phase 2)
   - code style rules (indentation, spacing, etc.)
   - additional best practices rules
