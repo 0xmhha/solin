@@ -24,3 +24,4 @@ export { UninitializedStateRule } from './security/uninitialized-state';
 export { ArbitrarySendRule } from './security/arbitrary-send';
 export { DelegatecallInLoopRule } from './security/delegatecall-in-loop';
 export { ShadowingVariablesRule } from './security/shadowing-variables';
+export { SelfdestructRule } from './security/selfdestruct';
