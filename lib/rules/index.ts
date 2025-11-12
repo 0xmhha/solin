@@ -22,3 +22,4 @@ export { UncheckedCallsRule } from './security/unchecked-calls';
 export { TimestampDependenceRule } from './security/timestamp-dependence';
 export { UninitializedStateRule } from './security/uninitialized-state';
 export { ArbitrarySendRule } from './security/arbitrary-send';
+export { DelegatecallInLoopRule } from './security/delegatecall-in-loop';
