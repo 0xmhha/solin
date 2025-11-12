@@ -2,7 +2,7 @@
 
 > **Last Updated**: 2025-01-12
 > **Current Phase**: Phase 2 - Lint Rules (In Progress)
-> **Overall Progress**: 38/251 tasks (15.1%)
+> **Overall Progress**: 39/251 tasks (15.5%)
 
 ## Status Legend
 
@@ -912,7 +912,7 @@
 ## Phase 3: Security Detectors
 
 **Timeline**: Weeks 12-19 (8 weeks)
-**Progress**: 3/99 tasks (3.0%)
+**Progress**: 4/99 tasks (4.0%)
 **Priority**: P1 (High)
 **Status**: In Progress - Core security rules implemented
 
@@ -935,7 +935,7 @@
 ### 3.2: High Severity Detectors (Weeks 13-16)
 
 **42 detectors, 4 weeks**
-**Progress**: 3/42 detectors completed
+**Progress**: 4/42 detectors completed
 
 - [x] ✅ **SEC-HIGH-001**: tx-origin
   - **Status**: DONE
@@ -974,7 +974,24 @@
     - Safe pattern allowance (>=, <=, >, <, -, +)
   - **Recommendation**: Use >= or <= for time conditions, avoid randomness, consider Chainlink VRF
 
-- [ ] ⏭️ **SEC-HIGH-004**: reentrancy (Next Priority - Complex)
+- [x] ✅ **SEC-HIGH-004**: uninitialized-state
+  - **Status**: DONE
+  - **Completed**: 2025-01-12
+  - **File**: `lib/rules/security/uninitialized-state.ts`
+  - **Test File**: `test/unit/rules/security/uninitialized-state.test.ts`
+  - **Test Results**: ✅ 17 tests passing
+  - **Severity**: WARNING
+  - **Description**: Detects uninitialized state variables (defaults to zero values)
+  - **Features**:
+    - State variable collection and analysis
+    - Constructor detection and initialization tracking
+    - Declaration-time initialization check
+    - constant/immutable variable exclusion
+    - Member access pattern support (this.variable)
+    - Multiple contracts support
+  - **Recommendation**: Explicitly initialize all state variables for clarity and safety
+
+- [ ] ⏭️ **SEC-HIGH-005**: reentrancy (Next Priority - Complex)
   - **Status**: TODO
   - **Priority**: P1
   - **Difficulty**: ⭐⭐⭐⭐⭐ (Very High)
