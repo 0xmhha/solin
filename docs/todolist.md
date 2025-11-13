@@ -2,7 +2,7 @@
 
 > **Last Updated**: 2025-01-13
 > **Current Phase**: Phase 2 - Lint Rules (In Progress)
-> **Overall Progress**: 50/251 tasks (19.9%)
+> **Overall Progress**: 51/251 tasks (20.3%)
 
 ## Status Legend
 
@@ -912,7 +912,7 @@
 ## Phase 3: Security Detectors
 
 **Timeline**: Weeks 12-19 (8 weeks)
-**Progress**: 15/99 tasks (15.2%)
+**Progress**: 16/99 tasks (16.2%)
 **Priority**: P1 (High)
 **Status**: In Progress - Core security rules implemented
 
@@ -1177,7 +1177,7 @@
 ### 3.3: Medium Severity Detectors (Weeks 17-18)
 
 **27 detectors, 2 weeks**
-**Progress**: 1/27 detectors completed (3.7%)
+**Progress**: 2/27 detectors completed (7.4%)
 
 - [x] ✅ **SEC-MEDIUM-001**: floating-pragma
   - **Status**: DONE
@@ -1197,6 +1197,25 @@
       - Non-solidity pragmas
   - **Recommendation**: Lock pragma to specific Solidity version (e.g., "pragma solidity 0.8.19;")
   - **Impact**: Ensures consistent bytecode across compilations, prevents version-dependent bugs
+
+- [x] ✅ **SEC-MEDIUM-002**: outdated-compiler
+  - **Status**: DONE
+  - **Completed**: 2025-01-13
+  - **File**: `lib/rules/security/outdated-compiler.ts`
+  - **Test File**: `test/unit/rules/security/outdated-compiler.test.ts`
+  - **Test Results**: ✅ 14 tests passing
+  - **Severity**: WARNING
+  - **Description**: Detects usage of outdated Solidity compiler versions
+  - **Features**:
+    - Minimum recommended version: 0.8.18
+    - Version parsing with operators (^, >=, <, etc.)
+    - Range pragma support
+    - Multiple version detection in ranges
+    - Safe pattern exclusions:
+      - 0.8.18 and higher
+      - Recent stable versions
+  - **Recommendation**: Update to Solidity 0.8.18 or higher for bug fixes and security patches
+  - **Impact**: Ensures use of compiler versions without known vulnerabilities
 
 ### 3.4: Low & Informational (Week 19)
 
@@ -1265,10 +1284,10 @@
 | Phase 0 | ✅ DONE | 5/8 (62.5%) | Week 1 |
 | Phase 1 | ✅ CORE COMPLETE | 20/45 (44.4%) | Weeks 2-5 |
 | Phase 2 | 🚧 IN PROGRESS | 12/81 (14.8%) | Weeks 6-11 |
-| Phase 3 | 🚧 IN PROGRESS | 15/99 (15.2%) | Weeks 12-19 |
+| Phase 3 | 🚧 IN PROGRESS | 16/99 (16.2%) | Weeks 12-19 |
 | Phase 4 | ⏭️ TODO | 0/8 (0%) | Weeks 20-22 |
 | Phase 5 | ⏭️ TODO | 0/10 (0%) | Weeks 23-26 |
-| **TOTAL** | | **50/251 (19.9%)** | **26 weeks** |
+| **TOTAL** | | **51/251 (20.3%)** | **26 weeks** |
 
 ### By Priority
 
@@ -1298,13 +1317,13 @@
 **Current Context**: 2025-01-13
 - Phase 1: Core Foundation - ✅ COMPLETE (20/45 tasks, 44.4%)
 - Phase 2: Lint Rules - 🚧 IN PROGRESS (12/81 tasks, 14.8%)
-- Phase 3: Security - 🚧 IN PROGRESS (15/99 tasks, 15.2%)
-- Total Progress: 50/251 tasks (19.9%)
+- Phase 3: Security - 🚧 IN PROGRESS (16/99 tasks, 16.2%)
+- Total Progress: 51/251 tasks (20.3%)
 
 **Recent Achievements**:
 - ✅ Core engine and rule framework complete
-- ✅ 26 rules implemented (11 lint + 15 security)
-- ✅ 526 tests passing, 37 test suites
+- ✅ 27 rules implemented (11 lint + 16 security)
+- ✅ 540 tests passing, 38 test suites
 - ✅ All using TDD methodology with comprehensive coverage
 - ✅ GitHub repository created: https://github.com/0xmhha/solin
 - ✅ Git author history corrected (0xmhha <mhha@wemade.com>)
@@ -1323,7 +1342,7 @@
    - no-empty-blocks (10 tests)
    - unused-state-variables (17 tests)
    - loop-invariant-code (12 tests)
-2. **Security Rules** (15 rules):
+2. **Security Rules** (16 rules):
    - **HIGH Severity** (14 rules):
      - tx-origin (11 tests)
      - unchecked-calls (13 tests)
@@ -1339,8 +1358,9 @@
      - locked-ether (16 tests)
      - divide-before-multiply (5 tests)
      - msg-value-loop (12 tests)
-   - **MEDIUM Severity** (1 rule):
-     - floating-pragma (13 tests) - **NEW!**
+   - **MEDIUM Severity** (2 rules):
+     - floating-pragma (13 tests)
+     - outdated-compiler (14 tests) - **NEW!**
 
 **Next Priority**:
 - **Primary**: More security detectors (continue Phase 3)
