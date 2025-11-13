@@ -27,3 +27,4 @@ export { ShadowingVariablesRule } from './security/shadowing-variables';
 export { SelfdestructRule } from './security/selfdestruct';
 export { ControlledDelegatecallRule } from './security/controlled-delegatecall';
 export { WeakPrngRule } from './security/weak-prng';
+export { UninitializedStorageRule } from './security/uninitialized-storage';
