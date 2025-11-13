@@ -2,7 +2,7 @@
 
 > **Last Updated**: 2025-01-13
 > **Current Phase**: Phase 2 - Lint Rules (In Progress)
-> **Overall Progress**: 52/251 tasks (20.7%)
+> **Overall Progress**: 53/251 tasks (21.1%)
 
 ## Status Legend
 
@@ -651,7 +651,7 @@
 ## Phase 2: Lint Rules
 
 **Timeline**: Weeks 6-11 (6 weeks)
-**Progress**: 12/81 tasks (14.8%)
+**Progress**: 13/81 tasks (16.0%)
 **Priority**: P1 (High)
 **Status**: In Progress - Core lint rules implemented
 
@@ -688,7 +688,7 @@
 ### 2.3: Best Practices Rules (Weeks 7-8)
 
 **25 rules, 2 weeks**
-**Progress**: 8/25 rules completed (32.0%)
+**Progress**: 9/25 rules completed (36.0%)
 
 - [x] ✅ **LINT-BP-001**: no-empty-blocks
   - **Status**: DONE
@@ -820,6 +820,27 @@
   - **Gas Optimization Impact**:
     - constant: Replaces SLOAD (2100+ gas) with direct value substitution
     - immutable: Replaces SLOAD with cheaper bytecode constant (~2000 gas savings per access)
+
+- [x] ✅ **LINT-BP-009**: boolean-equality
+  - **Status**: DONE
+  - **Completed**: 2025-01-13
+  - **File**: `lib/rules/lint/boolean-equality.ts`
+  - **Test File**: `test/unit/rules/lint/boolean-equality.test.ts`
+  - **Test Results**: ✅ 13 tests passing
+  - **Description**: Detects unnecessary explicit boolean comparisons (== true, != false)
+  - **Features**:
+    - Comparison operator detection (==, !=)
+    - Boolean literal identification
+    - Direct boolean usage recommendation
+    - Gas efficiency guidance
+  - **Implementation Notes**:
+    - Checks both left and right operands
+    - Supports BooleanLiteral and boolean Literal types
+    - Provides context-specific suggestions (negation for !=)
+  - **Code Quality Impact**:
+    - Improves readability with direct boolean usage
+    - Reduces bytecode size with simpler expressions
+    - Follows Solidity best practices
 
 ### 2.4: Code Style Rules (Weeks 9-10)
 
@@ -1302,18 +1323,18 @@
 |-------|--------|----------|----------------------|
 | Phase 0 | ✅ DONE | 5/8 (62.5%) | Week 1 |
 | Phase 1 | ✅ CORE COMPLETE | 20/45 (44.4%) | Weeks 2-5 |
-| Phase 2 | 🚧 IN PROGRESS | 12/81 (14.8%) | Weeks 6-11 |
+| Phase 2 | 🚧 IN PROGRESS | 13/81 (16.0%) | Weeks 6-11 |
 | Phase 3 | 🚧 IN PROGRESS | 17/99 (17.2%) | Weeks 12-19 |
 | Phase 4 | ⏭️ TODO | 0/8 (0%) | Weeks 20-22 |
 | Phase 5 | ⏭️ TODO | 0/10 (0%) | Weeks 23-26 |
-| **TOTAL** | | **52/251 (20.7%)** | **26 weeks** |
+| **TOTAL** | | **53/251 (21.1%)** | **26 weeks** |
 
 ### By Priority
 
 | Priority | Total | Done | In Progress | Todo |
 |----------|-------|------|-------------|------|
 | P0 (Critical) | 50 | 20 | 0 | 30 |
-| P1 (High) | 180 | 12 | 2 | 166 |
+| P1 (High) | 180 | 13 | 2 | 165 |
 | P2 (Medium) | 21 | 0 | 0 | 21 |
 | P3 (Low) | 0 | 0 | 0 | 0 |
 
@@ -1335,20 +1356,20 @@
 
 **Current Context**: 2025-01-13
 - Phase 1: Core Foundation - ✅ COMPLETE (20/45 tasks, 44.4%)
-- Phase 2: Lint Rules - 🚧 IN PROGRESS (12/81 tasks, 14.8%)
+- Phase 2: Lint Rules - 🚧 IN PROGRESS (13/81 tasks, 16.0%)
 - Phase 3: Security - 🚧 IN PROGRESS (17/99 tasks, 17.2%)
-- Total Progress: 52/251 tasks (20.7%)
+- Total Progress: 53/251 tasks (21.1%)
 
 **Recent Achievements**:
 - ✅ Core engine and rule framework complete
-- ✅ 28 rules implemented (11 lint + 17 security)
-- ✅ 552 tests passing, 39 test suites
+- ✅ 29 rules implemented (12 lint + 17 security)
+- ✅ 565 tests passing, 40 test suites
 - ✅ All using TDD methodology with comprehensive coverage
 - ✅ GitHub repository created: https://github.com/0xmhha/solin
 - ✅ Git author history corrected (0xmhha <mhha@wemade.com>)
 
 **Implemented Rules**:
-1. **Lint Rules** (11 rules):
+1. **Lint Rules** (12 rules):
    - naming-convention (20 tests)
    - visibility-modifiers (14 tests)
    - state-mutability (15 tests)
@@ -1361,6 +1382,7 @@
    - no-empty-blocks (10 tests)
    - unused-state-variables (17 tests)
    - loop-invariant-code (12 tests)
+   - boolean-equality (13 tests)
 2. **Security Rules** (17 rules):
    - **HIGH Severity** (14 rules):
      - tx-origin (11 tests)
@@ -1380,7 +1402,7 @@
    - **MEDIUM Severity** (3 rules):
      - floating-pragma (13 tests)
      - outdated-compiler (14 tests)
-     - assert-state-change (12 tests) - **NEW!**
+     - assert-state-change (12 tests)
 
 **Next Priority**:
 - **Primary**: More security detectors (continue Phase 3)
