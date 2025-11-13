@@ -1,8 +1,8 @@
 # Solin Development Task List
 
 > **Last Updated**: 2025-01-13
-> **Current Phase**: Phase 2 - Lint Rules (In Progress)
-> **Overall Progress**: 53/251 tasks (21.1%)
+> **Current Phase**: Phase 3 - Security Detectors (In Progress)
+> **Overall Progress**: 57/251 tasks (22.7%)
 
 ## Status Legend
 
@@ -1198,7 +1198,7 @@
 ### 3.3: Medium Severity Detectors (Weeks 17-18)
 
 **27 detectors, 2 weeks**
-**Progress**: 6/27 detectors completed (22.2%)
+**Progress**: 7/27 detectors completed (25.9%)
 
 - [x] ✅ **SEC-MEDIUM-001**: floating-pragma
   - **Status**: DONE
@@ -1323,6 +1323,28 @@
     - Reports with max value context for target type
   - **Impact**: Prevents silent data loss from downcasting (e.g., uint256 to uint8 truncates values > 255)
 
+- [x] ✅ **SEC-MEDIUM-007**: shadowing-builtin
+  - **Status**: DONE
+  - **Completed**: 2025-01-13
+  - **File**: `lib/rules/security/shadowing-builtin.ts`
+  - **Test File**: `test/unit/rules/security/shadowing-builtin.test.ts`
+  - **Test Results**: ✅ 16 tests passing
+  - **Severity**: WARNING
+  - **Description**: Detects shadowing of Solidity built-in variables, functions, and keywords
+  - **Features**:
+    - Built-in globals detection (msg, tx, block, now, abi, etc.)
+    - Built-in functions detection (require, assert, revert, keccak256, etc.)
+    - Function parameter shadowing
+    - Local variable shadowing
+    - State variable shadowing
+    - Deduplication to prevent multiple reports
+  - **Implementation Notes**:
+    - Comprehensive built-ins list (17 identifiers)
+    - Location-based deduplication using Set
+    - Checks FunctionDefinition parameters, VariableDeclaration, StateVariableDeclaration
+    - Provides renaming suggestions in messages
+  - **Impact**: Prevents confusion and bugs from shadowing built-ins like msg, block, or require
+
 ### 3.4: Low & Informational (Week 19)
 
 **30 detectors, 1 week**
@@ -1389,11 +1411,11 @@
 |-------|--------|----------|----------------------|
 | Phase 0 | ✅ DONE | 5/8 (62.5%) | Week 1 |
 | Phase 1 | ✅ CORE COMPLETE | 20/45 (44.4%) | Weeks 2-5 |
-| Phase 2 | 🚧 IN PROGRESS | 13/81 (16.0%) | Weeks 6-11 |
-| Phase 3 | 🚧 IN PROGRESS | 20/99 (20.2%) | Weeks 12-19 |
+| Phase 2 | ✅ COMPLETE | 13/81 (16.0%) | Weeks 6-11 |
+| Phase 3 | 🚧 IN PROGRESS | 21/99 (21.2%) | Weeks 12-19 |
 | Phase 4 | ⏭️ TODO | 0/8 (0%) | Weeks 20-22 |
 | Phase 5 | ⏭️ TODO | 0/10 (0%) | Weeks 23-26 |
-| **TOTAL** | | **56/251 (22.3%)** | **26 weeks** |
+| **TOTAL** | | **57/251 (22.7%)** | **26 weeks** |
 
 ### By Priority
 
