@@ -2,7 +2,7 @@
 
 > **Last Updated**: 2025-01-13
 > **Current Phase**: Phase 3 - Security Detectors (In Progress)
-> **Overall Progress**: 60/251 tasks (23.9%)
+> **Overall Progress**: 61/251 tasks (24.3%)
 
 ## Status Legend
 
@@ -1213,7 +1213,7 @@
 ### 3.3: Medium Severity Detectors (Weeks 17-18)
 
 **27 detectors, 2 weeks**
-**Progress**: 9/27 detectors completed (33.3%)
+**Progress**: 10/27 detectors completed (37.0%)
 
 - [x] ✅ **SEC-MEDIUM-001**: floating-pragma
   - **Status**: DONE
@@ -1410,6 +1410,31 @@
   - **Recommendation**: Always check return values with require(), assert(), or if statement
   - **Impact**: Prevents silent failures where external calls fail but execution continues
 
+- [x] ✅ **SEC-MEDIUM-010**: costly-loop
+  - **Status**: DONE
+  - **Completed**: 2025-01-13
+  - **File**: `lib/rules/security/costly-loop.ts`
+  - **Test File**: `test/unit/rules/security/costly-loop.test.ts`
+  - **Test Results**: ✅ 12 tests passing
+  - **Severity**: WARNING
+  - **Description**: Detects loops that iterate over unbounded dynamic arrays causing gas exhaustion and DoS
+  - **Features**:
+    - For loop detection with dynamic array iteration
+    - While loop detection with dynamic array access
+    - Do-while loop detection with dynamic array
+    - Nested loop detection
+    - Loop with external call detection
+    - Loop with state modification detection
+    - Fixed-size literal bound exclusion (e.g., i < 10)
+    - Multiple condition exclusion (e.g., i < n && i < 100)
+  - **Implementation Notes**:
+    - Checks if loop condition uses .length on dynamic array
+    - Does not distinguish fixed-size arrays from dynamic arrays at AST level (conservative approach)
+    - Excludes loops with literal number bounds
+    - Excludes loops with multiple conditions (assumed to have manual bounds)
+  - **Recommendation**: Use pagination, batch processing, pull-over-push pattern, or explicit iteration limits
+  - **Impact**: Prevents DoS via gas exhaustion where unbounded array growth makes transactions fail
+
 ### 3.4: Low & Informational (Week 19)
 
 **30 detectors, 1 week**
@@ -1477,10 +1502,10 @@
 | Phase 0 | ✅ DONE | 5/8 (62.5%) | Week 1 |
 | Phase 1 | ✅ CORE COMPLETE | 20/45 (44.4%) | Weeks 2-5 |
 | Phase 2 | ✅ COMPLETE | 13/81 (16.0%) | Weeks 6-11 |
-| Phase 3 | 🚧 IN PROGRESS | 23/99 (23.2%) | Weeks 12-19 |
+| Phase 3 | 🚧 IN PROGRESS | 24/99 (24.2%) | Weeks 12-19 |
 | Phase 4 | ⏭️ TODO | 0/8 (0%) | Weeks 20-22 |
 | Phase 5 | ⏭️ TODO | 0/10 (0%) | Weeks 23-26 |
-| **TOTAL** | | **59/251 (23.5%)** | **26 weeks** |
+| **TOTAL** | | **61/251 (24.3%)** | **26 weeks** |
 
 ### By Priority
 
