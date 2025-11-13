@@ -2,7 +2,7 @@
 
 > **Last Updated**: 2025-01-13
 > **Current Phase**: Phase 2 - Lint Rules (In Progress)
-> **Overall Progress**: 49/251 tasks (19.5%)
+> **Overall Progress**: 50/251 tasks (19.9%)
 
 ## Status Legend
 
@@ -912,7 +912,7 @@
 ## Phase 3: Security Detectors
 
 **Timeline**: Weeks 12-19 (8 weeks)
-**Progress**: 14/99 tasks (14.1%)
+**Progress**: 15/99 tasks (15.2%)
 **Priority**: P1 (High)
 **Status**: In Progress - Core security rules implemented
 
@@ -1177,6 +1177,26 @@
 ### 3.3: Medium Severity Detectors (Weeks 17-18)
 
 **27 detectors, 2 weeks**
+**Progress**: 1/27 detectors completed (3.7%)
+
+- [x] ✅ **SEC-MEDIUM-001**: floating-pragma
+  - **Status**: DONE
+  - **Completed**: 2025-01-13
+  - **File**: `lib/rules/security/floating-pragma.ts`
+  - **Test File**: `test/unit/rules/security/floating-pragma.test.ts`
+  - **Test Results**: ✅ 13 tests passing
+  - **Severity**: WARNING
+  - **Description**: Detects non-fixed pragma directives that allow multiple compiler versions
+  - **Features**:
+    - Floating operator detection: ^, >, <, >=, <=
+    - Range pragma detection (e.g., >=0.7.0 <0.9.0)
+    - Complex range detection
+    - Safe pattern exclusions:
+      - Fixed version (0.8.19)
+      - Exact version with = operator
+      - Non-solidity pragmas
+  - **Recommendation**: Lock pragma to specific Solidity version (e.g., "pragma solidity 0.8.19;")
+  - **Impact**: Ensures consistent bytecode across compilations, prevents version-dependent bugs
 
 ### 3.4: Low & Informational (Week 19)
 
@@ -1245,10 +1265,10 @@
 | Phase 0 | ✅ DONE | 5/8 (62.5%) | Week 1 |
 | Phase 1 | ✅ CORE COMPLETE | 20/45 (44.4%) | Weeks 2-5 |
 | Phase 2 | 🚧 IN PROGRESS | 12/81 (14.8%) | Weeks 6-11 |
-| Phase 3 | 🚧 IN PROGRESS | 14/99 (14.1%) | Weeks 12-19 |
+| Phase 3 | 🚧 IN PROGRESS | 15/99 (15.2%) | Weeks 12-19 |
 | Phase 4 | ⏭️ TODO | 0/8 (0%) | Weeks 20-22 |
 | Phase 5 | ⏭️ TODO | 0/10 (0%) | Weeks 23-26 |
-| **TOTAL** | | **49/251 (19.5%)** | **26 weeks** |
+| **TOTAL** | | **50/251 (19.9%)** | **26 weeks** |
 
 ### By Priority
 
@@ -1278,13 +1298,13 @@
 **Current Context**: 2025-01-13
 - Phase 1: Core Foundation - ✅ COMPLETE (20/45 tasks, 44.4%)
 - Phase 2: Lint Rules - 🚧 IN PROGRESS (12/81 tasks, 14.8%)
-- Phase 3: Security - 🚧 IN PROGRESS (14/99 tasks, 14.1%)
-- Total Progress: 49/251 tasks (19.5%)
+- Phase 3: Security - 🚧 IN PROGRESS (15/99 tasks, 15.2%)
+- Total Progress: 50/251 tasks (19.9%)
 
 **Recent Achievements**:
 - ✅ Core engine and rule framework complete
-- ✅ 25 rules implemented (11 lint + 14 security)
-- ✅ 513 tests passing, 36 test suites
+- ✅ 26 rules implemented (11 lint + 15 security)
+- ✅ 526 tests passing, 37 test suites
 - ✅ All using TDD methodology with comprehensive coverage
 - ✅ GitHub repository created: https://github.com/0xmhha/solin
 - ✅ Git author history corrected (0xmhha <mhha@wemade.com>)
@@ -1303,21 +1323,24 @@
    - no-empty-blocks (10 tests)
    - unused-state-variables (17 tests)
    - loop-invariant-code (12 tests)
-2. **Security Rules** (14 rules):
-   - tx-origin (11 tests)
-   - unchecked-calls (13 tests)
-   - timestamp-dependence (15 tests)
-   - uninitialized-state (17 tests)
-   - arbitrary-send (16 tests)
-   - delegatecall-in-loop (16 tests)
-   - shadowing-variables (15 tests)
-   - selfdestruct (14 tests)
-   - controlled-delegatecall (17 tests)
-   - weak-prng (17 tests)
-   - uninitialized-storage (14 tests)
-   - locked-ether (16 tests)
-   - divide-before-multiply (5 tests)
-   - msg-value-loop (12 tests) - **NEW!**
+2. **Security Rules** (15 rules):
+   - **HIGH Severity** (14 rules):
+     - tx-origin (11 tests)
+     - unchecked-calls (13 tests)
+     - timestamp-dependence (15 tests)
+     - uninitialized-state (17 tests)
+     - arbitrary-send (16 tests)
+     - delegatecall-in-loop (16 tests)
+     - shadowing-variables (15 tests)
+     - selfdestruct (14 tests)
+     - controlled-delegatecall (17 tests)
+     - weak-prng (17 tests)
+     - uninitialized-storage (14 tests)
+     - locked-ether (16 tests)
+     - divide-before-multiply (5 tests)
+     - msg-value-loop (12 tests)
+   - **MEDIUM Severity** (1 rule):
+     - floating-pragma (13 tests) - **NEW!**
 
 **Next Priority**:
 - **Primary**: More security detectors (continue Phase 3)
