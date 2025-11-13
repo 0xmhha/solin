@@ -2,7 +2,7 @@
 
 > **Last Updated**: 2025-01-12
 > **Current Phase**: Phase 2 - Lint Rules (In Progress)
-> **Overall Progress**: 44/251 tasks (17.5%)
+> **Overall Progress**: 45/251 tasks (17.9%)
 
 ## Status Legend
 
@@ -912,7 +912,7 @@
 ## Phase 3: Security Detectors
 
 **Timeline**: Weeks 12-19 (8 weeks)
-**Progress**: 9/99 tasks (9.1%)
+**Progress**: 10/99 tasks (10.1%)
 **Priority**: P1 (High)
 **Status**: In Progress - Core security rules implemented
 
@@ -935,7 +935,7 @@
 ### 3.2: High Severity Detectors (Weeks 13-16)
 
 **42 detectors, 4 weeks**
-**Progress**: 9/42 detectors completed
+**Progress**: 10/42 detectors completed
 
 - [x] ✅ **SEC-HIGH-001**: tx-origin
   - **Status**: DONE
@@ -1085,7 +1085,27 @@
       - hardcoded address literals (0x...)
   - **Recommendation**: Use whitelist of approved addresses, implement strict access controls, or use immutable/constant addresses for delegatecall targets
 
-- [ ] ⏭️ **SEC-HIGH-011**: reentrancy (Next Priority - Complex)
+- [x] ✅ **SEC-HIGH-012**: weak-prng
+  - **Status**: DONE
+  - **Completed**: 2025-01-12
+  - **File**: `lib/rules/security/weak-prng.ts`
+  - **Test File**: `test/unit/rules/security/weak-prng.test.ts`
+  - **Test Results**: ✅ 17 tests passing
+  - **Severity**: ERROR (HIGH)
+  - **Description**: Detects weak pseudo-random number generation using predictable block properties
+  - **Features**:
+    - block.timestamp with modulo detection
+    - blockhash with modulo detection
+    - block.number/prevrandao/difficulty with modulo
+    - keccak256/sha256 containing block properties
+    - Deprecated 'now' keyword detection
+    - Nested expression and binary operation support
+    - Safe pattern exclusions:
+      - Time comparisons (>, <, >=, <=) without randomness
+      - Block range checks
+  - **Recommendation**: Use Chainlink VRF or oracle-based randomness. Never rely on block properties for security-critical randomness in gambling/lotteries/NFTs
+
+- [ ] ⏭️ **SEC-HIGH-013**: reentrancy (Next Priority - Complex)
   - **Status**: TODO
   - **Priority**: P1
   - **Difficulty**: ⭐⭐⭐⭐⭐ (Very High)
@@ -1165,17 +1185,17 @@
 | Phase 0 | ✅ DONE | 5/8 (62.5%) | Week 1 |
 | Phase 1 | ✅ CORE COMPLETE | 20/45 (44.4%) | Weeks 2-5 |
 | Phase 2 | 🚧 IN PROGRESS | 10/81 (12.3%) | Weeks 6-11 |
-| Phase 3 | 🚧 IN PROGRESS | 9/99 (9.1%) | Weeks 12-19 |
+| Phase 3 | 🚧 IN PROGRESS | 10/99 (10.1%) | Weeks 12-19 |
 | Phase 4 | ⏭️ TODO | 0/8 (0%) | Weeks 20-22 |
 | Phase 5 | ⏭️ TODO | 0/10 (0%) | Weeks 23-26 |
-| **TOTAL** | | **44/251 (17.5%)** | **26 weeks** |
+| **TOTAL** | | **45/251 (17.9%)** | **26 weeks** |
 
 ### By Priority
 
 | Priority | Total | Done | In Progress | Todo |
 |----------|-------|------|-------------|------|
 | P0 (Critical) | 50 | 20 | 0 | 30 |
-| P1 (High) | 180 | 9 | 2 | 169 |
+| P1 (High) | 180 | 10 | 2 | 168 |
 | P2 (Medium) | 21 | 0 | 0 | 21 |
 | P3 (Low) | 0 | 0 | 0 | 0 |
 
@@ -1198,13 +1218,13 @@
 **Current Context**: 2025-01-12
 - Phase 1: Core Foundation - ✅ COMPLETE (20/45 tasks, 44.4%)
 - Phase 2: Lint Rules - 🚧 IN PROGRESS (10/81 tasks, 12.3%)
-- Phase 3: Security - 🚧 IN PROGRESS (9/99 tasks, 9.1%)
-- Total Progress: 44/251 tasks (17.5%)
+- Phase 3: Security - 🚧 IN PROGRESS (10/99 tasks, 10.1%)
+- Total Progress: 45/251 tasks (17.9%)
 
 **Recent Achievements**:
 - ✅ Core engine and rule framework complete
-- ✅ 18 rules implemented (9 lint + 9 security)
-- ✅ 449 tests passing, 31 test suites
+- ✅ 19 rules implemented (9 lint + 10 security)
+- ✅ 466 tests passing, 32 test suites
 - ✅ All using TDD methodology with comprehensive coverage
 - ✅ GitHub repository created: https://github.com/0xmhha/solin
 - ✅ Git author history corrected (0xmhha <mhha@wemade.com>)
@@ -1221,7 +1241,7 @@
    - constant-immutable (18 tests)
    - cache-array-length (17 tests)
    - no-empty-blocks (10 tests)
-2. **Security Rules** (9 rules):
+2. **Security Rules** (10 rules):
    - tx-origin (11 tests)
    - unchecked-calls (13 tests)
    - timestamp-dependence (15 tests)
@@ -1230,11 +1250,12 @@
    - delegatecall-in-loop (16 tests)
    - shadowing-variables (15 tests)
    - selfdestruct (14 tests)
-   - controlled-delegatecall (17 tests) - **NEW!**
+   - controlled-delegatecall (17 tests)
+   - weak-prng (17 tests) - **NEW!**
 
 **Next Priority**:
 - **Primary**: More security detectors (continue Phase 3)
-  - Next HIGH severity: integer-overflow, weak-prng, or locked-ether (⭐⭐⭐-⭐⭐⭐⭐ difficulty)
+  - Next HIGH severity: locked-ether, integer-overflow, or uninitialized-storage (⭐⭐⭐-⭐⭐⭐⭐ difficulty)
 - **Alternative**: More lint rules (continue Phase 2)
   - code style rules (indentation, spacing, etc.)
   - additional best practices rules
