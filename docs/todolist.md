@@ -933,7 +933,7 @@
 ## Phase 3: Security Detectors
 
 **Timeline**: Weeks 12-19 (8 weeks)
-**Progress**: 19/99 tasks (19.2%)
+**Progress**: 20/99 tasks (20.2%)
 **Priority**: P1 (High)
 **Status**: In Progress - Core security rules implemented
 
@@ -1198,7 +1198,7 @@
 ### 3.3: Medium Severity Detectors (Weeks 17-18)
 
 **27 detectors, 2 weeks**
-**Progress**: 5/27 detectors completed (18.5%)
+**Progress**: 6/27 detectors completed (22.2%)
 
 - [x] ✅ **SEC-MEDIUM-001**: floating-pragma
   - **Status**: DONE
@@ -1302,6 +1302,27 @@
     - Reports per-function (not per-state-change)
   - **Impact**: Enables transparency and off-chain monitoring of critical state changes
 
+- [x] ✅ **SEC-MEDIUM-006**: unsafe-cast
+  - **Status**: DONE
+  - **Completed**: 2025-01-13
+  - **File**: `lib/rules/security/unsafe-cast.ts`
+  - **Test File**: `test/unit/rules/security/unsafe-cast.test.ts`
+  - **Test Results**: ✅ 15 tests passing
+  - **Severity**: WARNING
+  - **Description**: Detects unsafe integer type downcasts that may cause data loss
+  - **Features**:
+    - Integer downcast detection (uint/int types)
+    - Bit width comparison (larger to smaller)
+    - Signed/unsigned type support
+    - Safe upcast exclusion
+    - ElementaryTypeName AST handling
+  - **Implementation Notes**:
+    - Parses bit widths from type names (uint8, uint256, int128, etc.)
+    - Infers source types from expressions (defaults to uint256)
+    - Detects FunctionCall nodes with ElementaryTypeName expressions
+    - Reports with max value context for target type
+  - **Impact**: Prevents silent data loss from downcasting (e.g., uint256 to uint8 truncates values > 255)
+
 ### 3.4: Low & Informational (Week 19)
 
 **30 detectors, 1 week**
@@ -1369,17 +1390,17 @@
 | Phase 0 | ✅ DONE | 5/8 (62.5%) | Week 1 |
 | Phase 1 | ✅ CORE COMPLETE | 20/45 (44.4%) | Weeks 2-5 |
 | Phase 2 | 🚧 IN PROGRESS | 13/81 (16.0%) | Weeks 6-11 |
-| Phase 3 | 🚧 IN PROGRESS | 19/99 (19.2%) | Weeks 12-19 |
+| Phase 3 | 🚧 IN PROGRESS | 20/99 (20.2%) | Weeks 12-19 |
 | Phase 4 | ⏭️ TODO | 0/8 (0%) | Weeks 20-22 |
 | Phase 5 | ⏭️ TODO | 0/10 (0%) | Weeks 23-26 |
-| **TOTAL** | | **55/251 (21.9%)** | **26 weeks** |
+| **TOTAL** | | **56/251 (22.3%)** | **26 weeks** |
 
 ### By Priority
 
 | Priority | Total | Done | In Progress | Todo |
 |----------|-------|------|-------------|------|
 | P0 (Critical) | 50 | 20 | 0 | 30 |
-| P1 (High) | 180 | 15 | 2 | 163 |
+| P1 (High) | 180 | 16 | 2 | 162 |
 | P2 (Medium) | 21 | 0 | 0 | 21 |
 | P3 (Low) | 0 | 0 | 0 | 0 |
 
@@ -1402,13 +1423,13 @@
 **Current Context**: 2025-01-13
 - Phase 1: Core Foundation - ✅ COMPLETE (20/45 tasks, 44.4%)
 - Phase 2: Lint Rules - 🚧 IN PROGRESS (13/81 tasks, 16.0%)
-- Phase 3: Security - 🚧 IN PROGRESS (19/99 tasks, 19.2%)
-- Total Progress: 55/251 tasks (21.9%)
+- Phase 3: Security - 🚧 IN PROGRESS (20/99 tasks, 20.2%)
+- Total Progress: 56/251 tasks (22.3%)
 
 **Recent Achievements**:
 - ✅ Core engine and rule framework complete
-- ✅ 31 rules implemented (12 lint + 19 security)
-- ✅ 595 tests passing, 42 test suites
+- ✅ 32 rules implemented (12 lint + 20 security)
+- ✅ 610 tests passing, 43 test suites
 - ✅ All using TDD methodology with comprehensive coverage
 - ✅ GitHub repository created: https://github.com/0xmhha/solin
 - ✅ Git author history corrected (0xmhha <mhha@wemade.com>)
@@ -1428,7 +1449,7 @@
    - unused-state-variables (17 tests)
    - loop-invariant-code (12 tests)
    - boolean-equality (13 tests)
-2. **Security Rules** (19 rules):
+2. **Security Rules** (20 rules):
    - **HIGH Severity** (14 rules):
      - tx-origin (11 tests)
      - unchecked-calls (13 tests)
@@ -1444,12 +1465,13 @@
      - locked-ether (16 tests)
      - divide-before-multiply (5 tests)
      - msg-value-loop (12 tests)
-   - **MEDIUM Severity** (5 rules):
+   - **MEDIUM Severity** (6 rules):
      - floating-pragma (13 tests)
      - outdated-compiler (14 tests)
      - assert-state-change (12 tests)
      - missing-zero-check (15 tests)
      - missing-events (15 tests)
+     - unsafe-cast (15 tests)
 
 **Next Priority**:
 - **Primary**: More security detectors (continue Phase 3)
