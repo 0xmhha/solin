@@ -933,7 +933,7 @@
 ## Phase 3: Security Detectors
 
 **Timeline**: Weeks 12-19 (8 weeks)
-**Progress**: 17/99 tasks (17.2%)
+**Progress**: 18/99 tasks (18.2%)
 **Priority**: P1 (High)
 **Status**: In Progress - Core security rules implemented
 
@@ -1198,7 +1198,7 @@
 ### 3.3: Medium Severity Detectors (Weeks 17-18)
 
 **27 detectors, 2 weeks**
-**Progress**: 3/27 detectors completed (11.1%)
+**Progress**: 4/27 detectors completed (14.8%)
 
 - [x] ✅ **SEC-MEDIUM-001**: floating-pragma
   - **Status**: DONE
@@ -1256,6 +1256,29 @@
       - Boolean literals
   - **Recommendation**: Use require() for validation with state changes, reserve assert() for invariant checks only
   - **Impact**: Prevents excessive gas consumption on failure (assert consumes all gas)
+
+- [x] ✅ **SEC-MEDIUM-004**: missing-zero-check
+  - **Status**: DONE
+  - **Completed**: 2025-01-13
+  - **File**: `lib/rules/security/missing-zero-check.ts`
+  - **Test File**: `test/unit/rules/security/missing-zero-check.test.ts`
+  - **Test Results**: ✅ 15 tests passing
+  - **Severity**: WARNING
+  - **Description**: Detects functions with address parameters lacking zero-address validation
+  - **Features**:
+    - Constructor and function parameter detection
+    - Payable address support
+    - Multiple address parameters handling
+    - Zero-address check validation (require, assert, if-revert)
+    - Internal/private function exclusion
+    - View/pure function exclusion
+  - **Implementation Notes**:
+    - Checks public and external functions only
+    - Validates all address and address payable parameters
+    - Detects require/assert with address(0) comparison
+    - Detects if-statement with zero-address checks
+    - Reports per-parameter issues for clarity
+  - **Impact**: Prevents loss of funds or control by accidental zero-address assignments
 
 ### 3.4: Low & Informational (Week 19)
 
@@ -1324,17 +1347,17 @@
 | Phase 0 | ✅ DONE | 5/8 (62.5%) | Week 1 |
 | Phase 1 | ✅ CORE COMPLETE | 20/45 (44.4%) | Weeks 2-5 |
 | Phase 2 | 🚧 IN PROGRESS | 13/81 (16.0%) | Weeks 6-11 |
-| Phase 3 | 🚧 IN PROGRESS | 17/99 (17.2%) | Weeks 12-19 |
+| Phase 3 | 🚧 IN PROGRESS | 18/99 (18.2%) | Weeks 12-19 |
 | Phase 4 | ⏭️ TODO | 0/8 (0%) | Weeks 20-22 |
 | Phase 5 | ⏭️ TODO | 0/10 (0%) | Weeks 23-26 |
-| **TOTAL** | | **53/251 (21.1%)** | **26 weeks** |
+| **TOTAL** | | **54/251 (21.5%)** | **26 weeks** |
 
 ### By Priority
 
 | Priority | Total | Done | In Progress | Todo |
 |----------|-------|------|-------------|------|
 | P0 (Critical) | 50 | 20 | 0 | 30 |
-| P1 (High) | 180 | 13 | 2 | 165 |
+| P1 (High) | 180 | 14 | 2 | 164 |
 | P2 (Medium) | 21 | 0 | 0 | 21 |
 | P3 (Low) | 0 | 0 | 0 | 0 |
 
@@ -1357,13 +1380,13 @@
 **Current Context**: 2025-01-13
 - Phase 1: Core Foundation - ✅ COMPLETE (20/45 tasks, 44.4%)
 - Phase 2: Lint Rules - 🚧 IN PROGRESS (13/81 tasks, 16.0%)
-- Phase 3: Security - 🚧 IN PROGRESS (17/99 tasks, 17.2%)
-- Total Progress: 53/251 tasks (21.1%)
+- Phase 3: Security - 🚧 IN PROGRESS (18/99 tasks, 18.2%)
+- Total Progress: 54/251 tasks (21.5%)
 
 **Recent Achievements**:
 - ✅ Core engine and rule framework complete
-- ✅ 29 rules implemented (12 lint + 17 security)
-- ✅ 565 tests passing, 40 test suites
+- ✅ 30 rules implemented (12 lint + 18 security)
+- ✅ 580 tests passing, 41 test suites
 - ✅ All using TDD methodology with comprehensive coverage
 - ✅ GitHub repository created: https://github.com/0xmhha/solin
 - ✅ Git author history corrected (0xmhha <mhha@wemade.com>)
@@ -1383,7 +1406,7 @@
    - unused-state-variables (17 tests)
    - loop-invariant-code (12 tests)
    - boolean-equality (13 tests)
-2. **Security Rules** (17 rules):
+2. **Security Rules** (18 rules):
    - **HIGH Severity** (14 rules):
      - tx-origin (11 tests)
      - unchecked-calls (13 tests)
@@ -1399,10 +1422,11 @@
      - locked-ether (16 tests)
      - divide-before-multiply (5 tests)
      - msg-value-loop (12 tests)
-   - **MEDIUM Severity** (3 rules):
+   - **MEDIUM Severity** (4 rules):
      - floating-pragma (13 tests)
      - outdated-compiler (14 tests)
      - assert-state-change (12 tests)
+     - missing-zero-check (15 tests)
 
 **Next Priority**:
 - **Primary**: More security detectors (continue Phase 3)
