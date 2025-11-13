@@ -2,7 +2,7 @@
 
 > **Last Updated**: 2025-01-13
 > **Current Phase**: Phase 3 - Security Detectors (In Progress)
-> **Overall Progress**: 57/251 tasks (22.7%)
+> **Overall Progress**: 58/251 tasks (23.1%)
 
 ## Status Legend
 
@@ -956,7 +956,7 @@
 ### 3.2: High Severity Detectors (Weeks 13-16)
 
 **42 detectors, 4 weeks**
-**Progress**: 14/42 detectors completed (33.3%)
+**Progress**: 15/42 detectors completed (35.7%)
 
 - [x] ✅ **SEC-HIGH-001**: tx-origin
   - **Status**: DONE
@@ -1146,14 +1146,29 @@
   - **Recommendation**: Always initialize storage pointers, use memory instead, upgrade to Solidity 0.5.0+
   - **Note**: Compilation error in Solidity 0.5.0+, critical vulnerability in < 0.5.0
 
-- [ ] ⏭️ **SEC-HIGH-015**: reentrancy (Next Priority - Complex)
-  - **Status**: TODO
-  - **Priority**: P1
-  - **Difficulty**: ⭐⭐⭐⭐⭐ (Very High)
-  - **Estimated Effort**: 3-5 days
-  - **Description**: Detects reentrancy vulnerabilities
-  - **Requirements**: Control flow analysis, state change tracking, external call detection
-  - **Note**: Most complex security detector, requires SEC-002
+- [x] ✅ **SEC-HIGH-015**: reentrancy
+  - **Status**: DONE
+  - **Completed**: 2025-01-13
+  - **File**: `lib/rules/security/reentrancy.ts`
+  - **Test File**: `test/unit/rules/security/reentrancy.test.ts`
+  - **Test Results**: ✅ 16 tests passing
+  - **Severity**: ERROR (HIGH)
+  - **Description**: Detects reentrancy vulnerabilities where external calls are made before state updates
+  - **Features**:
+    - External call detection (.call, .delegatecall, .transfer, .send)
+    - External contract function call detection
+    - State change tracking (variable assignments)
+    - Cross-function reentrancy detection (internal function calls)
+    - View/pure function exclusion
+    - NonReentrant modifier detection
+    - Checks-effects-interactions pattern validation
+  - **Implementation Notes**:
+    - Two-pass analysis: collect function definitions, then analyze
+    - Line number comparison for call-before-state-change detection
+    - Recursive collection of state changes from internal functions
+    - Conservative approach: assumes external functions are state-changing unless proven view/pure
+  - **Recommendation**: Follow checks-effects-interactions pattern, use ReentrancyGuard from OpenZeppelin
+  - **Impact**: Prevents The DAO-style attacks ($60M exploit) where attackers recursively drain funds
 
 - [x] ✅ **SEC-HIGH-016**: locked-ether
   - **Status**: DONE
@@ -1412,10 +1427,10 @@
 | Phase 0 | ✅ DONE | 5/8 (62.5%) | Week 1 |
 | Phase 1 | ✅ CORE COMPLETE | 20/45 (44.4%) | Weeks 2-5 |
 | Phase 2 | ✅ COMPLETE | 13/81 (16.0%) | Weeks 6-11 |
-| Phase 3 | 🚧 IN PROGRESS | 21/99 (21.2%) | Weeks 12-19 |
+| Phase 3 | 🚧 IN PROGRESS | 22/99 (22.2%) | Weeks 12-19 |
 | Phase 4 | ⏭️ TODO | 0/8 (0%) | Weeks 20-22 |
 | Phase 5 | ⏭️ TODO | 0/10 (0%) | Weeks 23-26 |
-| **TOTAL** | | **57/251 (22.7%)** | **26 weeks** |
+| **TOTAL** | | **58/251 (23.1%)** | **26 weeks** |
 
 ### By Priority
 
