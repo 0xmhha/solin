@@ -2,7 +2,7 @@
 
 > **Last Updated**: 2025-01-13
 > **Current Phase**: Phase 3 - Security Detectors (In Progress)
-> **Overall Progress**: 58/251 tasks (23.1%)
+> **Overall Progress**: 59/251 tasks (23.5%)
 
 ## Status Legend
 
@@ -1213,7 +1213,7 @@
 ### 3.3: Medium Severity Detectors (Weeks 17-18)
 
 **27 detectors, 2 weeks**
-**Progress**: 7/27 detectors completed (25.9%)
+**Progress**: 8/27 detectors completed (29.6%)
 
 - [x] ✅ **SEC-MEDIUM-001**: floating-pragma
   - **Status**: DONE
@@ -1360,6 +1360,31 @@
     - Provides renaming suggestions in messages
   - **Impact**: Prevents confusion and bugs from shadowing built-ins like msg, block, or require
 
+- [x] ✅ **SEC-MEDIUM-008**: unchecked-send
+  - **Status**: DONE
+  - **Completed**: 2025-01-13
+  - **File**: `lib/rules/security/unchecked-send.ts`
+  - **Test File**: `test/unit/rules/security/unchecked-send.test.ts`
+  - **Test Results**: ✅ 13 tests passing
+  - **Severity**: WARNING
+  - **Description**: Detects send() calls without checking the return value
+  - **Features**:
+    - Direct send() call detection
+    - Variable assignment tracking (send assigned to variable)
+    - require/assert check detection
+    - if statement condition check detection
+    - Ternary expression check detection
+    - Boolean variable usage tracking
+    - Two-pass analysis per function
+  - **Implementation Notes**:
+    - Function-level analysis with separate state per function
+    - First pass: identify checked variables and send calls
+    - Second pass: report unchecked sends
+    - Prevents duplicate reports for variable-assigned sends
+    - Distinguishes transfer() from send() (only send() needs checking)
+  - **Recommendation**: Use require(addr.send(amount), "Failed") or transfer() which reverts automatically
+  - **Impact**: Prevents silent failures where ether transfer fails but execution continues, leading to fund loss
+
 ### 3.4: Low & Informational (Week 19)
 
 **30 detectors, 1 week**
@@ -1427,10 +1452,10 @@
 | Phase 0 | ✅ DONE | 5/8 (62.5%) | Week 1 |
 | Phase 1 | ✅ CORE COMPLETE | 20/45 (44.4%) | Weeks 2-5 |
 | Phase 2 | ✅ COMPLETE | 13/81 (16.0%) | Weeks 6-11 |
-| Phase 3 | 🚧 IN PROGRESS | 22/99 (22.2%) | Weeks 12-19 |
+| Phase 3 | 🚧 IN PROGRESS | 23/99 (23.2%) | Weeks 12-19 |
 | Phase 4 | ⏭️ TODO | 0/8 (0%) | Weeks 20-22 |
 | Phase 5 | ⏭️ TODO | 0/10 (0%) | Weeks 23-26 |
-| **TOTAL** | | **58/251 (23.1%)** | **26 weeks** |
+| **TOTAL** | | **59/251 (23.5%)** | **26 weeks** |
 
 ### By Priority
 
