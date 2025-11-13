@@ -2,7 +2,7 @@
 
 > **Last Updated**: 2025-01-12
 > **Current Phase**: Phase 2 - Lint Rules (In Progress)
-> **Overall Progress**: 46/251 tasks (18.3%)
+> **Overall Progress**: 47/251 tasks (18.7%)
 
 ## Status Legend
 
@@ -912,7 +912,7 @@
 ## Phase 3: Security Detectors
 
 **Timeline**: Weeks 12-19 (8 weeks)
-**Progress**: 11/99 tasks (11.1%)
+**Progress**: 12/99 tasks (12.1%)
 **Priority**: P1 (High)
 **Status**: In Progress - Core security rules implemented
 
@@ -935,7 +935,7 @@
 ### 3.2: High Severity Detectors (Weeks 13-16)
 
 **42 detectors, 4 weeks**
-**Progress**: 11/42 detectors completed
+**Progress**: 12/42 detectors completed
 
 - [x] ✅ **SEC-HIGH-001**: tx-origin
   - **Status**: DONE
@@ -1205,17 +1205,17 @@
 | Phase 0 | ✅ DONE | 5/8 (62.5%) | Week 1 |
 | Phase 1 | ✅ CORE COMPLETE | 20/45 (44.4%) | Weeks 2-5 |
 | Phase 2 | 🚧 IN PROGRESS | 10/81 (12.3%) | Weeks 6-11 |
-| Phase 3 | 🚧 IN PROGRESS | 11/99 (11.1%) | Weeks 12-19 |
+| Phase 3 | 🚧 IN PROGRESS | 12/99 (12.1%) | Weeks 12-19 |
 | Phase 4 | ⏭️ TODO | 0/8 (0%) | Weeks 20-22 |
 | Phase 5 | ⏭️ TODO | 0/10 (0%) | Weeks 23-26 |
-| **TOTAL** | | **46/251 (18.3%)** | **26 weeks** |
+| **TOTAL** | | **47/251 (18.7%)** | **26 weeks** |
 
 ### By Priority
 
 | Priority | Total | Done | In Progress | Todo |
 |----------|-------|------|-------------|------|
 | P0 (Critical) | 50 | 20 | 0 | 30 |
-| P1 (High) | 180 | 11 | 2 | 167 |
+| P1 (High) | 180 | 12 | 2 | 166 |
 | P2 (Medium) | 21 | 0 | 0 | 21 |
 | P3 (Low) | 0 | 0 | 0 | 0 |
 
@@ -1238,13 +1238,13 @@
 **Current Context**: 2025-01-12
 - Phase 1: Core Foundation - ✅ COMPLETE (20/45 tasks, 44.4%)
 - Phase 2: Lint Rules - 🚧 IN PROGRESS (10/81 tasks, 12.3%)
-- Phase 3: Security - 🚧 IN PROGRESS (11/99 tasks, 11.1%)
-- Total Progress: 46/251 tasks (18.3%)
+- Phase 3: Security - 🚧 IN PROGRESS (12/99 tasks, 12.1%)
+- Total Progress: 47/251 tasks (18.7%)
 
 **Recent Achievements**:
 - ✅ Core engine and rule framework complete
-- ✅ 20 rules implemented (9 lint + 11 security)
-- ✅ 480 tests passing, 33 test suites
+- ✅ 21 rules implemented (9 lint + 12 security)
+- ✅ 496 tests passing, 34 test suites
 - ✅ All using TDD methodology with comprehensive coverage
 - ✅ GitHub repository created: https://github.com/0xmhha/solin
 - ✅ Git author history corrected (0xmhha <mhha@wemade.com>)
@@ -1272,7 +1272,8 @@
    - selfdestruct (14 tests)
    - controlled-delegatecall (17 tests)
    - weak-prng (17 tests)
-   - uninitialized-storage (14 tests) - **NEW!**
+   - uninitialized-storage (14 tests)
+   - locked-ether (16 tests) - **NEW!**
 
 **Next Priority**:
 - **Primary**: More security detectors (continue Phase 3)
