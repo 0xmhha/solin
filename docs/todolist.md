@@ -2,7 +2,7 @@
 
 > **Last Updated**: 2025-01-12
 > **Current Phase**: Phase 2 - Lint Rules (In Progress)
-> **Overall Progress**: 45/251 tasks (17.9%)
+> **Overall Progress**: 46/251 tasks (18.3%)
 
 ## Status Legend
 
@@ -912,7 +912,7 @@
 ## Phase 3: Security Detectors
 
 **Timeline**: Weeks 12-19 (8 weeks)
-**Progress**: 10/99 tasks (10.1%)
+**Progress**: 11/99 tasks (11.1%)
 **Priority**: P1 (High)
 **Status**: In Progress - Core security rules implemented
 
@@ -935,7 +935,7 @@
 ### 3.2: High Severity Detectors (Weeks 13-16)
 
 **42 detectors, 4 weeks**
-**Progress**: 10/42 detectors completed
+**Progress**: 11/42 detectors completed
 
 - [x] ✅ **SEC-HIGH-001**: tx-origin
   - **Status**: DONE
@@ -1105,7 +1105,27 @@
       - Block range checks
   - **Recommendation**: Use Chainlink VRF or oracle-based randomness. Never rely on block properties for security-critical randomness in gambling/lotteries/NFTs
 
-- [ ] ⏭️ **SEC-HIGH-013**: reentrancy (Next Priority - Complex)
+- [x] ✅ **SEC-HIGH-014**: uninitialized-storage
+  - **Status**: DONE
+  - **Completed**: 2025-01-12
+  - **File**: `lib/rules/security/uninitialized-storage.ts`
+  - **Test File**: `test/unit/rules/security/uninitialized-storage.test.ts`
+  - **Test Results**: ✅ 14 tests passing
+  - **Severity**: ERROR (HIGH)
+  - **Description**: Detects uninitialized local storage pointers (points to slot 0, overwrites state)
+  - **Features**:
+    - Uninitialized storage struct detection
+    - Uninitialized storage array detection
+    - Storage mapping pointer detection
+    - Function scope analysis (local variables only)
+    - Safe pattern exclusions:
+      - Memory variables (not storage)
+      - Initialized storage pointers
+      - Storage variables with assignment
+  - **Recommendation**: Always initialize storage pointers, use memory instead, upgrade to Solidity 0.5.0+
+  - **Note**: Compilation error in Solidity 0.5.0+, critical vulnerability in < 0.5.0
+
+- [ ] ⏭️ **SEC-HIGH-015**: reentrancy (Next Priority - Complex)
   - **Status**: TODO
   - **Priority**: P1
   - **Difficulty**: ⭐⭐⭐⭐⭐ (Very High)
@@ -1185,17 +1205,17 @@
 | Phase 0 | ✅ DONE | 5/8 (62.5%) | Week 1 |
 | Phase 1 | ✅ CORE COMPLETE | 20/45 (44.4%) | Weeks 2-5 |
 | Phase 2 | 🚧 IN PROGRESS | 10/81 (12.3%) | Weeks 6-11 |
-| Phase 3 | 🚧 IN PROGRESS | 10/99 (10.1%) | Weeks 12-19 |
+| Phase 3 | 🚧 IN PROGRESS | 11/99 (11.1%) | Weeks 12-19 |
 | Phase 4 | ⏭️ TODO | 0/8 (0%) | Weeks 20-22 |
 | Phase 5 | ⏭️ TODO | 0/10 (0%) | Weeks 23-26 |
-| **TOTAL** | | **45/251 (17.9%)** | **26 weeks** |
+| **TOTAL** | | **46/251 (18.3%)** | **26 weeks** |
 
 ### By Priority
 
 | Priority | Total | Done | In Progress | Todo |
 |----------|-------|------|-------------|------|
 | P0 (Critical) | 50 | 20 | 0 | 30 |
-| P1 (High) | 180 | 10 | 2 | 168 |
+| P1 (High) | 180 | 11 | 2 | 167 |
 | P2 (Medium) | 21 | 0 | 0 | 21 |
 | P3 (Low) | 0 | 0 | 0 | 0 |
 
@@ -1218,13 +1238,13 @@
 **Current Context**: 2025-01-12
 - Phase 1: Core Foundation - ✅ COMPLETE (20/45 tasks, 44.4%)
 - Phase 2: Lint Rules - 🚧 IN PROGRESS (10/81 tasks, 12.3%)
-- Phase 3: Security - 🚧 IN PROGRESS (10/99 tasks, 10.1%)
-- Total Progress: 45/251 tasks (17.9%)
+- Phase 3: Security - 🚧 IN PROGRESS (11/99 tasks, 11.1%)
+- Total Progress: 46/251 tasks (18.3%)
 
 **Recent Achievements**:
 - ✅ Core engine and rule framework complete
-- ✅ 19 rules implemented (9 lint + 10 security)
-- ✅ 466 tests passing, 32 test suites
+- ✅ 20 rules implemented (9 lint + 11 security)
+- ✅ 480 tests passing, 33 test suites
 - ✅ All using TDD methodology with comprehensive coverage
 - ✅ GitHub repository created: https://github.com/0xmhha/solin
 - ✅ Git author history corrected (0xmhha <mhha@wemade.com>)
@@ -1241,7 +1261,7 @@
    - constant-immutable (18 tests)
    - cache-array-length (17 tests)
    - no-empty-blocks (10 tests)
-2. **Security Rules** (10 rules):
+2. **Security Rules** (11 rules):
    - tx-origin (11 tests)
    - unchecked-calls (13 tests)
    - timestamp-dependence (15 tests)
@@ -1251,11 +1271,12 @@
    - shadowing-variables (15 tests)
    - selfdestruct (14 tests)
    - controlled-delegatecall (17 tests)
-   - weak-prng (17 tests) - **NEW!**
+   - weak-prng (17 tests)
+   - uninitialized-storage (14 tests) - **NEW!**
 
 **Next Priority**:
 - **Primary**: More security detectors (continue Phase 3)
-  - Next HIGH severity: locked-ether, integer-overflow, or uninitialized-storage (⭐⭐⭐-⭐⭐⭐⭐ difficulty)
+  - Next HIGH severity: locked-ether or integer-overflow (⭐⭐⭐-⭐⭐⭐⭐ difficulty)
 - **Alternative**: More lint rules (continue Phase 2)
   - code style rules (indentation, spacing, etc.)
   - additional best practices rules
