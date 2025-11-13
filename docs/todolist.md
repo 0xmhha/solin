@@ -2,7 +2,7 @@
 
 > **Last Updated**: 2025-01-13
 > **Current Phase**: Phase 2 - Lint Rules (In Progress)
-> **Overall Progress**: 48/251 tasks (19.1%)
+> **Overall Progress**: 49/251 tasks (19.5%)
 
 ## Status Legend
 
@@ -912,7 +912,7 @@
 ## Phase 3: Security Detectors
 
 **Timeline**: Weeks 12-19 (8 weeks)
-**Progress**: 13/99 tasks (13.1%)
+**Progress**: 14/99 tasks (14.1%)
 **Priority**: P1 (High)
 **Status**: In Progress - Core security rules implemented
 
@@ -935,7 +935,7 @@
 ### 3.2: High Severity Detectors (Weeks 13-16)
 
 **42 detectors, 4 weeks**
-**Progress**: 13/42 detectors completed (31.0%)
+**Progress**: 14/42 detectors completed (33.3%)
 
 - [x] ✅ **SEC-HIGH-001**: tx-origin
   - **Status**: DONE
@@ -1155,6 +1155,25 @@
     - BinaryOperation analysis (division followed by multiplication)
   - **Recommendation**: Reorder operations to multiply first, then divide (a * c / b) to minimize precision loss
 
+- [x] ✅ **SEC-HIGH-019**: msg-value-loop
+  - **Status**: DONE
+  - **Completed**: 2025-01-13
+  - **File**: `lib/rules/security/msg-value-loop.ts`
+  - **Test File**: `test/unit/rules/security/msg-value-loop.test.ts`
+  - **Test Results**: ✅ 12 tests passing
+  - **Severity**: ERROR (HIGH)
+  - **Description**: Detects msg.value usage within loops causing incorrect payment amounts and DoS vulnerabilities
+  - **Features**:
+    - All loop types detection (for, while, do-while)
+    - Nested loop support
+    - Nested expression tracking (msg.value in calculations)
+    - Safe pattern exclusions:
+      - msg.value outside loops
+      - msg.value stored before loop
+      - msg.value in condition only (not body)
+  - **Recommendation**: Store msg.value before loop, calculate per-iteration amounts, track cumulative payments
+  - **Impact**: Prevents overpayment attacks where same msg.value is reused in each iteration
+
 ### 3.3: Medium Severity Detectors (Weeks 17-18)
 
 **27 detectors, 2 weeks**
@@ -1226,10 +1245,10 @@
 | Phase 0 | ✅ DONE | 5/8 (62.5%) | Week 1 |
 | Phase 1 | ✅ CORE COMPLETE | 20/45 (44.4%) | Weeks 2-5 |
 | Phase 2 | 🚧 IN PROGRESS | 12/81 (14.8%) | Weeks 6-11 |
-| Phase 3 | 🚧 IN PROGRESS | 13/99 (13.1%) | Weeks 12-19 |
+| Phase 3 | 🚧 IN PROGRESS | 14/99 (14.1%) | Weeks 12-19 |
 | Phase 4 | ⏭️ TODO | 0/8 (0%) | Weeks 20-22 |
 | Phase 5 | ⏭️ TODO | 0/10 (0%) | Weeks 23-26 |
-| **TOTAL** | | **48/251 (19.1%)** | **26 weeks** |
+| **TOTAL** | | **49/251 (19.5%)** | **26 weeks** |
 
 ### By Priority
 
@@ -1259,13 +1278,13 @@
 **Current Context**: 2025-01-13
 - Phase 1: Core Foundation - ✅ COMPLETE (20/45 tasks, 44.4%)
 - Phase 2: Lint Rules - 🚧 IN PROGRESS (12/81 tasks, 14.8%)
-- Phase 3: Security - 🚧 IN PROGRESS (13/99 tasks, 13.1%)
-- Total Progress: 48/251 tasks (19.1%)
+- Phase 3: Security - 🚧 IN PROGRESS (14/99 tasks, 14.1%)
+- Total Progress: 49/251 tasks (19.5%)
 
 **Recent Achievements**:
 - ✅ Core engine and rule framework complete
-- ✅ 24 rules implemented (11 lint + 13 security)
-- ✅ 501 tests passing, 35 test suites
+- ✅ 25 rules implemented (11 lint + 14 security)
+- ✅ 513 tests passing, 36 test suites
 - ✅ All using TDD methodology with comprehensive coverage
 - ✅ GitHub repository created: https://github.com/0xmhha/solin
 - ✅ Git author history corrected (0xmhha <mhha@wemade.com>)
@@ -1284,7 +1303,7 @@
    - no-empty-blocks (10 tests)
    - unused-state-variables (17 tests)
    - loop-invariant-code (12 tests)
-2. **Security Rules** (13 rules):
+2. **Security Rules** (14 rules):
    - tx-origin (11 tests)
    - unchecked-calls (13 tests)
    - timestamp-dependence (15 tests)
@@ -1297,7 +1316,8 @@
    - weak-prng (17 tests)
    - uninitialized-storage (14 tests)
    - locked-ether (16 tests)
-   - divide-before-multiply (5 tests) - **NEW!**
+   - divide-before-multiply (5 tests)
+   - msg-value-loop (12 tests) - **NEW!**
 
 **Next Priority**:
 - **Primary**: More security detectors (continue Phase 3)
