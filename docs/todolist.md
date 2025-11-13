@@ -2,7 +2,7 @@
 
 > **Last Updated**: 2025-01-12
 > **Current Phase**: Phase 2 - Lint Rules (In Progress)
-> **Overall Progress**: 43/251 tasks (17.1%)
+> **Overall Progress**: 44/251 tasks (17.5%)
 
 ## Status Legend
 
@@ -912,7 +912,7 @@
 ## Phase 3: Security Detectors
 
 **Timeline**: Weeks 12-19 (8 weeks)
-**Progress**: 8/99 tasks (8.1%)
+**Progress**: 9/99 tasks (9.1%)
 **Priority**: P1 (High)
 **Status**: In Progress - Core security rules implemented
 
@@ -935,7 +935,7 @@
 ### 3.2: High Severity Detectors (Weeks 13-16)
 
 **42 detectors, 4 weeks**
-**Progress**: 8/42 detectors completed
+**Progress**: 9/42 detectors completed
 
 - [x] ✅ **SEC-HIGH-001**: tx-origin
   - **Status**: DONE
@@ -1065,7 +1065,27 @@
       - Contracts without selfdestruct (no false positives)
   - **Recommendation**: Remove selfdestruct from production code, use pausable patterns or circuit breakers instead, implement multi-signature with time-delays if absolutely necessary
 
-- [ ] ⏭️ **SEC-HIGH-009**: reentrancy (Next Priority - Complex)
+- [x] ✅ **SEC-HIGH-010**: controlled-delegatecall
+  - **Status**: DONE
+  - **Completed**: 2025-01-12
+  - **File**: `lib/rules/security/controlled-delegatecall.ts`
+  - **Test File**: `test/unit/rules/security/controlled-delegatecall.test.ts`
+  - **Test Results**: ✅ 17 tests passing
+  - **Severity**: ERROR (HIGH)
+  - **Description**: Detects delegatecall with user-controlled target addresses (arbitrary code execution risk)
+  - **Features**:
+    - Function parameter target detection
+    - Mapping value target detection
+    - Array element target detection
+    - Mutable storage variable target detection
+    - Type conversion unwrapping (address casts)
+    - Safe pattern exclusions:
+      - constant addresses (compile-time fixed)
+      - immutable addresses (constructor-set only)
+      - hardcoded address literals (0x...)
+  - **Recommendation**: Use whitelist of approved addresses, implement strict access controls, or use immutable/constant addresses for delegatecall targets
+
+- [ ] ⏭️ **SEC-HIGH-011**: reentrancy (Next Priority - Complex)
   - **Status**: TODO
   - **Priority**: P1
   - **Difficulty**: ⭐⭐⭐⭐⭐ (Very High)
@@ -1145,17 +1165,17 @@
 | Phase 0 | ✅ DONE | 5/8 (62.5%) | Week 1 |
 | Phase 1 | ✅ CORE COMPLETE | 20/45 (44.4%) | Weeks 2-5 |
 | Phase 2 | 🚧 IN PROGRESS | 10/81 (12.3%) | Weeks 6-11 |
-| Phase 3 | 🚧 IN PROGRESS | 7/99 (7.1%) | Weeks 12-19 |
+| Phase 3 | 🚧 IN PROGRESS | 9/99 (9.1%) | Weeks 12-19 |
 | Phase 4 | ⏭️ TODO | 0/8 (0%) | Weeks 20-22 |
 | Phase 5 | ⏭️ TODO | 0/10 (0%) | Weeks 23-26 |
-| **TOTAL** | | **42/251 (16.7%)** | **26 weeks** |
+| **TOTAL** | | **44/251 (17.5%)** | **26 weeks** |
 
 ### By Priority
 
 | Priority | Total | Done | In Progress | Todo |
 |----------|-------|------|-------------|------|
 | P0 (Critical) | 50 | 20 | 0 | 30 |
-| P1 (High) | 180 | 7 | 2 | 171 |
+| P1 (High) | 180 | 9 | 2 | 169 |
 | P2 (Medium) | 21 | 0 | 0 | 21 |
 | P3 (Low) | 0 | 0 | 0 | 0 |
 
@@ -1178,13 +1198,13 @@
 **Current Context**: 2025-01-12
 - Phase 1: Core Foundation - ✅ COMPLETE (20/45 tasks, 44.4%)
 - Phase 2: Lint Rules - 🚧 IN PROGRESS (10/81 tasks, 12.3%)
-- Phase 3: Security - 🚧 IN PROGRESS (7/99 tasks, 7.1%)
-- Total Progress: 42/251 tasks (16.7%)
+- Phase 3: Security - 🚧 IN PROGRESS (9/99 tasks, 9.1%)
+- Total Progress: 44/251 tasks (17.5%)
 
 **Recent Achievements**:
 - ✅ Core engine and rule framework complete
-- ✅ 17 rules implemented (9 lint + 8 security)
-- ✅ 432 tests passing, 30 test suites
+- ✅ 18 rules implemented (9 lint + 9 security)
+- ✅ 449 tests passing, 31 test suites
 - ✅ All using TDD methodology with comprehensive coverage
 - ✅ GitHub repository created: https://github.com/0xmhha/solin
 - ✅ Git author history corrected (0xmhha <mhha@wemade.com>)
@@ -1201,7 +1221,7 @@
    - constant-immutable (18 tests)
    - cache-array-length (17 tests)
    - no-empty-blocks (10 tests)
-2. **Security Rules** (8 rules):
+2. **Security Rules** (9 rules):
    - tx-origin (11 tests)
    - unchecked-calls (13 tests)
    - timestamp-dependence (15 tests)
@@ -1209,11 +1229,12 @@
    - arbitrary-send (16 tests)
    - delegatecall-in-loop (16 tests)
    - shadowing-variables (15 tests)
-   - selfdestruct (14 tests) - **NEW!**
+   - selfdestruct (14 tests)
+   - controlled-delegatecall (17 tests) - **NEW!**
 
 **Next Priority**:
 - **Primary**: More security detectors (continue Phase 3)
-  - Next HIGH severity: controlled-delegatecall or integer-overflow (⭐⭐⭐-⭐⭐⭐⭐ difficulty)
+  - Next HIGH severity: integer-overflow, weak-prng, or locked-ether (⭐⭐⭐-⭐⭐⭐⭐ difficulty)
 - **Alternative**: More lint rules (continue Phase 2)
   - code style rules (indentation, spacing, etc.)
   - additional best practices rules
