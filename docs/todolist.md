@@ -2,7 +2,7 @@
 
 > **Last Updated**: 2025-01-13
 > **Current Phase**: Phase 3 - Security Detectors (In Progress)
-> **Overall Progress**: 59/251 tasks (23.5%)
+> **Overall Progress**: 60/251 tasks (23.9%)
 
 ## Status Legend
 
@@ -1213,7 +1213,7 @@
 ### 3.3: Medium Severity Detectors (Weeks 17-18)
 
 **27 detectors, 2 weeks**
-**Progress**: 8/27 detectors completed (29.6%)
+**Progress**: 9/27 detectors completed (33.3%)
 
 - [x] ✅ **SEC-MEDIUM-001**: floating-pragma
   - **Status**: DONE
@@ -1384,6 +1384,31 @@
     - Distinguishes transfer() from send() (only send() needs checking)
   - **Recommendation**: Use require(addr.send(amount), "Failed") or transfer() which reverts automatically
   - **Impact**: Prevents silent failures where ether transfer fails but execution continues, leading to fund loss
+
+- [x] ✅ **SEC-MEDIUM-009**: unchecked-lowlevel
+  - **Status**: DONE
+  - **Completed**: 2025-01-13
+  - **File**: `lib/rules/security/unchecked-lowlevel.ts`
+  - **Test File**: `test/unit/rules/security/unchecked-lowlevel.test.ts`
+  - **Test Results**: ✅ 14 tests passing
+  - **Severity**: WARNING
+  - **Description**: Detects low-level calls (.call, .delegatecall, .staticcall) without checking return value
+  - **Features**:
+    - .call() detection
+    - .delegatecall() detection
+    - .staticcall() detection
+    - Direct call detection (not assigned to variable)
+    - require/assert check detection
+    - if statement condition check detection
+    - Ternary expression check detection
+    - Function-level analysis with separate state
+  - **Implementation Notes**:
+    - Similar to unchecked-send but for low-level calls
+    - Two-pass analysis: find checked calls, then report unchecked ones
+    - Distinguishes transfer()/send() from low-level calls
+    - Does not handle tuple destructuring (simplified approach)
+  - **Recommendation**: Always check return values with require(), assert(), or if statement
+  - **Impact**: Prevents silent failures where external calls fail but execution continues
 
 ### 3.4: Low & Informational (Week 19)
 
