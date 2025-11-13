@@ -28,3 +28,4 @@ export { SelfdestructRule } from './security/selfdestruct';
 export { ControlledDelegatecallRule } from './security/controlled-delegatecall';
 export { WeakPrngRule } from './security/weak-prng';
 export { UninitializedStorageRule } from './security/uninitialized-storage';
+export { LockedEtherRule } from './security/locked-ether';
