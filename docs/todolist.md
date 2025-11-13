@@ -2,7 +2,7 @@
 
 > **Last Updated**: 2025-01-13
 > **Current Phase**: Phase 2 - Lint Rules (In Progress)
-> **Overall Progress**: 51/251 tasks (20.3%)
+> **Overall Progress**: 52/251 tasks (20.7%)
 
 ## Status Legend
 
@@ -912,7 +912,7 @@
 ## Phase 3: Security Detectors
 
 **Timeline**: Weeks 12-19 (8 weeks)
-**Progress**: 16/99 tasks (16.2%)
+**Progress**: 17/99 tasks (17.2%)
 **Priority**: P1 (High)
 **Status**: In Progress - Core security rules implemented
 
@@ -1177,7 +1177,7 @@
 ### 3.3: Medium Severity Detectors (Weeks 17-18)
 
 **27 detectors, 2 weeks**
-**Progress**: 2/27 detectors completed (7.4%)
+**Progress**: 3/27 detectors completed (11.1%)
 
 - [x] ✅ **SEC-MEDIUM-001**: floating-pragma
   - **Status**: DONE
@@ -1216,6 +1216,25 @@
       - Recent stable versions
   - **Recommendation**: Update to Solidity 0.8.18 or higher for bug fixes and security patches
   - **Impact**: Ensures use of compiler versions without known vulnerabilities
+
+- [x] ✅ **SEC-MEDIUM-003**: assert-state-change
+  - **Status**: DONE
+  - **Completed**: 2025-01-13
+  - **File**: `lib/rules/security/assert-state-change.ts`
+  - **Test File**: `test/unit/rules/security/assert-state-change.test.ts`
+  - **Test Results**: ✅ 12 tests passing
+  - **Severity**: WARNING
+  - **Description**: Detects assert() calls containing state-changing operations
+  - **Features**:
+    - Assignment operator detection (=, +=, -=, *=, /=, etc.)
+    - Increment/decrement operator detection (++, --)
+    - State-changing method detection (transfer, send)
+    - Function call detection (conservative approach)
+    - Safe pattern exclusions:
+      - Pure comparisons (>, <, ==, !=)
+      - Boolean literals
+  - **Recommendation**: Use require() for validation with state changes, reserve assert() for invariant checks only
+  - **Impact**: Prevents excessive gas consumption on failure (assert consumes all gas)
 
 ### 3.4: Low & Informational (Week 19)
 
@@ -1284,10 +1303,10 @@
 | Phase 0 | ✅ DONE | 5/8 (62.5%) | Week 1 |
 | Phase 1 | ✅ CORE COMPLETE | 20/45 (44.4%) | Weeks 2-5 |
 | Phase 2 | 🚧 IN PROGRESS | 12/81 (14.8%) | Weeks 6-11 |
-| Phase 3 | 🚧 IN PROGRESS | 16/99 (16.2%) | Weeks 12-19 |
+| Phase 3 | 🚧 IN PROGRESS | 17/99 (17.2%) | Weeks 12-19 |
 | Phase 4 | ⏭️ TODO | 0/8 (0%) | Weeks 20-22 |
 | Phase 5 | ⏭️ TODO | 0/10 (0%) | Weeks 23-26 |
-| **TOTAL** | | **51/251 (20.3%)** | **26 weeks** |
+| **TOTAL** | | **52/251 (20.7%)** | **26 weeks** |
 
 ### By Priority
 
@@ -1317,13 +1336,13 @@
 **Current Context**: 2025-01-13
 - Phase 1: Core Foundation - ✅ COMPLETE (20/45 tasks, 44.4%)
 - Phase 2: Lint Rules - 🚧 IN PROGRESS (12/81 tasks, 14.8%)
-- Phase 3: Security - 🚧 IN PROGRESS (16/99 tasks, 16.2%)
-- Total Progress: 51/251 tasks (20.3%)
+- Phase 3: Security - 🚧 IN PROGRESS (17/99 tasks, 17.2%)
+- Total Progress: 52/251 tasks (20.7%)
 
 **Recent Achievements**:
 - ✅ Core engine and rule framework complete
-- ✅ 27 rules implemented (11 lint + 16 security)
-- ✅ 540 tests passing, 38 test suites
+- ✅ 28 rules implemented (11 lint + 17 security)
+- ✅ 552 tests passing, 39 test suites
 - ✅ All using TDD methodology with comprehensive coverage
 - ✅ GitHub repository created: https://github.com/0xmhha/solin
 - ✅ Git author history corrected (0xmhha <mhha@wemade.com>)
@@ -1342,7 +1361,7 @@
    - no-empty-blocks (10 tests)
    - unused-state-variables (17 tests)
    - loop-invariant-code (12 tests)
-2. **Security Rules** (16 rules):
+2. **Security Rules** (17 rules):
    - **HIGH Severity** (14 rules):
      - tx-origin (11 tests)
      - unchecked-calls (13 tests)
@@ -1358,9 +1377,10 @@
      - locked-ether (16 tests)
      - divide-before-multiply (5 tests)
      - msg-value-loop (12 tests)
-   - **MEDIUM Severity** (2 rules):
+   - **MEDIUM Severity** (3 rules):
      - floating-pragma (13 tests)
-     - outdated-compiler (14 tests) - **NEW!**
+     - outdated-compiler (14 tests)
+     - assert-state-change (12 tests) - **NEW!**
 
 **Next Priority**:
 - **Primary**: More security detectors (continue Phase 3)
