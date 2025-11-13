@@ -1,8 +1,8 @@
 # Solin Development Task List
 
-> **Last Updated**: 2025-01-12
+> **Last Updated**: 2025-01-13
 > **Current Phase**: Phase 2 - Lint Rules (In Progress)
-> **Overall Progress**: 47/251 tasks (18.7%)
+> **Overall Progress**: 48/251 tasks (19.1%)
 
 ## Status Legend
 
@@ -912,7 +912,7 @@
 ## Phase 3: Security Detectors
 
 **Timeline**: Weeks 12-19 (8 weeks)
-**Progress**: 12/99 tasks (12.1%)
+**Progress**: 13/99 tasks (13.1%)
 **Priority**: P1 (High)
 **Status**: In Progress - Core security rules implemented
 
@@ -935,7 +935,7 @@
 ### 3.2: High Severity Detectors (Weeks 13-16)
 
 **42 detectors, 4 weeks**
-**Progress**: 12/42 detectors completed
+**Progress**: 13/42 detectors completed (31.0%)
 
 - [x] ✅ **SEC-HIGH-001**: tx-origin
   - **Status**: DONE
@@ -1134,6 +1134,27 @@
   - **Requirements**: Control flow analysis, state change tracking, external call detection
   - **Note**: Most complex security detector, requires SEC-002
 
+- [x] ✅ **SEC-HIGH-016**: locked-ether
+  - **Status**: DONE
+  - **Completed**: 2025-01-12
+  - **File**: `lib/rules/security/locked-ether.ts`
+  - **Test File**: `test/unit/rules/security/locked-ether.test.ts`
+  - **Test Results**: ✅ 16 tests passing
+
+- [x] ✅ **SEC-HIGH-018**: divide-before-multiply
+  - **Status**: DONE
+  - **Completed**: 2025-01-13
+  - **File**: `lib/rules/security/divide-before-multiply.ts`
+  - **Test File**: `test/unit/rules/security/divide-before-multiply.test.ts`
+  - **Test Results**: ✅ 5 tests passing
+  - **Severity**: WARNING
+  - **Description**: Detects division followed by multiplication causing precision loss in integer arithmetic
+  - **Features**:
+    - Pattern detection: a / b * c
+    - Identifies intermediate result truncation
+    - BinaryOperation analysis (division followed by multiplication)
+  - **Recommendation**: Reorder operations to multiply first, then divide (a * c / b) to minimize precision loss
+
 ### 3.3: Medium Severity Detectors (Weeks 17-18)
 
 **27 detectors, 2 weeks**
@@ -1204,11 +1225,11 @@
 |-------|--------|----------|----------------------|
 | Phase 0 | ✅ DONE | 5/8 (62.5%) | Week 1 |
 | Phase 1 | ✅ CORE COMPLETE | 20/45 (44.4%) | Weeks 2-5 |
-| Phase 2 | 🚧 IN PROGRESS | 10/81 (12.3%) | Weeks 6-11 |
-| Phase 3 | 🚧 IN PROGRESS | 12/99 (12.1%) | Weeks 12-19 |
+| Phase 2 | 🚧 IN PROGRESS | 12/81 (14.8%) | Weeks 6-11 |
+| Phase 3 | 🚧 IN PROGRESS | 13/99 (13.1%) | Weeks 12-19 |
 | Phase 4 | ⏭️ TODO | 0/8 (0%) | Weeks 20-22 |
 | Phase 5 | ⏭️ TODO | 0/10 (0%) | Weeks 23-26 |
-| **TOTAL** | | **47/251 (18.7%)** | **26 weeks** |
+| **TOTAL** | | **48/251 (19.1%)** | **26 weeks** |
 
 ### By Priority
 
@@ -1235,22 +1256,22 @@
 
 ### For Next Session
 
-**Current Context**: 2025-01-12
+**Current Context**: 2025-01-13
 - Phase 1: Core Foundation - ✅ COMPLETE (20/45 tasks, 44.4%)
-- Phase 2: Lint Rules - 🚧 IN PROGRESS (10/81 tasks, 12.3%)
-- Phase 3: Security - 🚧 IN PROGRESS (12/99 tasks, 12.1%)
-- Total Progress: 47/251 tasks (18.7%)
+- Phase 2: Lint Rules - 🚧 IN PROGRESS (12/81 tasks, 14.8%)
+- Phase 3: Security - 🚧 IN PROGRESS (13/99 tasks, 13.1%)
+- Total Progress: 48/251 tasks (19.1%)
 
 **Recent Achievements**:
 - ✅ Core engine and rule framework complete
-- ✅ 21 rules implemented (9 lint + 12 security)
-- ✅ 496 tests passing, 34 test suites
+- ✅ 24 rules implemented (11 lint + 13 security)
+- ✅ 501 tests passing, 35 test suites
 - ✅ All using TDD methodology with comprehensive coverage
 - ✅ GitHub repository created: https://github.com/0xmhha/solin
 - ✅ Git author history corrected (0xmhha <mhha@wemade.com>)
 
 **Implemented Rules**:
-1. **Lint Rules** (9 rules):
+1. **Lint Rules** (11 rules):
    - naming-convention (20 tests)
    - visibility-modifiers (14 tests)
    - state-mutability (15 tests)
@@ -1261,7 +1282,9 @@
    - constant-immutable (18 tests)
    - cache-array-length (17 tests)
    - no-empty-blocks (10 tests)
-2. **Security Rules** (11 rules):
+   - unused-state-variables (17 tests)
+   - loop-invariant-code (12 tests)
+2. **Security Rules** (13 rules):
    - tx-origin (11 tests)
    - unchecked-calls (13 tests)
    - timestamp-dependence (15 tests)
@@ -1273,7 +1296,8 @@
    - controlled-delegatecall (17 tests)
    - weak-prng (17 tests)
    - uninitialized-storage (14 tests)
-   - locked-ether (16 tests) - **NEW!**
+   - locked-ether (16 tests)
+   - divide-before-multiply (5 tests) - **NEW!**
 
 **Next Priority**:
 - **Primary**: More security detectors (continue Phase 3)
@@ -1421,5 +1445,5 @@ None currently.
 
 ---
 
-**Last Review**: 2025-01-12
-**Next Review**: 2025-01-19
+**Last Review**: 2025-01-13
+**Next Review**: 2025-01-20
