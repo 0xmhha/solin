@@ -2,7 +2,7 @@
 
 > **Last Updated**: 2025-01-13
 > **Current Phase**: Phase 3 - Security Detectors (In Progress)
-> **Overall Progress**: 65/251 tasks (25.9%)
+> **Overall Progress**: 66/251 tasks (26.3%)
 
 ## Status Legend
 
@@ -1213,7 +1213,7 @@
 ### 3.3: Medium Severity Detectors (Weeks 17-18)
 
 **27 detectors, 2 weeks**
-**Progress**: 14/27 detectors completed (51.9%)
+**Progress**: 15/27 detectors completed (55.6%)
 
 - [x] ✅ **SEC-MEDIUM-001**: floating-pragma
   - **Status**: DONE
@@ -1525,6 +1525,28 @@
     - Ignores transfer/send and high-level external calls
   - **Recommendation**: Use (bool success, ) = target.call("") to ignore return data, or implement size limits
   - **Impact**: Prevents DoS attacks from malicious contracts returning extremely large data causing out-of-gas through memory expansion
+
+- [x] ✅ **SEC-MEDIUM-015**: void-constructor
+  - **Status**: DONE
+  - **Completed**: 2025-01-13
+  - **File**: `lib/rules/security/void-constructor.ts`
+  - **Test File**: `test/unit/rules/security/void-constructor.test.ts`
+  - **Test Results**: ✅ 10 tests passing
+  - **Severity**: WARNING
+  - **Description**: Detects functions with names similar to contract name that might be intended as constructors
+  - **Features**:
+    - Old-style constructor detection (function with same name as contract)
+    - Constructor name typo detection using Levenshtein distance algorithm
+    - Case-insensitive name comparison
+    - Adaptive threshold based on name length (1-2 chars for short names, 25% for long names)
+    - Interface and library exclusion
+  - **Implementation Notes**:
+    - Implements Levenshtein distance for edit distance calculation
+    - Threshold: ≤4 chars = 1 edit, 5-8 chars = 2 edits, >8 chars = 25% of length
+    - Detects both exact matches and similar names (typos)
+    - Works with Solidity <0.5.0 old-style constructors
+  - **Recommendation**: Use constructor keyword (Solidity >=0.5.0) instead of contract-named functions, check for typos, upgrade to modern syntax
+  - **Impact**: Prevents typo'd constructors from becoming public functions that anyone can call to re-initialize the contract
 
 ### 3.4: Low & Informational (Week 19)
 
