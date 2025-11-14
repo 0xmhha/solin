@@ -2,7 +2,7 @@
 
 > **Last Updated**: 2025-01-13
 > **Current Phase**: Phase 3 - Security Detectors (In Progress)
-> **Overall Progress**: 64/251 tasks (25.5%)
+> **Overall Progress**: 65/251 tasks (25.9%)
 
 ## Status Legend
 
@@ -1213,7 +1213,7 @@
 ### 3.3: Medium Severity Detectors (Weeks 17-18)
 
 **27 detectors, 2 weeks**
-**Progress**: 13/27 detectors completed (48.1%)
+**Progress**: 14/27 detectors completed (51.9%)
 
 - [x] ✅ **SEC-MEDIUM-001**: floating-pragma
   - **Status**: DONE
@@ -1504,6 +1504,28 @@
   - **Recommendation**: Use comparison operators instead of strict equality for balance and timestamp
   - **Impact**: Prevents unexpected behavior from balance manipulation via selfdestruct/forced sends and miner-controlled timestamps
 
+- [x] ✅ **SEC-MEDIUM-014**: return-bomb
+  - **Status**: DONE
+  - **Completed**: 2025-01-13
+  - **File**: `lib/rules/security/return-bomb.ts`
+  - **Test File**: `test/unit/rules/security/return-bomb.test.ts`
+  - **Test Results**: ✅ 11 tests passing
+  - **Severity**: WARNING
+  - **Description**: Detects external calls that copy return data to memory without size limits
+  - **Features**:
+    - call() with bytes memory return data detection
+    - delegatecall() with return data capture detection
+    - staticcall() with return data capture detection
+    - Tuple destructuring analysis for (bool, bytes memory) pattern
+    - Safe pattern exclusion: (bool success, ) without data capture
+  - **Implementation Notes**:
+    - Checks VariableDeclarationStatement for tuple destructuring
+    - Validates second variable is bytes memory type
+    - Handles both MemberAccess and NameValueExpression call patterns
+    - Ignores transfer/send and high-level external calls
+  - **Recommendation**: Use (bool success, ) = target.call("") to ignore return data, or implement size limits
+  - **Impact**: Prevents DoS attacks from malicious contracts returning extremely large data causing out-of-gas through memory expansion
+
 ### 3.4: Low & Informational (Week 19)
 
 **30 detectors, 1 week**
@@ -1571,10 +1593,10 @@
 | Phase 0 | ✅ DONE | 5/8 (62.5%) | Week 1 |
 | Phase 1 | ✅ CORE COMPLETE | 20/45 (44.4%) | Weeks 2-5 |
 | Phase 2 | ✅ COMPLETE | 13/81 (16.0%) | Weeks 6-11 |
-| Phase 3 | 🚧 IN PROGRESS | 27/99 (27.3%) | Weeks 12-19 |
+| Phase 3 | 🚧 IN PROGRESS | 28/99 (28.3%) | Weeks 12-19 |
 | Phase 4 | ⏭️ TODO | 0/8 (0%) | Weeks 20-22 |
 | Phase 5 | ⏭️ TODO | 0/10 (0%) | Weeks 23-26 |
-| **TOTAL** | | **64/251 (25.5%)** | **26 weeks** |
+| **TOTAL** | | **65/251 (25.9%)** | **26 weeks** |
 
 ### By Priority
 
