@@ -2,7 +2,7 @@
 
 > **Last Updated**: 2025-01-13
 > **Current Phase**: Phase 3 - Security Detectors (In Progress)
-> **Overall Progress**: 63/251 tasks (25.1%)
+> **Overall Progress**: 64/251 tasks (25.5%)
 
 ## Status Legend
 
@@ -1213,7 +1213,7 @@
 ### 3.3: Medium Severity Detectors (Weeks 17-18)
 
 **27 detectors, 2 weeks**
-**Progress**: 12/27 detectors completed (44.4%)
+**Progress**: 13/27 detectors completed (48.1%)
 
 - [x] ✅ **SEC-MEDIUM-001**: floating-pragma
   - **Status**: DONE
@@ -1482,6 +1482,28 @@
   - **Recommendation**: Add access control modifiers or require statements to ether withdrawal functions
   - **Impact**: Prevents unauthorized fund drainage by requiring proper authorization for withdrawals
 
+- [x] ✅ **SEC-MEDIUM-013**: incorrect-equality
+  - **Status**: DONE
+  - **Completed**: 2025-01-13
+  - **File**: `lib/rules/security/incorrect-equality.ts`
+  - **Test File**: `test/unit/rules/security/incorrect-equality.test.ts`
+  - **Test Results**: ✅ 12 tests passing
+  - **Severity**: WARNING
+  - **Description**: Detects dangerous use of strict equality (== or !=) with balance or timestamp
+  - **Features**:
+    - Strict equality detection with .balance
+    - Strict equality detection with block.timestamp
+    - Deprecated 'now' keyword detection
+    - Inequality (!=) detection for both balance and timestamp
+    - Nested expression support (e.g., address(this).balance)
+  - **Implementation Notes**:
+    - Checks binary operations with == or != operators
+    - Recursively searches for .balance member access
+    - Checks for block.timestamp and deprecated 'now' keyword
+    - Does not flag comparison operators (>=, <=, >, <)
+  - **Recommendation**: Use comparison operators instead of strict equality for balance and timestamp
+  - **Impact**: Prevents unexpected behavior from balance manipulation via selfdestruct/forced sends and miner-controlled timestamps
+
 ### 3.4: Low & Informational (Week 19)
 
 **30 detectors, 1 week**
@@ -1549,10 +1571,10 @@
 | Phase 0 | ✅ DONE | 5/8 (62.5%) | Week 1 |
 | Phase 1 | ✅ CORE COMPLETE | 20/45 (44.4%) | Weeks 2-5 |
 | Phase 2 | ✅ COMPLETE | 13/81 (16.0%) | Weeks 6-11 |
-| Phase 3 | 🚧 IN PROGRESS | 26/99 (26.3%) | Weeks 12-19 |
+| Phase 3 | 🚧 IN PROGRESS | 27/99 (27.3%) | Weeks 12-19 |
 | Phase 4 | ⏭️ TODO | 0/8 (0%) | Weeks 20-22 |
 | Phase 5 | ⏭️ TODO | 0/10 (0%) | Weeks 23-26 |
-| **TOTAL** | | **63/251 (25.1%)** | **26 weeks** |
+| **TOTAL** | | **64/251 (25.5%)** | **26 weeks** |
 
 ### By Priority
 
