@@ -2,7 +2,7 @@
 
 > **Last Updated**: 2025-01-13
 > **Current Phase**: Phase 2 & 3 - Lint Rules & Security Detectors (In Progress)
-> **Overall Progress**: 67/251 tasks (26.7%)
+> **Overall Progress**: 68/251 tasks (27.1%)
 
 ## Status Legend
 
@@ -651,7 +651,7 @@
 ## Phase 2: Lint Rules
 
 **Timeline**: Weeks 6-11 (6 weeks)
-**Progress**: 14/81 tasks (17.3%)
+**Progress**: 15/81 tasks (18.5%)
 **Priority**: P1 (High)
 **Status**: In Progress - Core lint rules implemented
 
@@ -845,7 +845,7 @@
 ### 2.4: Code Style Rules (Weeks 9-10)
 
 **20 rules, 2 weeks**
-**Progress**: 1/20 rules completed (5.0%)
+**Progress**: 2/20 rules completed (10.0%)
 
 - [x] ✅ **LINT-STYLE-001**: indent
   - **Status**: DONE
@@ -868,6 +868,28 @@
     - Configuration via context.config.rules pattern
   - **Recommendation**: Use consistent indentation (2 or 4 spaces), avoid tabs
   - **Impact**: Improves code readability and maintainability
+
+- [x] ✅ **LINT-STYLE-002**: max-line-length
+  - **Status**: DONE
+  - **Completed**: 2025-01-13
+  - **File**: `lib/rules/lint/max-line-length.ts`
+  - **Test File**: `test/unit/rules/lint/max-line-length.test.ts`
+  - **Test Results**: ✅ 10 tests passing
+  - **Severity**: INFO
+  - **Description**: Enforces maximum line length for improved readability (default: 120 characters)
+  - **Features**:
+    - Configurable maximum line length
+    - Comment line exclusion option (ignoreComments)
+    - Long string line exclusion option (ignoreStrings)
+    - Multi-line comment support (// and /* ... */)
+    - Per-line analysis with specific length reporting
+  - **Implementation Notes**:
+    - Line-by-line string analysis (no AST needed)
+    - Trimmed line checking for comment detection
+    - String literal length heuristic for ignoreStrings
+    - Configuration options: max, ignoreComments, ignoreStrings
+  - **Recommendation**: Keep lines under 120 characters (configurable), break long lines for readability
+  - **Impact**: Improves code readability, especially on smaller screens or split-view editors
 
 ### 2.5: Gas Optimization Rules (Week 11)
 
