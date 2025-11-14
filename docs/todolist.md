@@ -2,7 +2,7 @@
 
 > **Last Updated**: 2025-01-13
 > **Current Phase**: Phase 2 & 3 - Lint Rules & Security Detectors (In Progress)
-> **Overall Progress**: 68/251 tasks (27.1%)
+> **Overall Progress**: 69/251 tasks (27.5%)
 
 ## Status Legend
 
@@ -651,7 +651,7 @@
 ## Phase 2: Lint Rules
 
 **Timeline**: Weeks 6-11 (6 weeks)
-**Progress**: 15/81 tasks (18.5%)
+**Progress**: 16/81 tasks (19.8%)
 **Priority**: P1 (High)
 **Status**: In Progress - Core lint rules implemented
 
@@ -845,7 +845,7 @@
 ### 2.4: Code Style Rules (Weeks 9-10)
 
 **20 rules, 2 weeks**
-**Progress**: 2/20 rules completed (10.0%)
+**Progress**: 3/20 rules completed (15.0%)
 
 - [x] ✅ **LINT-STYLE-001**: indent
   - **Status**: DONE
@@ -890,6 +890,28 @@
     - Configuration options: max, ignoreComments, ignoreStrings
   - **Recommendation**: Keep lines under 120 characters (configurable), break long lines for readability
   - **Impact**: Improves code readability, especially on smaller screens or split-view editors
+
+- [x] ✅ **LINT-STYLE-003**: no-trailing-whitespace
+  - **Status**: DONE
+  - **Completed**: 2025-01-13
+  - **File**: `lib/rules/lint/no-trailing-whitespace.ts`
+  - **Test File**: `test/unit/rules/lint/no-trailing-whitespace.test.ts`
+  - **Test Results**: ✅ 12 tests passing
+  - **Severity**: INFO
+  - **Description**: Detects trailing whitespace at the end of lines
+  - **Features**:
+    - Trailing space detection (spaces and tabs)
+    - Blank line whitespace detection
+    - Skip blank lines option (skipBlankLines)
+    - Precise column position reporting
+    - Multiple whitespace character counting
+  - **Implementation Notes**:
+    - Line-by-line string comparison using trimEnd()
+    - Whitespace count calculation: length - trimEnd().length
+    - Blank line detection: trim().length === 0
+    - Configuration option: skipBlankLines (default: false)
+  - **Recommendation**: Remove all trailing whitespace, configure editor to auto-trim on save
+  - **Impact**: Prevents version control diff noise, improves code hygiene, avoids editor issues
 
 ### 2.5: Gas Optimization Rules (Week 11)
 
