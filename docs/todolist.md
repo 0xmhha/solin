@@ -2,7 +2,7 @@
 
 > **Last Updated**: 2025-01-13
 > **Current Phase**: Phase 3 - Security Detectors (In Progress)
-> **Overall Progress**: 61/251 tasks (24.3%)
+> **Overall Progress**: 62/251 tasks (24.7%)
 
 ## Status Legend
 
@@ -1213,7 +1213,7 @@
 ### 3.3: Medium Severity Detectors (Weeks 17-18)
 
 **27 detectors, 2 weeks**
-**Progress**: 10/27 detectors completed (37.0%)
+**Progress**: 11/27 detectors completed (40.7%)
 
 - [x] ✅ **SEC-MEDIUM-001**: floating-pragma
   - **Status**: DONE
@@ -1435,6 +1435,29 @@
   - **Recommendation**: Use pagination, batch processing, pull-over-push pattern, or explicit iteration limits
   - **Impact**: Prevents DoS via gas exhaustion where unbounded array growth makes transactions fail
 
+- [x] ✅ **SEC-MEDIUM-011**: deprecated-functions
+  - **Status**: DONE
+  - **Completed**: 2025-01-13
+  - **File**: `lib/rules/security/deprecated-functions.ts`
+  - **Test File**: `test/unit/rules/security/deprecated-functions.test.ts`
+  - **Test Results**: ✅ 15 tests passing
+  - **Severity**: WARNING
+  - **Description**: Detects usage of deprecated Solidity functions and modifiers
+  - **Features**:
+    - suicide() detection (replaced by selfdestruct)
+    - throw detection (replaced by revert())
+    - sha3() detection (replaced by keccak256)
+    - callcode() detection (replaced by delegatecall)
+    - constant modifier detection (replaced by view/pure)
+    - Function call detection (simple and member access)
+    - State mutability checking for deprecated constant
+  - **Implementation Notes**:
+    - Checks both simple function calls (suicide, sha3) and member access (.callcode())
+    - Checks stateMutability field for deprecated constant modifier
+    - Provides specific replacement suggestions for each deprecated item
+  - **Recommendation**: Replace deprecated functions with modern alternatives for Solidity 0.5.0+ compatibility
+  - **Impact**: Prevents compilation errors and unexpected behavior from deprecated language features
+
 ### 3.4: Low & Informational (Week 19)
 
 **30 detectors, 1 week**
@@ -1502,10 +1525,10 @@
 | Phase 0 | ✅ DONE | 5/8 (62.5%) | Week 1 |
 | Phase 1 | ✅ CORE COMPLETE | 20/45 (44.4%) | Weeks 2-5 |
 | Phase 2 | ✅ COMPLETE | 13/81 (16.0%) | Weeks 6-11 |
-| Phase 3 | 🚧 IN PROGRESS | 24/99 (24.2%) | Weeks 12-19 |
+| Phase 3 | 🚧 IN PROGRESS | 25/99 (25.3%) | Weeks 12-19 |
 | Phase 4 | ⏭️ TODO | 0/8 (0%) | Weeks 20-22 |
 | Phase 5 | ⏭️ TODO | 0/10 (0%) | Weeks 23-26 |
-| **TOTAL** | | **61/251 (24.3%)** | **26 weeks** |
+| **TOTAL** | | **62/251 (24.7%)** | **26 weeks** |
 
 ### By Priority
 
