@@ -2,7 +2,7 @@
 
 > **Last Updated**: 2025-01-13
 > **Current Phase**: Phase 3 - Security Detectors (In Progress)
-> **Overall Progress**: 62/251 tasks (24.7%)
+> **Overall Progress**: 63/251 tasks (25.1%)
 
 ## Status Legend
 
@@ -1213,7 +1213,7 @@
 ### 3.3: Medium Severity Detectors (Weeks 17-18)
 
 **27 detectors, 2 weeks**
-**Progress**: 11/27 detectors completed (40.7%)
+**Progress**: 12/27 detectors completed (44.4%)
 
 - [x] ✅ **SEC-MEDIUM-001**: floating-pragma
   - **Status**: DONE
@@ -1458,6 +1458,30 @@
   - **Recommendation**: Replace deprecated functions with modern alternatives for Solidity 0.5.0+ compatibility
   - **Impact**: Prevents compilation errors and unexpected behavior from deprecated language features
 
+- [x] ✅ **SEC-MEDIUM-012**: unprotected-ether-withdrawal
+  - **Status**: DONE
+  - **Completed**: 2025-01-13
+  - **File**: `lib/rules/security/unprotected-ether-withdrawal.ts`
+  - **Test File**: `test/unit/rules/security/unprotected-ether-withdrawal.test.ts`
+  - **Test Results**: ✅ 13 tests passing
+  - **Severity**: WARNING
+  - **Description**: Detects public/external functions that can withdraw ether without access control
+  - **Features**:
+    - transfer() detection in public/external functions
+    - send() detection in public/external functions
+    - call{value: ...}("") detection using NameValueExpression
+    - Protection modifier checking (onlyOwner, onlyAdmin, etc.)
+    - require statement checking for access control
+    - Private/internal function exclusion
+    - View/pure function exclusion
+  - **Implementation Notes**:
+    - Checks visibility (public/external) and stateMutability (not view/pure)
+    - Detects common protection modifiers by name pattern matching
+    - Handles both MemberAccess (transfer/send) and NameValueExpression (call{value:})
+    - Requires at least one require statement or protection modifier for safe withdrawal
+  - **Recommendation**: Add access control modifiers or require statements to ether withdrawal functions
+  - **Impact**: Prevents unauthorized fund drainage by requiring proper authorization for withdrawals
+
 ### 3.4: Low & Informational (Week 19)
 
 **30 detectors, 1 week**
@@ -1525,10 +1549,10 @@
 | Phase 0 | ✅ DONE | 5/8 (62.5%) | Week 1 |
 | Phase 1 | ✅ CORE COMPLETE | 20/45 (44.4%) | Weeks 2-5 |
 | Phase 2 | ✅ COMPLETE | 13/81 (16.0%) | Weeks 6-11 |
-| Phase 3 | 🚧 IN PROGRESS | 25/99 (25.3%) | Weeks 12-19 |
+| Phase 3 | 🚧 IN PROGRESS | 26/99 (26.3%) | Weeks 12-19 |
 | Phase 4 | ⏭️ TODO | 0/8 (0%) | Weeks 20-22 |
 | Phase 5 | ⏭️ TODO | 0/10 (0%) | Weeks 23-26 |
-| **TOTAL** | | **62/251 (24.7%)** | **26 weeks** |
+| **TOTAL** | | **63/251 (25.1%)** | **26 weeks** |
 
 ### By Priority
 
