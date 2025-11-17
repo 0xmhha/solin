@@ -2,7 +2,7 @@
 
 > **Last Updated**: 2025-01-13
 > **Current Phase**: Phase 2 & 3 - Lint Rules & Security Detectors (In Progress)
-> **Overall Progress**: 72/251 tasks (28.7%)
+> **Overall Progress**: 73/251 tasks (29.1%)
 
 ## Status Legend
 
@@ -651,7 +651,7 @@
 ## Phase 2: Lint Rules
 
 **Timeline**: Weeks 6-11 (6 weeks)
-**Progress**: 19/81 tasks (23.5%)
+**Progress**: 20/81 tasks (24.7%)
 **Priority**: P1 (High)
 **Status**: In Progress - Core lint rules implemented
 
@@ -845,7 +845,7 @@
 ### 2.4: Code Style Rules (Weeks 9-10)
 
 **20 rules, 2 weeks**
-**Progress**: 6/20 rules completed (30.0%)
+**Progress**: 7/20 rules completed (35.0%)
 
 - [x] ✅ **LINT-STYLE-001**: indent
   - **Status**: DONE
@@ -982,6 +982,29 @@
     - Configuration option: style (1tbs|allman)
   - **Recommendation**: Use consistent brace style (1TBS is more common in Solidity)
   - **Impact**: Improves code consistency, enhances readability, follows style conventions
+
+- [x] ✅ **LINT-STYLE-007**: no-console
+  - **Status**: DONE
+  - **Completed**: 2025-01-13
+  - **File**: `lib/rules/lint/no-console.ts`
+  - **Test File**: `test/unit/rules/lint/no-console.test.ts`
+  - **Test Results**: ✅ 13 tests passing
+  - **Severity**: INFO
+  - **Description**: Detects Hardhat console.log usage for development debugging
+  - **Features**:
+    - Console import detection (hardhat/console.sol, hardhat/console2.sol)
+    - Console function call detection (console.log, console.logUint, console2.*)
+    - String literal filtering (no false positives in strings)
+    - Comment filtering (no false positives in comments)
+    - Multiple console call detection
+  - **Implementation Notes**:
+    - Line-by-line scanning with import detection
+    - String removal before console call detection
+    - Comment removal to avoid false positives
+    - Regex-free simple string matching for performance
+    - Configuration: none (always enabled when rule is active)
+  - **Recommendation**: Remove all console statements before production deployment, use events instead
+  - **Impact**: Prevents gas cost increases, avoids information exposure, enforces production readiness
 
 ### 2.5: Gas Optimization Rules (Week 11)
 
