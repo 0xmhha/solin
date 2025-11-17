@@ -2,7 +2,7 @@
 
 > **Last Updated**: 2025-01-13
 > **Current Phase**: Phase 2 & 3 - Lint Rules & Security Detectors (In Progress)
-> **Overall Progress**: 73/251 tasks (29.1%)
+> **Overall Progress**: 74/251 tasks (29.5%)
 
 ## Status Legend
 
@@ -651,7 +651,7 @@
 ## Phase 2: Lint Rules
 
 **Timeline**: Weeks 6-11 (6 weeks)
-**Progress**: 20/81 tasks (24.7%)
+**Progress**: 21/81 tasks (25.9%)
 **Priority**: P1 (High)
 **Status**: In Progress - Core lint rules implemented
 
@@ -845,7 +845,7 @@
 ### 2.4: Code Style Rules (Weeks 9-10)
 
 **20 rules, 2 weeks**
-**Progress**: 7/20 rules completed (35.0%)
+**Progress**: 8/20 rules completed (40.0%)
 
 - [x] ✅ **LINT-STYLE-001**: indent
   - **Status**: DONE
@@ -1005,6 +1005,29 @@
     - Configuration: none (always enabled when rule is active)
   - **Recommendation**: Remove all console statements before production deployment, use events instead
   - **Impact**: Prevents gas cost increases, avoids information exposure, enforces production readiness
+
+- [x] ✅ **LINT-STYLE-008**: function-max-lines
+  - **Status**: DONE
+  - **Completed**: 2025-01-13
+  - **File**: `lib/rules/lint/function-max-lines.ts`
+  - **Test File**: `test/unit/rules/lint/function-max-lines.test.ts`
+  - **Test Results**: ✅ 11 tests passing
+  - **Severity**: INFO
+  - **Description**: Enforces maximum number of lines per function for maintainability (default: 50 lines)
+  - **Features**:
+    - Configurable maximum line count (default: 50)
+    - Function definition line count calculation
+    - Constructor and modifier support
+    - Multi-function analysis
+    - Function name reporting in violations
+  - **Implementation Notes**:
+    - AST traversal for FunctionDefinition, ModifierDefinition, ConstructorDefinition nodes
+    - Line count calculation: end.line - start.line + 1
+    - Recursive node visitor pattern
+    - Type-safe with any type for node compatibility
+    - Configuration option: max (default: 50)
+  - **Recommendation**: Keep functions under 50 lines, break long functions into smaller focused functions
+  - **Impact**: Improves code maintainability, readability, testability, and reduces complexity
 
 ### 2.5: Gas Optimization Rules (Week 11)
 
