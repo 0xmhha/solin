@@ -2,7 +2,7 @@
 
 > **Last Updated**: 2025-01-13
 > **Current Phase**: Phase 2 & 3 - Lint Rules & Security Detectors (In Progress)
-> **Overall Progress**: 71/251 tasks (28.3%)
+> **Overall Progress**: 72/251 tasks (28.7%)
 
 ## Status Legend
 
@@ -651,7 +651,7 @@
 ## Phase 2: Lint Rules
 
 **Timeline**: Weeks 6-11 (6 weeks)
-**Progress**: 18/81 tasks (22.2%)
+**Progress**: 19/81 tasks (23.5%)
 **Priority**: P1 (High)
 **Status**: In Progress - Core lint rules implemented
 
@@ -845,7 +845,7 @@
 ### 2.4: Code Style Rules (Weeks 9-10)
 
 **20 rules, 2 weeks**
-**Progress**: 5/20 rules completed (25.0%)
+**Progress**: 6/20 rules completed (30.0%)
 
 - [x] ✅ **LINT-STYLE-001**: indent
   - **Status**: DONE
@@ -959,6 +959,29 @@
     - Configuration options: style (single|double), avoidEscape (default: true)
   - **Recommendation**: Choose consistent quote style (single or double), enable avoidEscape to reduce escaping
   - **Impact**: Improves code consistency, reduces escape sequences, enhances readability
+
+- [x] ✅ **LINT-STYLE-006**: brace-style
+  - **Status**: DONE
+  - **Completed**: 2025-01-13
+  - **File**: `lib/rules/lint/brace-style.ts`
+  - **Test File**: `test/unit/rules/lint/brace-style.test.ts`
+  - **Test Results**: ✅ 11 tests passing
+  - **Severity**: INFO
+  - **Description**: Enforces consistent brace style for code blocks (1TBS or Allman)
+  - **Features**:
+    - Configurable brace style (1tbs or allman, default: 1tbs)
+    - Contract, function, and control structure block detection
+    - Single-line block handling (allowed)
+    - Empty block handling
+    - Keyword-based brace detection
+  - **Implementation Notes**:
+    - Line-by-line analysis with keyword pattern matching
+    - Regex-based keyword detection (contract, function, if, for, while, etc.)
+    - Same-line vs new-line brace position checking
+    - Single-line block exclusion logic
+    - Configuration option: style (1tbs|allman)
+  - **Recommendation**: Use consistent brace style (1TBS is more common in Solidity)
+  - **Impact**: Improves code consistency, enhances readability, follows style conventions
 
 ### 2.5: Gas Optimization Rules (Week 11)
 
