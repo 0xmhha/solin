@@ -1,8 +1,8 @@
 # Solin Development Task List
 
-> **Last Updated**: 2025-01-13
+> **Last Updated**: 2025-01-17
 > **Current Phase**: Phase 2 & 3 - Lint Rules & Security Detectors (In Progress)
-> **Overall Progress**: 77/251 tasks (30.7%)
+> **Overall Progress**: 78/251 tasks (31.1%)
 
 ## Status Legend
 
@@ -651,7 +651,7 @@
 ## Phase 2: Lint Rules
 
 **Timeline**: Weeks 6-11 (6 weeks)
-**Progress**: 26/81 tasks (32.1%)
+**Progress**: 27/81 tasks (33.3%)
 **Priority**: P1 (High)
 **Status**: In Progress - Core lint rules and gas optimization rules implemented
 
@@ -1238,6 +1238,34 @@
     - Improves dApp responsiveness
     - Maximum 3 indexed parameters per event (Solidity limit)
   - **Recommendation**: Add indexed keyword to address, bytes32, bool, and enum parameters
+
+- [x] ✅ **LINT-GAS-005**: gas-small-strings
+  - **Status**: DONE
+  - **Completed**: 2025-01-17
+  - **File**: `lib/rules/lint/gas-small-strings.ts`
+  - **Test File**: `test/unit/rules/lint/gas-small-strings.test.ts`
+  - **Test Results**: ✅ 22 tests passing
+  - **Description**: Detects short strings (≤32 bytes) that should use bytes32 for gas efficiency
+  - **Features**:
+    - String state variable detection with short literals
+    - String constant detection with short values
+    - Empty string handling
+    - Exact 32-byte boundary detection
+    - Uninitialized string exclusion (cannot determine length)
+    - Multiple contract support
+    - Mixed string and bytes32 variable handling
+  - **Implementation Notes**:
+    - AST traversal for StateVariableDeclaration nodes
+    - String type validation (ElementaryTypeName with name 'string')
+    - String literal length calculation
+    - Type conversion handling (string(...))
+    - Gas savings estimation based on string length
+  - **Gas Optimization Impact**:
+    - Storage: ~2100 gas saved per read for strings ≤31 bytes
+    - ~2000 gas saved per read for strings exactly 32 bytes
+    - bytes32 uses 1 storage slot vs string using 2+ slots
+    - More efficient for fixed-length strings in memory
+  - **Recommendation**: Replace string with bytes32 for fixed-length strings ≤32 bytes. Convert using: bytes32 varName = bytes32(bytes("value"))
 
 ---
 
