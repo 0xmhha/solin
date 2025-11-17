@@ -2,7 +2,7 @@
 
 > **Last Updated**: 2025-01-13
 > **Current Phase**: Phase 2 & 3 - Lint Rules & Security Detectors (In Progress)
-> **Overall Progress**: 76/251 tasks (30.3%)
+> **Overall Progress**: 77/251 tasks (30.7%)
 
 ## Status Legend
 
@@ -651,7 +651,7 @@
 ## Phase 2: Lint Rules
 
 **Timeline**: Weeks 6-11 (6 weeks)
-**Progress**: 23/81 tasks (28.4%)
+**Progress**: 24/81 tasks (29.6%)
 **Priority**: P1 (High)
 **Status**: In Progress - Core lint rules implemented
 
@@ -845,7 +845,7 @@
 ### 2.4: Code Style Rules (Weeks 9-10)
 
 **20 rules, 2 weeks**
-**Progress**: 10/20 rules completed (50.0%)
+**Progress**: 11/20 rules completed (55.0%)
 
 - [x] ✅ **LINT-STYLE-001**: indent
   - **Status**: DONE
@@ -1076,6 +1076,30 @@
     - No underscores allowed in function name body
     - Configuration: none (always enforces mixedCase)
   - **Recommendation**: Use mixedCase (transfer, transferFrom, balanceOf), underscore prefix for internal/private
+  - **Impact**: Improves code consistency, follows Solidity style guide, enhances readability
+
+- [x] ✅ **LINT-STYLE-011**: var-name-mixedcase
+  - **Status**: DONE
+  - **Completed**: 2025-01-13
+  - **File**: `lib/rules/lint/var-name-mixedcase.ts`
+  - **Test File**: `test/unit/rules/lint/var-name-mixedcase.test.ts`
+  - **Test Results**: ✅ 13 tests passing
+  - **Severity**: INFO
+  - **Description**: Enforces mixedCase (camelCase) naming convention for variables
+  - **Features**:
+    - Variable name validation (mixedCase enforcement)
+    - Leading underscore support for private/internal state variables
+    - PascalCase detection and rejection
+    - snake_case detection and rejection
+    - Local variable and state variable support
+    - Function parameter validation
+  - **Implementation Notes**:
+    - AST traversal for VariableDeclaration nodes
+    - Regex pattern matching: ^[a-z][a-zA-Z0-9]*$ (after removing leading underscore)
+    - Leading underscore stripping for private/internal variables
+    - No underscores allowed in variable name body
+    - Configuration: none (always enforces mixedCase)
+  - **Recommendation**: Use mixedCase (balance, totalSupply, userBalance), underscore prefix for private/internal
   - **Impact**: Improves code consistency, follows Solidity style guide, enhances readability
 
 ### 2.5: Gas Optimization Rules (Week 11)
