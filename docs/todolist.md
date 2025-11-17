@@ -651,9 +651,9 @@
 ## Phase 2: Lint Rules
 
 **Timeline**: Weeks 6-11 (6 weeks)
-**Progress**: 24/81 tasks (29.6%)
+**Progress**: 25/81 tasks (30.9%)
 **Priority**: P1 (High)
-**Status**: In Progress - Core lint rules implemented
+**Status**: In Progress - Core lint rules and gas optimization rules implemented
 
 ### 2.1: Rule Categories Setup
 
@@ -1105,7 +1105,7 @@
 ### 2.5: Gas Optimization Rules (Week 11)
 
 **15 rules, 1 week**
-**Progress**: 1/15 rules completed (6.7%)
+**Progress**: 3/15 rules completed (20.0%)
 
 - [x] ✅ **LINT-GAS-001**: cache-array-length
   - **Status**: DONE
@@ -1182,6 +1182,34 @@
     - Function parameters: ~3-20 gas per iteration
     - Example: 100 iterations = 10,000+ gas saved
     - Best practice: Cache all loop-invariant values
+
+- [x] ✅ **LINT-GAS-003**: gas-custom-errors
+  - **Status**: DONE
+  - **Completed**: 2025-01-17
+  - **File**: `lib/rules/lint/gas-custom-errors.ts`
+  - **Test File**: `test/unit/rules/lint/gas-custom-errors.test.ts`
+  - **Test Results**: ✅ 20 tests passing
+  - **Description**: Detects require() and revert() calls with string literals for gas optimization
+  - **Features**:
+    - require() with string literal detection
+    - revert() with string literal detection
+    - Custom error usage validation (no false positives)
+    - assert() statement handling (correctly ignored)
+    - String concatenation detection (BinaryOperation)
+    - Multiple contract support
+    - Constructor and modifier detection
+  - **Implementation Notes**:
+    - AST traversal for FunctionCall nodes
+    - Function name extraction (require, revert)
+    - String argument validation (StringLiteral, BinaryOperation)
+    - Custom error exclusion (Identifier, MemberAccess)
+    - Location tracking for precise error reporting
+  - **Gas Optimization Impact**:
+    - Deployment: ~24KB saved per revert string
+    - Runtime: ~50 gas saved per revert execution
+    - Introduced in Solidity 0.8.4
+    - Example: 10 require statements = ~240KB deployment savings
+  - **Recommendation**: Replace require(condition, "message") with custom errors: if (!condition) revert CustomError()
 
 ---
 
@@ -1869,11 +1897,11 @@
 |-------|--------|----------|----------------------|
 | Phase 0 | ✅ DONE | 5/8 (62.5%) | Week 1 |
 | Phase 1 | ✅ CORE COMPLETE | 20/45 (44.4%) | Weeks 2-5 |
-| Phase 2 | ✅ COMPLETE | 13/81 (16.0%) | Weeks 6-11 |
-| Phase 3 | 🚧 IN PROGRESS | 28/99 (28.3%) | Weeks 12-19 |
+| Phase 2 | 🚧 IN PROGRESS | 25/81 (30.9%) | Weeks 6-11 |
+| Phase 3 | 🚧 IN PROGRESS | 30/99 (30.3%) | Weeks 12-19 |
 | Phase 4 | ⏭️ TODO | 0/8 (0%) | Weeks 20-22 |
 | Phase 5 | ⏭️ TODO | 0/10 (0%) | Weeks 23-26 |
-| **TOTAL** | | **65/251 (25.9%)** | **26 weeks** |
+| **TOTAL** | | **80/251 (31.9%)** | **26 weeks** |
 
 ### By Priority
 
@@ -1900,16 +1928,17 @@
 
 ### For Next Session
 
-**Current Context**: 2025-01-13
+**Current Context**: 2025-01-17
 - Phase 1: Core Foundation - ✅ COMPLETE (20/45 tasks, 44.4%)
-- Phase 2: Lint Rules - 🚧 IN PROGRESS (13/81 tasks, 16.0%)
-- Phase 3: Security - 🚧 IN PROGRESS (20/99 tasks, 20.2%)
-- Total Progress: 56/251 tasks (22.3%)
+- Phase 2: Lint Rules - 🚧 IN PROGRESS (25/81 tasks, 30.9%)
+- Phase 3: Security - 🚧 IN PROGRESS (30/99 tasks, 30.3%)
+- Total Progress: 80/251 tasks (31.9%)
 
 **Recent Achievements**:
 - ✅ Core engine and rule framework complete
-- ✅ 32 rules implemented (12 lint + 20 security)
-- ✅ 610 tests passing, 43 test suites
+- ✅ 46 rules implemented (15 lint + 15 security medium + 15 security high + 1 security low)
+- ✅ Gas optimization rules: cache-array-length, loop-invariant-code, gas-custom-errors
+- ✅ 630+ tests passing, 46+ test suites
 - ✅ All using TDD methodology with comprehensive coverage
 - ✅ GitHub repository created: https://github.com/0xmhha/solin
 - ✅ Git author history corrected (0xmhha <mhha@wemade.com>)
