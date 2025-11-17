@@ -2,7 +2,7 @@
 
 > **Last Updated**: 2025-01-13
 > **Current Phase**: Phase 2 & 3 - Lint Rules & Security Detectors (In Progress)
-> **Overall Progress**: 75/251 tasks (29.9%)
+> **Overall Progress**: 76/251 tasks (30.3%)
 
 ## Status Legend
 
@@ -651,7 +651,7 @@
 ## Phase 2: Lint Rules
 
 **Timeline**: Weeks 6-11 (6 weeks)
-**Progress**: 22/81 tasks (27.2%)
+**Progress**: 23/81 tasks (28.4%)
 **Priority**: P1 (High)
 **Status**: In Progress - Core lint rules implemented
 
@@ -845,7 +845,7 @@
 ### 2.4: Code Style Rules (Weeks 9-10)
 
 **20 rules, 2 weeks**
-**Progress**: 9/20 rules completed (45.0%)
+**Progress**: 10/20 rules completed (50.0%)
 
 - [x] ✅ **LINT-STYLE-001**: indent
   - **Status**: DONE
@@ -1051,6 +1051,31 @@
     - Rejects all-caps without special patterns
     - Configuration: none (always enforces PascalCase)
   - **Recommendation**: Use PascalCase (MyContract, ERC20Token, IERC20) for all contract-like definitions
+  - **Impact**: Improves code consistency, follows Solidity style guide, enhances readability
+
+- [x] ✅ **LINT-STYLE-010**: function-name-mixedcase
+  - **Status**: DONE
+  - **Completed**: 2025-01-13
+  - **File**: `lib/rules/lint/function-name-mixedcase.ts`
+  - **Test File**: `test/unit/rules/lint/function-name-mixedcase.test.ts`
+  - **Test Results**: ✅ 16 tests passing
+  - **Severity**: INFO
+  - **Description**: Enforces mixedCase (camelCase) naming convention for functions
+  - **Features**:
+    - Function name validation (mixedCase enforcement)
+    - Leading underscore support for internal/private functions
+    - PascalCase detection and rejection
+    - snake_case detection and rejection
+    - Special function exclusion (constructor, fallback, receive)
+    - Multi-function analysis
+  - **Implementation Notes**:
+    - AST traversal for FunctionDefinition nodes
+    - Regex pattern matching: ^[a-z][a-zA-Z0-9]*$ (after removing leading underscore)
+    - Leading underscore stripping for internal/private functions
+    - Special function name checking (constructor, fallback, receive)
+    - No underscores allowed in function name body
+    - Configuration: none (always enforces mixedCase)
+  - **Recommendation**: Use mixedCase (transfer, transferFrom, balanceOf), underscore prefix for internal/private
   - **Impact**: Improves code consistency, follows Solidity style guide, enhances readability
 
 ### 2.5: Gas Optimization Rules (Week 11)
