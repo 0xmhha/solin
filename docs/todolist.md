@@ -2,7 +2,7 @@
 
 > **Last Updated**: 2025-01-13
 > **Current Phase**: Phase 2 & 3 - Lint Rules & Security Detectors (In Progress)
-> **Overall Progress**: 74/251 tasks (29.5%)
+> **Overall Progress**: 75/251 tasks (29.9%)
 
 ## Status Legend
 
@@ -651,7 +651,7 @@
 ## Phase 2: Lint Rules
 
 **Timeline**: Weeks 6-11 (6 weeks)
-**Progress**: 21/81 tasks (25.9%)
+**Progress**: 22/81 tasks (27.2%)
 **Priority**: P1 (High)
 **Status**: In Progress - Core lint rules implemented
 
@@ -845,7 +845,7 @@
 ### 2.4: Code Style Rules (Weeks 9-10)
 
 **20 rules, 2 weeks**
-**Progress**: 8/20 rules completed (40.0%)
+**Progress**: 9/20 rules completed (45.0%)
 
 - [x] ✅ **LINT-STYLE-001**: indent
   - **Status**: DONE
@@ -1028,6 +1028,30 @@
     - Configuration option: max (default: 50)
   - **Recommendation**: Keep functions under 50 lines, break long functions into smaller focused functions
   - **Impact**: Improves code maintainability, readability, testability, and reduces complexity
+
+- [x] ✅ **LINT-STYLE-009**: contract-name-camelcase
+  - **Status**: DONE
+  - **Completed**: 2025-01-13
+  - **File**: `lib/rules/lint/contract-name-camelcase.ts`
+  - **Test File**: `test/unit/rules/lint/contract-name-camelcase.test.ts`
+  - **Test Results**: ✅ 13 tests passing
+  - **Severity**: INFO
+  - **Description**: Enforces PascalCase naming convention for contracts, libraries, and interfaces
+  - **Features**:
+    - Contract, library, and interface name validation
+    - PascalCase enforcement (starts with uppercase)
+    - Underscore detection and rejection
+    - Interface prefix support (I*)
+    - Acronym support (ERC20, IERC721)
+    - All-caps pattern filtering (MYCONTRACT rejected, IERC20 allowed)
+  - **Implementation Notes**:
+    - AST traversal for ContractDefinition, LibraryDefinition, InterfaceDefinition nodes
+    - Regex pattern matching: ^[A-Z][A-Za-z0-9]*$
+    - Special pattern allowance: starts with I, contains numbers, or has lowercase
+    - Rejects all-caps without special patterns
+    - Configuration: none (always enforces PascalCase)
+  - **Recommendation**: Use PascalCase (MyContract, ERC20Token, IERC20) for all contract-like definitions
+  - **Impact**: Improves code consistency, follows Solidity style guide, enhances readability
 
 ### 2.5: Gas Optimization Rules (Week 11)
 
