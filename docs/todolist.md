@@ -651,7 +651,7 @@
 ## Phase 2: Lint Rules
 
 **Timeline**: Weeks 6-11 (6 weeks)
-**Progress**: 25/81 tasks (30.9%)
+**Progress**: 26/81 tasks (32.1%)
 **Priority**: P1 (High)
 **Status**: In Progress - Core lint rules and gas optimization rules implemented
 
@@ -1105,7 +1105,7 @@
 ### 2.5: Gas Optimization Rules (Week 11)
 
 **15 rules, 1 week**
-**Progress**: 3/15 rules completed (20.0%)
+**Progress**: 4/15 rules completed (26.7%)
 
 - [x] ✅ **LINT-GAS-001**: cache-array-length
   - **Status**: DONE
@@ -1210,6 +1210,34 @@
     - Introduced in Solidity 0.8.4
     - Example: 10 require statements = ~240KB deployment savings
   - **Recommendation**: Replace require(condition, "message") with custom errors: if (!condition) revert CustomError()
+
+- [x] ✅ **LINT-GAS-004**: gas-indexed-events
+  - **Status**: DONE
+  - **Completed**: 2025-01-17
+  - **File**: `lib/rules/lint/gas-indexed-events.ts`
+  - **Test File**: `test/unit/rules/lint/gas-indexed-events.test.ts`
+  - **Test Results**: ✅ 22 tests passing
+  - **Description**: Detects event parameters that should be indexed for efficient off-chain filtering
+  - **Features**:
+    - address parameter detection (commonly filtered)
+    - bytes32 parameter detection (keys/IDs)
+    - bool parameter detection (status filtering)
+    - enum parameter detection (state filtering)
+    - Maximum 3 indexed parameters enforcement
+    - Already-indexed parameter exclusion
+    - Non-indexable type handling (string, bytes, arrays)
+  - **Implementation Notes**:
+    - AST traversal for EventDefinition nodes
+    - Type analysis (ElementaryTypeName, UserDefinedTypeName)
+    - Indexed count tracking per event
+    - Maximum 3 indexed parameters limit
+    - Type categorization for indexable types
+  - **Gas Optimization Impact**:
+    - Enables efficient off-chain event filtering
+    - Reduces query complexity and cost
+    - Improves dApp responsiveness
+    - Maximum 3 indexed parameters per event (Solidity limit)
+  - **Recommendation**: Add indexed keyword to address, bytes32, bool, and enum parameters
 
 ---
 
@@ -1897,11 +1925,11 @@
 |-------|--------|----------|----------------------|
 | Phase 0 | ✅ DONE | 5/8 (62.5%) | Week 1 |
 | Phase 1 | ✅ CORE COMPLETE | 20/45 (44.4%) | Weeks 2-5 |
-| Phase 2 | 🚧 IN PROGRESS | 25/81 (30.9%) | Weeks 6-11 |
+| Phase 2 | 🚧 IN PROGRESS | 26/81 (32.1%) | Weeks 6-11 |
 | Phase 3 | 🚧 IN PROGRESS | 30/99 (30.3%) | Weeks 12-19 |
 | Phase 4 | ⏭️ TODO | 0/8 (0%) | Weeks 20-22 |
 | Phase 5 | ⏭️ TODO | 0/10 (0%) | Weeks 23-26 |
-| **TOTAL** | | **80/251 (31.9%)** | **26 weeks** |
+| **TOTAL** | | **81/251 (32.3%)** | **26 weeks** |
 
 ### By Priority
 
@@ -1930,15 +1958,15 @@
 
 **Current Context**: 2025-01-17
 - Phase 1: Core Foundation - ✅ COMPLETE (20/45 tasks, 44.4%)
-- Phase 2: Lint Rules - 🚧 IN PROGRESS (25/81 tasks, 30.9%)
+- Phase 2: Lint Rules - 🚧 IN PROGRESS (26/81 tasks, 32.1%)
 - Phase 3: Security - 🚧 IN PROGRESS (30/99 tasks, 30.3%)
-- Total Progress: 80/251 tasks (31.9%)
+- Total Progress: 81/251 tasks (32.3%)
 
 **Recent Achievements**:
 - ✅ Core engine and rule framework complete
-- ✅ 46 rules implemented (15 lint + 15 security medium + 15 security high + 1 security low)
-- ✅ Gas optimization rules: cache-array-length, loop-invariant-code, gas-custom-errors
-- ✅ 630+ tests passing, 46+ test suites
+- ✅ 47 rules implemented (16 lint + 15 security medium + 15 security high + 1 security low)
+- ✅ Gas optimization rules: cache-array-length, loop-invariant-code, gas-custom-errors, gas-indexed-events
+- ✅ 920+ tests passing, 66+ test suites
 - ✅ All using TDD methodology with comprehensive coverage
 - ✅ GitHub repository created: https://github.com/0xmhha/solin
 - ✅ Git author history corrected (0xmhha <mhha@wemade.com>)
