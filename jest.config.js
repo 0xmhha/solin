@@ -27,6 +27,7 @@ module.exports = {
     '^@rules/(.*)$': '<rootDir>/lib/rules/$1',
     '^@config/(.*)$': '<rootDir>/lib/config/$1',
     '^@cli/(.*)$': '<rootDir>/lib/cli/$1',
+    '^@formatters/(.*)$': '<rootDir>/lib/formatters/$1',
   },
   setupFilesAfterEnv: ['<rootDir>/test/setup.ts'],
   testTimeout: 10000,
