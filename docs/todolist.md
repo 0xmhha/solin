@@ -2,7 +2,7 @@
 
 > **Last Updated**: 2025-01-17
 > **Current Phase**: Phase 2 & 3 - Lint Rules & Security Detectors (In Progress)
-> **Overall Progress**: 78/251 tasks (31.1%)
+> **Overall Progress**: 79/251 tasks (31.5%)
 
 ## Status Legend
 
@@ -1272,7 +1272,7 @@
 ## Phase 3: Security Detectors
 
 **Timeline**: Weeks 12-19 (8 weeks)
-**Progress**: 20/99 tasks (20.2%)
+**Progress**: 21/99 tasks (21.2%)
 **Priority**: P1 (High)
 **Status**: In Progress - Core security rules implemented
 
@@ -1890,6 +1890,28 @@
 ### 3.4: Low & Informational (Week 19)
 
 **30 detectors, 1 week**
+**Progress**: 1/30 detectors completed (3.3%)
+
+- [x] ✅ **SEC-LOW-001**: avoid-sha3
+  - **Status**: DONE
+  - **Completed**: 2025-01-17
+  - **File**: `lib/rules/security/avoid-sha3.ts`
+  - **Test File**: `test/unit/rules/security/avoid-sha3.test.ts`
+  - **Test Results**: ✅ 19 tests passing
+  - **Severity**: WARNING
+  - **Description**: Detects usage of deprecated sha3() function
+  - **Features**:
+    - sha3() function call detection
+    - Multiple sha3() calls detection
+    - sha3() in constructor detection
+    - sha3() in modifiers detection
+    - sha3() in nested function calls
+    - sha3() with multiple arguments
+  - **Implementation Notes**:
+    - AST traversal for FunctionCall nodes
+    - Function name extraction from Identifier
+    - Deprecation since Solidity 0.5.0
+  - **Recommendation**: Replace sha3() with keccak256() - same functionality, preferred name
 
 ---
 
