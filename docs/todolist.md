@@ -2,7 +2,7 @@
 
 > **Last Updated**: 2025-01-17
 > **Current Phase**: Phase 2 & 3 - Lint Rules & Security Detectors (In Progress)
-> **Overall Progress**: 80/251 tasks (31.9%)
+> **Overall Progress**: 81/251 tasks (32.3%)
 
 ## Status Legend
 
@@ -1272,7 +1272,7 @@
 ## Phase 3: Security Detectors
 
 **Timeline**: Weeks 12-19 (8 weeks)
-**Progress**: 22/99 tasks (22.2%)
+**Progress**: 23/99 tasks (23.2%)
 **Priority**: P1 (High)
 **Status**: In Progress - Core security rules implemented
 
@@ -1890,7 +1890,7 @@
 ### 3.4: Low & Informational (Week 19)
 
 **30 detectors, 1 week**
-**Progress**: 2/30 detectors completed (6.7%)
+**Progress**: 3/30 detectors completed (10.0%)
 
 - [x] ✅ **SEC-LOW-001**: avoid-sha3
   - **Status**: DONE
@@ -1932,6 +1932,26 @@
     - Function name extraction from Identifier
     - Deprecated since Solidity 0.5.0
   - **Recommendation**: Replace suicide() with selfdestruct() - same functionality, preferred name
+
+- [x] ✅ **SEC-LOW-003**: avoid-throw
+  - **Status**: DONE
+  - **Completed**: 2025-01-17
+  - **File**: `lib/rules/security/avoid-throw.ts`
+  - **Test File**: `test/unit/rules/security/avoid-throw.test.ts`
+  - **Test Results**: ✅ 19 tests passing
+  - **Severity**: WARNING
+  - **Description**: Detects usage of deprecated throw statement
+  - **Features**:
+    - throw statement detection in all contexts
+    - Multiple throw statements detection
+    - throw in constructors and modifiers
+    - throw in conditional blocks and loops
+    - throw in nested conditions
+  - **Implementation Notes**:
+    - AST traversal for ThrowStatement nodes
+    - Deprecated since Solidity 0.4.13, removed in 0.5.0
+    - throw consumes all remaining gas (like assert)
+  - **Recommendation**: Replace throw with revert() or require() - these refund unused gas
 
 ---
 
