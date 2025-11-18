@@ -2,7 +2,7 @@
 
 > **Last Updated**: 2025-01-17
 > **Current Phase**: Phase 2 & 3 - Lint Rules & Security Detectors (In Progress)
-> **Overall Progress**: 82/251 tasks (32.7%)
+> **Overall Progress**: 83/251 tasks (33.1%)
 
 ## Status Legend
 
@@ -1272,7 +1272,7 @@
 ## Phase 3: Security Detectors
 
 **Timeline**: Weeks 12-19 (8 weeks)
-**Progress**: 24/99 tasks (24.2%)
+**Progress**: 25/99 tasks (25.3%)
 **Priority**: P1 (High)
 **Status**: In Progress - Core security rules implemented
 
@@ -1890,7 +1890,7 @@
 ### 3.4: Low & Informational (Week 19)
 
 **30 detectors, 1 week**
-**Progress**: 4/30 detectors completed (13.3%)
+**Progress**: 5/30 detectors completed (16.7%)
 
 - [x] ✅ **SEC-LOW-001**: avoid-sha3
   - **Status**: DONE
@@ -1973,6 +1973,28 @@
     - Assembly bypasses Solidity's type safety
     - Requires thorough security audit when used
   - **Recommendation**: Avoid assembly unless absolutely necessary, ensure security audit and extensive documentation
+
+- [x] ✅ **SEC-LOW-005**: check-send-result
+  - **Status**: DONE
+  - **Completed**: 2025-01-17
+  - **File**: `lib/rules/security/check-send-result.ts`
+  - **Test File**: `test/unit/rules/security/check-send-result.test.ts`
+  - **Test Results**: ✅ 22 tests passing
+  - **Severity**: ERROR
+  - **Description**: Detects send() calls without checking return value
+  - **Features**:
+    - Unchecked send() call detection
+    - Checked send() with require/assert exclusion
+    - Variable assignment tracking
+    - Return statement detection
+    - send() in constructors, modifiers, and loops
+    - Multiple send() calls detection
+  - **Implementation Notes**:
+    - Two-pass analysis: find checked sends, then find unchecked
+    - Location-based deduplication
+    - send() returns false on failure but doesn't revert
+    - Can lead to silent failures
+  - **Recommendation**: Check return value with require/assert/if, or use transfer() which reverts automatically
 
 ---
 
