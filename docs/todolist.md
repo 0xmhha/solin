@@ -2,7 +2,7 @@
 
 > **Last Updated**: 2025-01-17
 > **Current Phase**: Phase 2 & 3 - Lint Rules & Security Detectors (In Progress)
-> **Overall Progress**: 79/251 tasks (31.5%)
+> **Overall Progress**: 80/251 tasks (31.9%)
 
 ## Status Legend
 
@@ -1272,7 +1272,7 @@
 ## Phase 3: Security Detectors
 
 **Timeline**: Weeks 12-19 (8 weeks)
-**Progress**: 21/99 tasks (21.2%)
+**Progress**: 22/99 tasks (22.2%)
 **Priority**: P1 (High)
 **Status**: In Progress - Core security rules implemented
 
@@ -1890,7 +1890,7 @@
 ### 3.4: Low & Informational (Week 19)
 
 **30 detectors, 1 week**
-**Progress**: 1/30 detectors completed (3.3%)
+**Progress**: 2/30 detectors completed (6.7%)
 
 - [x] ✅ **SEC-LOW-001**: avoid-sha3
   - **Status**: DONE
@@ -1912,6 +1912,26 @@
     - Function name extraction from Identifier
     - Deprecation since Solidity 0.5.0
   - **Recommendation**: Replace sha3() with keccak256() - same functionality, preferred name
+
+- [x] ✅ **SEC-LOW-002**: avoid-suicide
+  - **Status**: DONE
+  - **Completed**: 2025-01-17
+  - **File**: `lib/rules/security/avoid-suicide.ts`
+  - **Test File**: `test/unit/rules/security/avoid-suicide.test.ts`
+  - **Test Results**: ✅ 19 tests passing
+  - **Severity**: WARNING
+  - **Description**: Detects usage of deprecated suicide() function
+  - **Features**:
+    - suicide() function call detection
+    - Multiple suicide() calls detection
+    - suicide() in constructor detection
+    - suicide() in modifiers and conditional statements
+    - suicide() with various address types
+  - **Implementation Notes**:
+    - AST traversal for FunctionCall nodes
+    - Function name extraction from Identifier
+    - Deprecated since Solidity 0.5.0
+  - **Recommendation**: Replace suicide() with selfdestruct() - same functionality, preferred name
 
 ---
 
