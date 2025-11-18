@@ -10,6 +10,7 @@ import { RuleRegistry } from '@core/rule-registry';
 import { AnalysisEngine } from '@core/analysis-engine';
 import { StylishFormatter } from '@formatters/stylish-formatter';
 import { JSONFormatter } from '@formatters/json-formatter';
+import { SarifFormatter } from '@formatters/sarif-formatter';
 import type { IFormatter } from '@formatters/types';
 import { resolveFiles } from '../file-resolver';
 import type { ParsedArguments } from '../types';
@@ -220,6 +221,10 @@ export class AnalyzeCommand {
         return new JSONFormatter({ pretty: true });
       case 'json-compact':
         return new JSONFormatter({ pretty: false });
+      case 'sarif':
+        return new SarifFormatter({ pretty: true });
+      case 'sarif-compact':
+        return new SarifFormatter({ pretty: false });
       case 'stylish':
       default:
         return new StylishFormatter();
