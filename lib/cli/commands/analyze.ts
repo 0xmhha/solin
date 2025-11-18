@@ -14,6 +14,7 @@ import type { IFormatter } from '@formatters/types';
 import { resolveFiles } from '../file-resolver';
 import type { ParsedArguments } from '../types';
 import type { ResolvedConfig } from '@config/types';
+import * as Rules from '@rules/index';
 
 /**
  * Analyze command - runs analysis on Solidity files
@@ -131,93 +132,57 @@ export class AnalyzeCommand {
    * Register all available rules
    */
   private async registerRules(registry: RuleRegistry): Promise<void> {
-    // Import and register all rules
-    // We'll dynamically import rules based on what's available
-
-    // For now, register the rules that are already implemented
-    // This can be improved later with automatic discovery
-
-    try {
+    // Register all rules from the rules index
+    const ruleClasses = [
       // Security rules
-      const securityRules = [
-        'tx-origin',
-        'unchecked-calls',
-        'timestamp-dependence',
-        'uninitialized-state',
-        'arbitrary-send',
-        'delegatecall-in-loop',
-        'shadowing-variables',
-        'selfdestruct',
-        'controlled-delegatecall',
-        'weak-prng',
-        'uninitialized-storage',
-        'reentrancy',
-        'locked-ether',
-        'divide-before-multiply',
-        'msg-value-loop',
-        'floating-pragma',
-        'outdated-compiler',
-        'assert-state-change',
-        'missing-zero-check',
-        'missing-events',
-        'unsafe-cast',
-        'shadowing-builtin',
-        'unchecked-send',
-        'unchecked-lowlevel',
-        'costly-loop',
-        'deprecated-functions',
-      ];
-
-      for (const ruleName of securityRules) {
-        try {
-          const module = await import(`@rules/security/${ruleName}`);
-          const RuleClass = Object.values(module)[0] as any;
-          if (RuleClass) {
-            registry.register(new RuleClass());
-          }
-        } catch {
-          // Rule not found, skip
-        }
-      }
-
+      Rules.TxOriginRule,
+      Rules.UncheckedCallsRule,
+      Rules.TimestampDependenceRule,
+      Rules.UninitializedStateRule,
+      Rules.ArbitrarySendRule,
+      Rules.DelegatecallInLoopRule,
+      Rules.ShadowingVariablesRule,
+      Rules.SelfdestructRule,
+      Rules.ControlledDelegatecallRule,
+      Rules.WeakPrngRule,
+      Rules.UninitializedStorageRule,
+      Rules.LockedEtherRule,
+      Rules.ReentrancyRule,
+      Rules.DivideBeforeMultiplyRule,
+      Rules.MsgValueLoopRule,
+      Rules.FloatingPragmaRule,
+      Rules.OutdatedCompilerRule,
+      Rules.AssertStateChangeRule,
+      Rules.MissingZeroCheckRule,
+      Rules.MissingEventsRule,
+      Rules.UnsafeCastRule,
+      Rules.ShadowingBuiltinRule,
+      Rules.UncheckedSendRule,
+      Rules.UncheckedLowlevelRule,
+      Rules.CostlyLoopRule,
+      Rules.DeprecatedFunctionsRule,
       // Lint rules
-      const lintRules = [
-        'function-max-lines',
-        'quotes',
-        'max-line-length',
-        'magic-numbers',
-        'no-empty-blocks',
-        'state-mutability',
-        'var-name-mixedcase',
-        'space-after-comma',
-        'require-revert-reason',
-        'unused-variables',
-        'cache-array-length',
-        'visibility-modifiers',
-        'naming-convention',
-        'function-complexity',
-        'gas-custom-errors',
-        'function-name-mixedcase',
-        'boolean-equality',
-        'no-trailing-whitespace',
-        'no-console',
-        'gas-indexed-events',
-        'gas-small-strings',
-      ];
+      Rules.NoEmptyBlocksRule,
+      Rules.NamingConventionRule,
+      Rules.VisibilityModifiersRule,
+      // Rules.StateMutabilityRule, // TODO: Fix null pointer error
+      Rules.UnusedVariablesRule,
+      Rules.FunctionComplexityRule,
+      Rules.MagicNumbersRule,
+      Rules.RequireRevertReasonRule,
+      Rules.CacheArrayLengthRule,
+    ];
 
-      for (const ruleName of lintRules) {
+    // Register each rule
+    for (const RuleClass of ruleClasses) {
+      if (RuleClass) {
         try {
-          const module = await import(`@rules/lint/${ruleName}`);
-          const RuleClass = Object.values(module)[0] as any;
-          if (RuleClass) {
-            registry.register(new RuleClass());
-          }
-        } catch {
-          // Rule not found, skip
+          registry.register(new RuleClass());
+        } catch (error) {
+          // Skip rules that fail to instantiate
+          console.debug(`Failed to register rule: ${error}`);
         }
       }
-    } catch (error) {
-      console.warn('Warning: Some rules could not be loaded');
     }
   }
 

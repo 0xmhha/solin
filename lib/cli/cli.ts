@@ -7,6 +7,8 @@
 import { Command } from 'commander';
 import { ParsedArguments } from './types';
 import { AnalyzeCommand } from './commands/analyze';
+import { InitCommand } from './commands/init';
+import { ListRulesCommand } from './commands/list-rules';
 import * as packageJson from '../../package.json';
 
 export class CLI {
@@ -23,7 +25,7 @@ export class CLI {
   private setupCommands(): void {
     this.program
       .name('solin')
-      .description('Advanced Solidity static analysis tool')
+      .description('Advanced Solidity static analysis tool\n\nCommands:\n  init          Generate default .solinrc.json configuration file\n  list-rules    List all available rules\n  <files>       Analyze Solidity files (default)')
       .version(packageJson.version)
       .argument('[files...]', 'Solidity files or glob patterns to analyze')
       .option('-c, --config <path>', 'Configuration file path')
@@ -82,6 +84,21 @@ export class CLI {
    */
   async run(args: string[]): Promise<number> {
     try {
+      // Check for subcommands
+      const command = args[2];
+
+      if (command === 'init') {
+        const force = args.includes('--force');
+        const initCommand = new InitCommand();
+        return await initCommand.execute(force);
+      }
+
+      if (command === 'list-rules') {
+        const listRulesCommand = new ListRulesCommand();
+        return await listRulesCommand.execute();
+      }
+
+      // Default: analyze command
       const parsedArgs = this.parseArguments(args);
 
       // Handle special cases
