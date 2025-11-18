@@ -33,14 +33,14 @@ Solin is designed to be a **unified Solidity analysis platform** that combines:
 
 ### Core Capabilities
 
-- ✅ **80+ Lint Rules**: Code style, best practices, naming conventions, gas optimization
-- ✅ **99+ Security Detectors**: Reentrancy, uninitialized variables, access control, and more
-- ✅ **Parallel Processing**: Multi-threaded analysis for improved performance
-- ✅ **Smart Caching**: File-level caching to skip unchanged files
-- ✅ **Auto-Fix**: Automatic fixes for common issues with confidence scoring
-- ✅ **Multiple Output Formats**: JSON, SARIF, Markdown, HTML reports
-- ✅ **Plugin System**: Extensible architecture for custom rules
-- ✅ **CI/CD Integration**: GitHub Actions, GitLab CI, and more
+- ✅ **59 Rules Total**: 33 security detectors + 26 lint rules
+- ✅ **Security Analysis**: Reentrancy, tx.origin, unchecked calls, weak randomness, and more
+- ✅ **Code Quality**: Naming conventions, complexity limits, gas optimization, code style
+- ✅ **Fast Analysis**: Analyze contracts in ~170ms
+- ✅ **Multiple Output Formats**: Stylish (human-readable) and JSON (machine-readable)
+- ✅ **Configurable Rules**: Enable/disable rules via .solinrc.json
+- ✅ **CLI Commands**: `init`, `list-rules`, and analyze commands
+- ✅ **CI/CD Ready**: Exit codes and max-warnings for pipeline integration
 
 ### Analysis Categories
 
@@ -51,18 +51,16 @@ Solin is designed to be a **unified Solidity analysis platform** that combines:
 - Gas consumption optimization
 - Documentation completeness
 
-#### Security Analysis
-- Vulnerability detection (High/Medium/Low/Informational)
-- Access control validation
-- Reentrancy detection
-- Integer overflow/underflow
-- Uninitialized storage
-- And 90+ more security patterns
-
-#### Custom Policies
-- Company-specific coding standards
-- Project-specific security requirements
-- Domain-specific validation rules
+#### Security Analysis (33 rules)
+- Reentrancy vulnerabilities
+- tx.origin authentication bypass
+- Unchecked external calls
+- Weak randomness (PRNG)
+- Unprotected ether withdrawal
+- Missing zero-address checks
+- Floating pragma versions
+- Deprecated functions
+- And 25+ more security patterns
 
 ## 📦 Installation
 
@@ -89,14 +87,27 @@ npm link
 
 ## 🔧 Usage
 
+### Quick Start
+
+```bash
+# 1. Initialize configuration file
+solin init
+
+# 2. Analyze your contracts
+solin contracts/MyToken.sol
+
+# 3. List available rules
+solin list-rules
+```
+
 ### Basic Usage
 
 ```bash
 # Analyze current directory
 solin .
 
-# Analyze specific file
-solin contracts/MyToken.sol
+# Analyze specific files
+solin contracts/MyToken.sol contracts/NFT.sol
 
 # Analyze with glob pattern
 solin 'contracts/**/*.sol'
