@@ -172,7 +172,7 @@ export class AnalyzeCommand {
       Rules.NoEmptyBlocksRule,
       Rules.NamingConventionRule,
       Rules.VisibilityModifiersRule,
-      // Rules.StateMutabilityRule, // TODO: Fix null pointer error
+      Rules.StateMutabilityRule,
       Rules.UnusedVariablesRule,
       Rules.FunctionComplexityRule,
       Rules.MagicNumbersRule,
