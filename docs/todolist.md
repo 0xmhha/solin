@@ -1,8 +1,8 @@
 # Solin Development Task List
 
-> **Last Updated**: 2025-01-17
+> **Last Updated**: 2025-01-18
 > **Current Phase**: Phase 2 & 3 - Lint Rules & Security Detectors (In Progress)
-> **Overall Progress**: 83/251 tasks (33.1%)
+> **Overall Progress**: 84/251 tasks (33.5%)
 
 ## Status Legend
 
@@ -1890,7 +1890,7 @@
 ### 3.4: Low & Informational (Week 19)
 
 **30 detectors, 1 week**
-**Progress**: 5/30 detectors completed (16.7%)
+**Progress**: 6/30 detectors completed (20.0%)
 
 - [x] ✅ **SEC-LOW-001**: avoid-sha3
   - **Status**: DONE
@@ -1996,6 +1996,34 @@
     - Can lead to silent failures
   - **Recommendation**: Check return value with require/assert/if, or use transfer() which reverts automatically
 
+- [x] ✅ **SEC-LOW-006**: avoid-tx-origin
+  - **Status**: DONE
+  - **Completed**: 2025-01-18
+  - **File**: `lib/rules/security/avoid-tx-origin.ts`
+  - **Test File**: `test/unit/rules/security/avoid-tx-origin.test.ts`
+  - **Test Results**: ✅ 26 tests passing
+  - **Severity**: WARNING
+  - **Description**: Detects dangerous usage of tx.origin for authorization
+  - **Features**:
+    - tx.origin usage detection in all contexts
+    - require/assert/if statement detection
+    - Modifier detection
+    - Constructor detection
+    - Assignment and return statement detection
+    - Nested expressions and function arguments
+    - Event emission and ternary expressions
+    - Mapping keys and array access
+    - Loop conditions
+  - **Implementation Notes**:
+    - tx.origin returns the EOA that initiated the transaction
+    - msg.sender returns the immediate caller
+    - Using tx.origin for authorization is vulnerable to phishing
+    - Attacker tricks user into calling malicious contract → malicious calls victim
+    - Victim checks tx.origin (user's address) → passes authorization
+    - Simple MemberAccess detection: tx.origin pattern
+  - **Recommendation**: Use msg.sender instead of tx.origin for authorization checks
+  - **Impact**: Prevents phishing attacks where attacker tricks user into authorizing malicious operations
+
 ---
 
 ## Phase 4: Performance & UX
@@ -2058,11 +2086,11 @@
 |-------|--------|----------|----------------------|
 | Phase 0 | ✅ DONE | 5/8 (62.5%) | Week 1 |
 | Phase 1 | ✅ CORE COMPLETE | 20/45 (44.4%) | Weeks 2-5 |
-| Phase 2 | 🚧 IN PROGRESS | 26/81 (32.1%) | Weeks 6-11 |
-| Phase 3 | 🚧 IN PROGRESS | 30/99 (30.3%) | Weeks 12-19 |
+| Phase 2 | 🚧 IN PROGRESS | 27/81 (33.3%) | Weeks 6-11 |
+| Phase 3 | 🚧 IN PROGRESS | 32/99 (32.3%) | Weeks 12-19 |
 | Phase 4 | ⏭️ TODO | 0/8 (0%) | Weeks 20-22 |
 | Phase 5 | ⏭️ TODO | 0/10 (0%) | Weeks 23-26 |
-| **TOTAL** | | **81/251 (32.3%)** | **26 weeks** |
+| **TOTAL** | | **84/251 (33.5%)** | **26 weeks** |
 
 ### By Priority
 
@@ -2089,17 +2117,18 @@
 
 ### For Next Session
 
-**Current Context**: 2025-01-17
+**Current Context**: 2025-01-18
 - Phase 1: Core Foundation - ✅ COMPLETE (20/45 tasks, 44.4%)
-- Phase 2: Lint Rules - 🚧 IN PROGRESS (26/81 tasks, 32.1%)
-- Phase 3: Security - 🚧 IN PROGRESS (30/99 tasks, 30.3%)
-- Total Progress: 81/251 tasks (32.3%)
+- Phase 2: Lint Rules - 🚧 IN PROGRESS (27/81 tasks, 33.3%)
+- Phase 3: Security - 🚧 IN PROGRESS (32/99 tasks, 32.3%)
+- Total Progress: 84/251 tasks (33.5%)
 
 **Recent Achievements**:
 - ✅ Core engine and rule framework complete
-- ✅ 47 rules implemented (16 lint + 15 security medium + 15 security high + 1 security low)
-- ✅ Gas optimization rules: cache-array-length, loop-invariant-code, gas-custom-errors, gas-indexed-events
-- ✅ 920+ tests passing, 66+ test suites
+- ✅ 54 rules implemented (22 lint + 26 security)
+- ✅ Security Basics category complete: avoid-sha3, avoid-suicide, avoid-throw, no-inline-assembly, check-send-result, avoid-tx-origin
+- ✅ Gas optimization rules: cache-array-length, loop-invariant-code, gas-custom-errors, gas-indexed-events, gas-small-strings
+- ✅ 1068+ tests passing, 73+ test suites
 - ✅ All using TDD methodology with comprehensive coverage
 - ✅ GitHub repository created: https://github.com/0xmhha/solin
 - ✅ Git author history corrected (0xmhha <mhha@wemade.com>)
