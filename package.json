@@ -13,7 +13,9 @@
     "LICENSE"
   ],
   "scripts": {
-    "build": "tsc && esbuild lib/cli/index.ts --bundle --platform=node --outfile=dist/cli.js --external:@solidity-parser/parser",
+    "build": "tsc && node scripts/build.js --prod",
+    "build:dev": "tsc && node scripts/build.js",
+    "build:watch": "tsc && node scripts/build.js --watch",
     "dev": "tsc --watch",
     "test": "jest",
     "test:watch": "jest --watch",
