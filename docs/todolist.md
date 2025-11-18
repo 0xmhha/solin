@@ -2,7 +2,7 @@
 
 > **Last Updated**: 2025-01-17
 > **Current Phase**: Phase 2 & 3 - Lint Rules & Security Detectors (In Progress)
-> **Overall Progress**: 81/251 tasks (32.3%)
+> **Overall Progress**: 82/251 tasks (32.7%)
 
 ## Status Legend
 
@@ -1272,7 +1272,7 @@
 ## Phase 3: Security Detectors
 
 **Timeline**: Weeks 12-19 (8 weeks)
-**Progress**: 23/99 tasks (23.2%)
+**Progress**: 24/99 tasks (24.2%)
 **Priority**: P1 (High)
 **Status**: In Progress - Core security rules implemented
 
@@ -1890,7 +1890,7 @@
 ### 3.4: Low & Informational (Week 19)
 
 **30 detectors, 1 week**
-**Progress**: 3/30 detectors completed (10.0%)
+**Progress**: 4/30 detectors completed (13.3%)
 
 - [x] ✅ **SEC-LOW-001**: avoid-sha3
   - **Status**: DONE
@@ -1952,6 +1952,27 @@
     - Deprecated since Solidity 0.4.13, removed in 0.5.0
     - throw consumes all remaining gas (like assert)
   - **Recommendation**: Replace throw with revert() or require() - these refund unused gas
+
+- [x] ✅ **SEC-LOW-004**: no-inline-assembly
+  - **Status**: DONE
+  - **Completed**: 2025-01-17
+  - **File**: `lib/rules/security/no-inline-assembly.ts`
+  - **Test File**: `test/unit/rules/security/no-inline-assembly.test.ts`
+  - **Test Results**: ✅ 20 tests passing
+  - **Severity**: WARNING
+  - **Description**: Detects usage of inline assembly blocks
+  - **Features**:
+    - Inline assembly block detection
+    - Assembly in constructors, modifiers, and functions
+    - Assembly with memory operations (mload, mstore)
+    - Assembly with storage operations (sload, sstore)
+    - Assembly with delegatecall and complex operations
+    - Assembly in libraries and fallback functions
+  - **Implementation Notes**:
+    - AST traversal for InlineAssemblyStatement nodes
+    - Assembly bypasses Solidity's type safety
+    - Requires thorough security audit when used
+  - **Recommendation**: Avoid assembly unless absolutely necessary, ensure security audit and extensive documentation
 
 ---
 
