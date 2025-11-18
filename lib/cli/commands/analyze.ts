@@ -11,6 +11,7 @@ import { AnalysisEngine } from '@core/analysis-engine';
 import { StylishFormatter } from '@formatters/stylish-formatter';
 import { JSONFormatter } from '@formatters/json-formatter';
 import { SarifFormatter } from '@formatters/sarif-formatter';
+import { HtmlFormatter } from '@formatters/html-formatter';
 import type { IFormatter } from '@formatters/types';
 import { resolveFiles } from '../file-resolver';
 import type { ParsedArguments } from '../types';
@@ -225,6 +226,8 @@ export class AnalyzeCommand {
         return new SarifFormatter({ pretty: true });
       case 'sarif-compact':
         return new SarifFormatter({ pretty: false });
+      case 'html':
+        return new HtmlFormatter({ interactive: true });
       case 'stylish':
       default:
         return new StylishFormatter();
