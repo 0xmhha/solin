@@ -6,6 +6,7 @@
 
 import { Command } from 'commander';
 import { ParsedArguments } from './types';
+import { AnalyzeCommand } from './commands/analyze';
 import * as packageJson from '../../package.json';
 
 export class CLI {
@@ -94,16 +95,9 @@ export class CLI {
         return 0;
       }
 
-      // Validate that files are provided
-      if (parsedArgs.files.length === 0) {
-        console.error('Error: No files specified');
-        console.log(this.showHelp());
-        return 2; // Exit code for invalid usage
-      }
-
-      // TODO: Implement actual analysis
-      console.log('Analysis not yet implemented');
-      return 0;
+      // Run analysis
+      const analyzeCommand = new AnalyzeCommand();
+      return await analyzeCommand.execute(parsedArgs);
     } catch (error) {
       console.error('Error:', error instanceof Error ? error.message : String(error));
       return 1;

@@ -1,0 +1,11 @@
+{
+  "extends": "solin:recommended",
+  "rules": {
+    "security/tx-origin": "error",
+    "security/reentrancy": "error",
+    "security/unchecked-send": "warning",
+    "security/timestamp-dependence": "warning",
+    "lint/magic-numbers": "warning",
+    "security/missing-zero-check": "warning"
+  }
+}
