@@ -65,3 +65,21 @@ export { NoTrailingWhitespaceRule } from './lint/no-trailing-whitespace';
 export { QuotesRule } from './lint/quotes';
 export { SpaceAfterCommaRule } from './lint/space-after-comma';
 export { VarNameMixedcaseRule } from './lint/var-name-mixedcase';
+
+// Developer tools
+export {
+  RuleTester,
+  createRuleTester,
+  type ValidTestCase,
+  type InvalidTestCase,
+  type ExpectedError,
+  type TestResult,
+  type RuleTesterConfig,
+} from './rule-tester';
+
+export {
+  RuleGenerator,
+  generateRule,
+  type RuleGeneratorOptions,
+  type GeneratedRule,
+} from './rule-generator';
