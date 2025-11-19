@@ -1,0 +1,149 @@
+# CircleCI Configuration for Solin
+# Place this file as .circleci/config.yml in your repository
+
+version: 2.1
+
+orbs:
+  node: circleci/node@5.1
+
+executors:
+  node-executor:
+    docker:
+      - image: cimg/node:18.19
+
+commands:
+  install-solin:
+    description: "Install Solin globally"
+    steps:
+      - run:
+          name: Install Solin
+          command: npm install -g solin
+
+  run-solin:
+    description: "Run Solin analysis"
+    parameters:
+      path:
+        type: string
+        default: "contracts/"
+      format:
+        type: string
+        default: "stylish"
+      config:
+        type: string
+        default: ""
+    steps:
+      - run:
+          name: Run Solin Analysis
+          command: |
+            ARGS="<< parameters.path >> --format << parameters.format >>"
+            if [ -n "<< parameters.config >>" ]; then
+              ARGS="$ARGS --config << parameters.config >>"
+            fi
+            solin $ARGS
+
+jobs:
+  # Basic lint job
+  solin-lint:
+    executor: node-executor
+    steps:
+      - checkout
+      - install-solin
+      - run-solin:
+          format: stylish
+      - store_artifacts:
+          path: ~/project
+          destination: source
+
+  # Generate JSON report
+  solin-report:
+    executor: node-executor
+    steps:
+      - checkout
+      - install-solin
+      - run:
+          name: Generate JSON Report
+          command: |
+            mkdir -p reports
+            solin contracts/ --format json > reports/solin-report.json
+      - store_artifacts:
+          path: reports
+          destination: solin-reports
+      - store_test_results:
+          path: reports
+
+  # Security scan with SARIF output
+  solin-security:
+    executor: node-executor
+    steps:
+      - checkout
+      - install-solin
+      - run:
+          name: Security Scan
+          command: |
+            mkdir -p reports
+            solin contracts/ --format sarif > reports/solin-sarif.json
+      - store_artifacts:
+          path: reports
+          destination: security-reports
+
+  # Enforce no warnings
+  solin-enforce:
+    executor: node-executor
+    steps:
+      - checkout
+      - install-solin
+      - run:
+          name: Enforce Quality Gates
+          command: solin contracts/ --max-warnings 0
+
+  # Full analysis with HTML report
+  solin-full:
+    executor: node-executor
+    steps:
+      - checkout
+      - install-solin
+      - run:
+          name: Full Analysis with HTML Report
+          command: |
+            mkdir -p reports
+            solin contracts/ --format json > reports/solin.json
+            solin contracts/ --format html > reports/solin.html
+            solin contracts/ --format sarif > reports/solin.sarif
+      - store_artifacts:
+          path: reports
+          destination: all-reports
+
+workflows:
+  version: 2
+
+  # Run on every commit
+  commit-workflow:
+    jobs:
+      - solin-lint
+      - solin-report:
+          requires:
+            - solin-lint
+
+  # Run on PRs
+  pr-workflow:
+    jobs:
+      - solin-lint
+      - solin-security:
+          requires:
+            - solin-lint
+      - solin-enforce:
+          requires:
+            - solin-security
+
+  # Scheduled nightly scan
+  nightly-security:
+    triggers:
+      - schedule:
+          cron: "0 2 * * *"
+          filters:
+            branches:
+              only:
+                - main
+                - master
+    jobs:
+      - solin-full

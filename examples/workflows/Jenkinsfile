@@ -1,0 +1,141 @@
+// Jenkins Pipeline for Solin
+// Place this file as Jenkinsfile in your repository root
+
+pipeline {
+    agent any
+
+    environment {
+        NODE_VERSION = '18'
+        CONTRACTS_PATH = 'contracts/'
+    }
+
+    tools {
+        nodejs "${NODE_VERSION}"
+    }
+
+    options {
+        timeout(time: 30, unit: 'MINUTES')
+        disableConcurrentBuilds()
+        buildDiscarder(logRotator(numToKeepStr: '10'))
+    }
+
+    stages {
+        stage('Setup') {
+            steps {
+                script {
+                    sh 'npm install -g solin'
+                }
+            }
+        }
+
+        stage('Lint') {
+            steps {
+                script {
+                    // Run Solin analysis
+                    sh "solin ${env.CONTRACTS_PATH} --format stylish || true"
+                }
+            }
+        }
+
+        stage('Generate Reports') {
+            parallel {
+                stage('JSON Report') {
+                    steps {
+                        script {
+                            sh "mkdir -p reports"
+                            sh "solin ${env.CONTRACTS_PATH} --format json > reports/solin-report.json"
+                        }
+                    }
+                }
+
+                stage('SARIF Report') {
+                    steps {
+                        script {
+                            sh "mkdir -p reports"
+                            sh "solin ${env.CONTRACTS_PATH} --format sarif > reports/solin-sarif.json"
+                        }
+                    }
+                }
+
+                stage('HTML Report') {
+                    steps {
+                        script {
+                            sh "mkdir -p reports"
+                            sh "solin ${env.CONTRACTS_PATH} --format html > reports/solin-report.html"
+                        }
+                    }
+                }
+            }
+        }
+
+        stage('Security Scan') {
+            when {
+                anyOf {
+                    branch 'main'
+                    branch 'master'
+                    changeRequest()
+                }
+            }
+            steps {
+                script {
+                    // Run security-focused analysis
+                    def result = sh(
+                        script: "solin ${env.CONTRACTS_PATH} --format json",
+                        returnStdout: true
+                    ).trim()
+
+                    // Parse and check for security issues
+                    def report = readJSON text: result
+                    def securityIssues = report.issues?.findAll {
+                        it.category == 'security' && it.severity == 'error'
+                    }
+
+                    if (securityIssues?.size() > 0) {
+                        unstable("Found ${securityIssues.size()} security issues")
+                    }
+                }
+            }
+        }
+
+        stage('Quality Gate') {
+            when {
+                branch 'main'
+            }
+            steps {
+                script {
+                    // Fail if there are any errors
+                    sh "solin ${env.CONTRACTS_PATH} --max-warnings 0"
+                }
+            }
+        }
+    }
+
+    post {
+        always {
+            // Archive reports
+            archiveArtifacts artifacts: 'reports/**', allowEmptyArchive: true
+
+            // Publish HTML report
+            publishHTML(target: [
+                allowMissing: true,
+                alwaysLinkToLastBuild: true,
+                keepAll: true,
+                reportDir: 'reports',
+                reportFiles: 'solin-report.html',
+                reportName: 'Solin Analysis Report'
+            ])
+        }
+
+        success {
+            echo 'Solin analysis completed successfully!'
+        }
+
+        failure {
+            echo 'Solin analysis failed. Check the reports for details.'
+        }
+
+        unstable {
+            echo 'Solin found issues. Review the security report.'
+        }
+    }
+}

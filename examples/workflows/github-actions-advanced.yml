@@ -1,0 +1,226 @@
+# Advanced GitHub Actions Workflow for Solin
+# This shows multiple advanced use cases
+
+name: Solin Advanced Analysis
+
+on:
+  push:
+    branches: [main, master, develop]
+    paths:
+      - '**.sol'
+      - 'contracts/**'
+  pull_request:
+    branches: [main, master]
+  schedule:
+    # Run security scan every day at 2 AM UTC
+    - cron: '0 2 * * *'
+  workflow_dispatch:
+    inputs:
+      contracts_path:
+        description: 'Path to contracts'
+        required: false
+        default: 'contracts/'
+      strict_mode:
+        description: 'Enable strict mode'
+        required: false
+        default: 'false'
+        type: boolean
+
+env:
+  NODE_VERSION: '18'
+
+jobs:
+  # Basic lint check
+  lint:
+    name: Solin Lint
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+
+      - name: Install Solin
+        run: npm install -g solin
+
+      - name: Run Solin
+        run: |
+          CONTRACTS="${{ github.event.inputs.contracts_path || 'contracts/' }}"
+          solin "$CONTRACTS" --format stylish
+        continue-on-error: true
+
+  # Generate reports for PR comments
+  report:
+    name: Generate Reports
+    runs-on: ubuntu-latest
+    needs: lint
+    outputs:
+      errors: ${{ steps.analyze.outputs.errors }}
+      warnings: ${{ steps.analyze.outputs.warnings }}
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+
+      - name: Install Solin
+        run: npm install -g solin
+
+      - name: Analyze and capture results
+        id: analyze
+        run: |
+          CONTRACTS="${{ github.event.inputs.contracts_path || 'contracts/' }}"
+          solin "$CONTRACTS" --format json > solin-report.json || true
+
+          # Extract summary
+          ERRORS=$(jq -r '.summary.errors // 0' solin-report.json)
+          WARNINGS=$(jq -r '.summary.warnings // 0' solin-report.json)
+
+          echo "errors=$ERRORS" >> $GITHUB_OUTPUT
+          echo "warnings=$WARNINGS" >> $GITHUB_OUTPUT
+
+      - name: Generate HTML Report
+        run: |
+          CONTRACTS="${{ github.event.inputs.contracts_path || 'contracts/' }}"
+          solin "$CONTRACTS" --format html > solin-report.html || true
+
+      - name: Upload reports
+        uses: actions/upload-artifact@v4
+        with:
+          name: solin-reports
+          path: |
+            solin-report.json
+            solin-report.html
+
+  # Security scan with SARIF for GitHub Security tab
+  security:
+    name: Security Scan
+    runs-on: ubuntu-latest
+    permissions:
+      security-events: write
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+
+      - name: Install Solin
+        run: npm install -g solin
+
+      - name: Run security analysis
+        run: |
+          CONTRACTS="${{ github.event.inputs.contracts_path || 'contracts/' }}"
+          solin "$CONTRACTS" --format sarif > solin.sarif || true
+
+      - name: Upload SARIF
+        uses: github/codeql-action/upload-sarif@v3
+        with:
+          sarif_file: solin.sarif
+          category: solin-security
+
+  # Comment on PR with results
+  pr-comment:
+    name: PR Comment
+    runs-on: ubuntu-latest
+    needs: report
+    if: github.event_name == 'pull_request'
+    permissions:
+      pull-requests: write
+    steps:
+      - name: Comment on PR
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const errors = '${{ needs.report.outputs.errors }}';
+            const warnings = '${{ needs.report.outputs.warnings }}';
+
+            let emoji = '✅';
+            let status = 'passed';
+
+            if (parseInt(errors) > 0) {
+              emoji = '❌';
+              status = 'failed';
+            } else if (parseInt(warnings) > 0) {
+              emoji = '⚠️';
+              status = 'passed with warnings';
+            }
+
+            const body = `## ${emoji} Solin Analysis ${status}
+
+            | Metric | Count |
+            |--------|-------|
+            | Errors | ${errors} |
+            | Warnings | ${warnings} |
+
+            [View full report](${context.serverUrl}/${context.repo.owner}/${context.repo.repo}/actions/runs/${context.runId})
+            `;
+
+            github.rest.issues.createComment({
+              issue_number: context.issue.number,
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              body: body
+            });
+
+  # Enforce quality gates on main branch
+  enforce:
+    name: Quality Gate
+    runs-on: ubuntu-latest
+    needs: [lint, security]
+    if: github.ref == 'refs/heads/main' || github.ref == 'refs/heads/master'
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+
+      - name: Install Solin
+        run: npm install -g solin
+
+      - name: Enforce no errors
+        run: |
+          CONTRACTS="${{ github.event.inputs.contracts_path || 'contracts/' }}"
+          if [ "${{ github.event.inputs.strict_mode }}" = "true" ]; then
+            solin "$CONTRACTS" --max-warnings 0
+          else
+            solin "$CONTRACTS"
+          fi
+
+  # Compare with base branch for PRs
+  diff-analysis:
+    name: Diff Analysis
+    runs-on: ubuntu-latest
+    if: github.event_name == 'pull_request'
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+
+      - name: Install Solin
+        run: npm install -g solin
+
+      - name: Analyze changed files only
+        run: |
+          # Get list of changed .sol files
+          CHANGED_FILES=$(git diff --name-only ${{ github.event.pull_request.base.sha }} ${{ github.sha }} | grep '\.sol$' || true)
+
+          if [ -n "$CHANGED_FILES" ]; then
+            echo "Analyzing changed Solidity files:"
+            echo "$CHANGED_FILES"
+            solin $CHANGED_FILES --format stylish
+          else
+            echo "No Solidity files changed in this PR"
+          fi

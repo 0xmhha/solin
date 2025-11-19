@@ -1,0 +1,122 @@
+# Azure DevOps Pipeline for Solin
+# Place this file as azure-pipelines.yml in your repository root
+
+trigger:
+  branches:
+    include:
+      - main
+      - master
+      - develop
+  paths:
+    include:
+      - 'contracts/**'
+      - '*.sol'
+
+pr:
+  branches:
+    include:
+      - main
+      - master
+
+pool:
+  vmImage: 'ubuntu-latest'
+
+variables:
+  nodeVersion: '18.x'
+  contractsPath: 'contracts/'
+
+stages:
+  - stage: Lint
+    displayName: 'Solin Analysis'
+    jobs:
+      - job: SolinLint
+        displayName: 'Run Solin Linting'
+        steps:
+          - task: NodeTool@0
+            inputs:
+              versionSpec: $(nodeVersion)
+            displayName: 'Install Node.js'
+
+          - script: npm install -g solin
+            displayName: 'Install Solin'
+
+          - script: solin $(contractsPath) --format stylish
+            displayName: 'Run Solin Analysis'
+            continueOnError: true
+
+      - job: SolinReport
+        displayName: 'Generate Analysis Report'
+        steps:
+          - task: NodeTool@0
+            inputs:
+              versionSpec: $(nodeVersion)
+            displayName: 'Install Node.js'
+
+          - script: npm install -g solin
+            displayName: 'Install Solin'
+
+          - script: |
+              mkdir -p $(Build.ArtifactStagingDirectory)/reports
+              solin $(contractsPath) --format json > $(Build.ArtifactStagingDirectory)/reports/solin-report.json
+            displayName: 'Generate JSON Report'
+
+          - task: PublishBuildArtifacts@1
+            inputs:
+              pathToPublish: '$(Build.ArtifactStagingDirectory)/reports'
+              artifactName: 'solin-reports'
+            displayName: 'Publish Reports'
+
+  - stage: Security
+    displayName: 'Security Analysis'
+    dependsOn: Lint
+    condition: succeeded()
+    jobs:
+      - job: SolinSecurity
+        displayName: 'Security Scan'
+        steps:
+          - task: NodeTool@0
+            inputs:
+              versionSpec: $(nodeVersion)
+            displayName: 'Install Node.js'
+
+          - script: npm install -g solin
+            displayName: 'Install Solin'
+
+          - script: |
+              mkdir -p $(Build.ArtifactStagingDirectory)/security
+              solin $(contractsPath) --format sarif > $(Build.ArtifactStagingDirectory)/security/solin.sarif
+            displayName: 'Generate SARIF Report'
+
+          - task: PublishBuildArtifacts@1
+            inputs:
+              pathToPublish: '$(Build.ArtifactStagingDirectory)/security'
+              artifactName: 'security-reports'
+            displayName: 'Publish Security Reports'
+
+  - stage: Enforce
+    displayName: 'Quality Gates'
+    dependsOn: Security
+    condition: and(succeeded(), eq(variables['Build.SourceBranch'], 'refs/heads/main'))
+    jobs:
+      - job: EnforceQuality
+        displayName: 'Enforce Quality Standards'
+        steps:
+          - task: NodeTool@0
+            inputs:
+              versionSpec: $(nodeVersion)
+            displayName: 'Install Node.js'
+
+          - script: npm install -g solin
+            displayName: 'Install Solin'
+
+          - script: solin $(contractsPath) --max-warnings 0
+            displayName: 'Enforce No Warnings'
+
+# Scheduled security scan
+schedules:
+  - cron: '0 3 * * *'
+    displayName: 'Nightly Security Scan'
+    branches:
+      include:
+        - main
+    always: true
