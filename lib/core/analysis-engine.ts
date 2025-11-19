@@ -16,15 +16,35 @@ import type { RuleRegistry } from './rule-registry';
 import type { SolidityParser } from '@parser/solidity-parser';
 import { AnalysisContext } from './analysis-context';
 import { Severity } from './types';
+import type { CacheManager } from './cache-manager';
 
 /**
  * Main analysis engine
  */
 export class AnalysisEngine implements IEngine {
+  private cacheManager: CacheManager | undefined;
+
   constructor(
     private readonly registry: RuleRegistry,
     private readonly parser: SolidityParser,
-  ) {}
+    cacheManager?: CacheManager,
+  ) {
+    this.cacheManager = cacheManager;
+  }
+
+  /**
+   * Set cache manager
+   */
+  setCache(cacheManager: CacheManager): void {
+    this.cacheManager = cacheManager;
+  }
+
+  /**
+   * Get cache manager
+   */
+  getCache(): CacheManager | undefined {
+    return this.cacheManager;
+  }
 
   /**
    * Analyze a single file
@@ -38,6 +58,15 @@ export class AnalysisEngine implements IEngine {
     try {
       // Read file
       const source = await fs.readFile(filePath, 'utf-8');
+
+      // Check cache
+      if (this.cacheManager) {
+        const configHash = this.cacheManager.hashConfig(config);
+        const cachedResult = this.cacheManager.get(filePath, source, configHash);
+        if (cachedResult) {
+          return cachedResult;
+        }
+      }
 
       // Parse file
       let parseResult;
@@ -89,6 +118,12 @@ export class AnalysisEngine implements IEngine {
       // Add parse errors if any
       if (parseResult.errors.length > 0) {
         result.parseErrors = parseResult.errors;
+      }
+
+      // Cache result (only if no parse errors)
+      if (this.cacheManager && !result.parseErrors) {
+        const configHash = this.cacheManager.hashConfig(config);
+        this.cacheManager.set(filePath, source, configHash, result);
       }
 
       return result;
