@@ -1,0 +1,144 @@
+{
+  "name": "solin",
+  "displayName": "Solin - Solidity Static Analyzer",
+  "description": "Static analysis for Solidity smart contracts",
+  "version": "0.1.0",
+  "publisher": "solin",
+  "engines": {
+    "vscode": "^1.74.0"
+  },
+  "categories": [
+    "Linters",
+    "Programming Languages"
+  ],
+  "keywords": [
+    "solidity",
+    "ethereum",
+    "smart contracts",
+    "security",
+    "linter",
+    "static analysis"
+  ],
+  "icon": "images/icon.png",
+  "galleryBanner": {
+    "color": "#7C3AED",
+    "theme": "dark"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/solin/solin"
+  },
+  "bugs": {
+    "url": "https://github.com/solin/solin/issues"
+  },
+  "license": "MIT",
+  "activationEvents": [
+    "onLanguage:solidity",
+    "workspaceContains:**/*.sol"
+  ],
+  "main": "./out/extension.js",
+  "contributes": {
+    "commands": [
+      {
+        "command": "solin.analyzeFile",
+        "title": "Solin: Analyze Current File"
+      },
+      {
+        "command": "solin.analyzeWorkspace",
+        "title": "Solin: Analyze Workspace"
+      },
+      {
+        "command": "solin.showOutput",
+        "title": "Solin: Show Output"
+      },
+      {
+        "command": "solin.clearDiagnostics",
+        "title": "Solin: Clear Diagnostics"
+      }
+    ],
+    "configuration": {
+      "title": "Solin",
+      "properties": {
+        "solin.enable": {
+          "type": "boolean",
+          "default": true,
+          "description": "Enable Solin analysis"
+        },
+        "solin.analyzeOnSave": {
+          "type": "boolean",
+          "default": true,
+          "description": "Run analysis when file is saved"
+        },
+        "solin.analyzeOnOpen": {
+          "type": "boolean",
+          "default": true,
+          "description": "Run analysis when file is opened"
+        },
+        "solin.configFile": {
+          "type": "string",
+          "default": "",
+          "description": "Path to Solin configuration file"
+        },
+        "solin.severity.error": {
+          "type": "string",
+          "enum": ["Error", "Warning", "Information", "Hint"],
+          "default": "Error",
+          "description": "VS Code severity for Solin errors"
+        },
+        "solin.severity.warning": {
+          "type": "string",
+          "enum": ["Error", "Warning", "Information", "Hint"],
+          "default": "Warning",
+          "description": "VS Code severity for Solin warnings"
+        },
+        "solin.severity.info": {
+          "type": "string",
+          "enum": ["Error", "Warning", "Information", "Hint"],
+          "default": "Information",
+          "description": "VS Code severity for Solin info"
+        },
+        "solin.maxProblems": {
+          "type": "number",
+          "default": 100,
+          "description": "Maximum number of problems to show"
+        },
+        "solin.exclude": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "default": ["**/node_modules/**", "**/lib/**"],
+          "description": "Glob patterns to exclude from analysis"
+        }
+      }
+    },
+    "languages": [
+      {
+        "id": "solidity",
+        "extensions": [".sol"]
+      }
+    ]
+  },
+  "scripts": {
+    "vscode:prepublish": "npm run compile",
+    "compile": "tsc -p ./",
+    "watch": "tsc -watch -p ./",
+    "pretest": "npm run compile",
+    "test": "node ./out/test/runTest.js",
+    "lint": "eslint src --ext ts",
+    "package": "vsce package",
+    "publish": "vsce publish"
+  },
+  "devDependencies": {
+    "@types/node": "^18.0.0",
+    "@types/vscode": "^1.74.0",
+    "@typescript-eslint/eslint-plugin": "^6.0.0",
+    "@typescript-eslint/parser": "^6.0.0",
+    "eslint": "^8.0.0",
+    "typescript": "^5.0.0",
+    "@vscode/vsce": "^2.0.0"
+  },
+  "dependencies": {
+    "solin": "^0.1.0"
+  }
+}
