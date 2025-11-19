@@ -104,11 +104,20 @@ export class CLI {
         }
 
         const initCommand = new InitCommand();
-        return await initCommand.execute({
+        const initOptions: {
+          force: boolean;
+          template?: TemplateType;
+          interactive: boolean;
+        } = {
           force,
-          template,
           interactive: !template, // Interactive if no template specified
-        });
+        };
+
+        if (template) {
+          initOptions.template = template;
+        }
+
+        return await initCommand.execute(initOptions);
       }
 
       if (command === 'list-rules') {
