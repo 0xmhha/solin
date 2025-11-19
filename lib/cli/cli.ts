@@ -7,7 +7,7 @@
 import { Command } from 'commander';
 import { ParsedArguments } from './types';
 import { AnalyzeCommand } from './commands/analyze';
-import { InitCommand } from './commands/init';
+import { InitCommand, TemplateType } from './commands/init';
 import { ListRulesCommand } from './commands/list-rules';
 import * as packageJson from '../../package.json';
 
@@ -89,8 +89,26 @@ export class CLI {
 
       if (command === 'init') {
         const force = args.includes('--force');
+        let template: TemplateType | undefined;
+
+        // Parse --template flag
+        const templateIndex = args.indexOf('--template');
+        if (templateIndex !== -1 && args[templateIndex + 1]) {
+          template = args[templateIndex + 1] as TemplateType;
+        }
+
+        // Also support short form -t
+        const shortTemplateIndex = args.indexOf('-t');
+        if (shortTemplateIndex !== -1 && args[shortTemplateIndex + 1]) {
+          template = args[shortTemplateIndex + 1] as TemplateType;
+        }
+
         const initCommand = new InitCommand();
-        return await initCommand.execute(force);
+        return await initCommand.execute({
+          force,
+          template,
+          interactive: !template, // Interactive if no template specified
+        });
       }
 
       if (command === 'list-rules') {
