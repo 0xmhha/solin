@@ -79,7 +79,7 @@ yarn global add solin
 ### From source
 
 ```bash
-git clone https://github.com/yourusername/solin.git
+git clone https://github.com/0xmhha/solin.git
 cd solin
 npm install
 npm link
@@ -196,11 +196,11 @@ See [examples/.solinignore](examples/.solinignore) for a complete example.
 Comprehensive documentation is available in the `docs/` directory:
 
 - [Architecture Overview](docs/architecture.md) - System design and component overview
-- [Features Documentation](docs/features.md) - Detailed feature specifications
 - [Development Guide](docs/development-guide.md) - TDD/DDD practices and contribution guidelines
 - [Design Principles](docs/design-principles.md) - SOLID principles and design patterns
-- [API Reference](docs/api.md) - Plugin and extension API documentation
-- [Rule Catalog](docs/rules/) - Complete list of all rules with examples
+- [Rule Authoring Guide](docs/rule-authoring-guide.md) - How to create custom rules
+- [CI/CD Integration](docs/ci-cd-integration.md) - Pipeline integration examples
+- [GitHub Action](docs/github-action.md) - GitHub Actions integration
 
 ## 🏗️ Project Structure
 
@@ -208,18 +208,15 @@ Comprehensive documentation is available in the `docs/` directory:
 solin/
 ├── docs/               # Comprehensive documentation
 │   ├── architecture.md
-│   ├── features.md
-│   ├── todolist.md
 │   ├── design-principles.md
-│   └── development-guide.md
+│   ├── development-guide.md
+│   └── rule-authoring-guide.md
 ├── lib/                # Source code
 │   ├── core/          # Core engine and orchestration
 │   ├── parser/        # Solidity parsing
 │   ├── rules/         # Rule implementations
 │   │   ├── lint/      # Lint rules
-│   │   ├── security/  # Security detectors
-│   │   └── custom/    # Custom rule framework
-│   ├── engine/        # Analysis engine
+│   │   └── security/  # Security detectors
 │   ├── plugins/       # Plugin system
 │   ├── formatters/    # Output formatters
 │   └── cli/           # Command-line interface
@@ -242,7 +239,7 @@ solin/
 
 ```bash
 # Clone repository
-git clone https://github.com/yourusername/solin.git
+git clone https://github.com/0xmhha/solin.git
 cd solin
 
 # Install dependencies
@@ -287,34 +284,6 @@ We welcome contributions! Please see our [Contributing Guide](CONTRIBUTING.md) f
 7. Push to the branch (`git push origin feature/amazing-feature`)
 8. Open a Pull Request
 
-## 📋 Roadmap
-
-See [docs/todolist.md](docs/todolist.md) for detailed development progress.
-
-### Phase 1: Foundation (Current)
-- [x] Project setup and architecture design
-- [ ] Core engine implementation
-- [ ] Basic lint rules (20+)
-- [ ] Configuration system
-
-### Phase 2: Security Analysis
-- [ ] Security detector framework
-- [ ] Port high-impact detectors (40+)
-- [ ] Control flow analysis
-- [ ] Data flow analysis
-
-### Phase 3: Performance & UX
-- [ ] Parallel processing
-- [ ] Smart caching
-- [ ] Auto-fix implementation
-- [ ] Multiple output formats
-
-### Phase 4: Extensibility
-- [ ] Plugin system
-- [ ] Custom rule API
-- [ ] Documentation generator
-- [ ] CI/CD integrations
-
 ## 🔗 Related Projects
 
 - [solhint](https://github.com/protofire/solhint) - Solidity linter (inspiration for lint rules)
@@ -336,10 +305,8 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 
 ## 📞 Contact & Support
 
-- **Issues**: [GitHub Issues](https://github.com/yourusername/solin/issues)
-- **Discussions**: [GitHub Discussions](https://github.com/yourusername/solin/discussions)
-- **Twitter**: [@solin_analyzer](https://twitter.com/solin_analyzer)
-- **Email**: support@solin.dev
+- **Issues**: [GitHub Issues](https://github.com/0xmhha/solin/issues)
+- **Discussions**: [GitHub Discussions](https://github.com/0xmhha/solin/discussions)
 
 ---
 
