@@ -16,3 +16,14 @@ export {
   type CacheManagerOptions,
   type CacheStats,
 } from './cache-manager';
+
+export {
+  WorkerPool,
+  createWorkerPool,
+  parallel,
+  type PoolTask,
+  type TaskResult,
+  type WorkerPoolOptions,
+  type ProgressCallback,
+  type PoolStats,
+} from './worker-pool';
