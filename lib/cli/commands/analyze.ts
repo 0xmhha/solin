@@ -387,9 +387,9 @@ export class AnalyzeCommand {
         try {
           registry.register(new RuleClass());
         } catch (error) {
-          // Skip rules that fail to instantiate
+          // Log rules that fail to instantiate
           const errorMessage = error instanceof Error ? error.message : String(error);
-          console.debug(`Failed to register rule: ${errorMessage}`);
+          console.error(`Failed to register rule: ${errorMessage}`);
         }
       }
     }

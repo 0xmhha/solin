@@ -161,41 +161,57 @@ export class UnusedVariablesRule extends AbstractRule {
   }
 
   /**
-   * Collect variable usages
-   * In Solidity AST, VariableDeclaration.name is usually a string, not an Identifier node
-   * So most of the time, Identifiers we find ARE usages, not declarations
+   * Collect variable usages by walking all nodes recursively
+   * This ensures we catch usages in nested scopes, loop conditions, function arguments, etc.
    */
   private collectVariableUsages(body: any, used: Set<string>, declared: Map<string, any>): void {
     if (!body) {
       return;
     }
 
-    this.walker.walk(body, {
-      enter: (node: any, parent: any) => {
-        if (node.type === 'Identifier') {
-          const name = node.name;
+    this.findIdentifierUsages(body, used, declared);
+  }
 
-          // Only track declared variables
-          if (name && declared.has(name)) {
-            // In most cases, VariableDeclaration.name is a string, not an Identifier node
-            // But in some AST versions, it might be an Identifier node
-            // So we check: if parent is VariableDeclaration and parent.name is NOT a string,
-            // then this Identifier might be the declaration name itself
-            if (parent && parent.type === 'VariableDeclaration' && typeof parent.name !== 'string') {
-              // Check if this node IS the name field
-              // by comparing object identity
-              if (parent.name === node) {
-                // This is the declaration name, not a usage
-                return undefined;
-              }
-            }
+  /**
+   * Recursively find all Identifier usages in the AST
+   */
+  private findIdentifierUsages(node: any, used: Set<string>, declared: Map<string, any>): void {
+    if (!node || typeof node !== 'object') {
+      return;
+    }
 
-            // This is a usage
-            used.add(name);
-          }
+    // Check if this is an Identifier that represents a variable usage
+    if (node.type === 'Identifier') {
+      const name = node.name;
+      if (name && declared.has(name)) {
+        used.add(name);
+      }
+    }
+
+    // Recursively check all properties
+    for (const key in node) {
+      if (key === 'loc' || key === 'range') {
+        continue;
+      }
+
+      // Skip the name property of VariableDeclaration to avoid counting declarations as usages
+      if (key === 'name' && node.type === 'VariableDeclaration') {
+        continue;
+      }
+
+      // Skip variables array in VariableDeclarationStatement
+      if (key === 'variables' && node.type === 'VariableDeclarationStatement') {
+        continue;
+      }
+
+      const value = node[key];
+      if (Array.isArray(value)) {
+        for (const child of value) {
+          this.findIdentifierUsages(child, used, declared);
         }
-        return undefined;
-      },
-    });
+      } else if (value && typeof value === 'object') {
+        this.findIdentifierUsages(value, used, declared);
+      }
+    }
   }
 }

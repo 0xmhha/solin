@@ -45,12 +45,12 @@
   "license": "MIT",
   "repository": {
     "type": "git",
-    "url": "https://github.com/yourusername/solin.git"
+    "url": "https://github.com/0xmhha/solin.git"
   },
   "bugs": {
-    "url": "https://github.com/yourusername/solin/issues"
+    "url": "https://github.com/0xmhha/solin/issues"
   },
-  "homepage": "https://github.com/yourusername/solin#readme",
+  "homepage": "https://github.com/0xmhha/solin#readme",
   "engines": {
     "node": ">=18.0.0",
     "npm": ">=8.0.0"
