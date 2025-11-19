@@ -38,6 +38,7 @@ export class CLI {
       .option('--ignore-path <path>', 'Path to ignore file')
       .option('--max-warnings <n>', 'Maximum number of warnings', parseInt)
       .option('-q, --quiet', 'Report errors only')
+      .option('-w, --watch', 'Watch files for changes and re-analyze')
       .allowUnknownOption(false);
   }
 
@@ -62,6 +63,7 @@ export class CLI {
       ignorePath: options.ignorePath,
       maxWarnings: options.maxWarnings,
       quiet: options.quiet,
+      watch: options.watch,
     };
   }
 

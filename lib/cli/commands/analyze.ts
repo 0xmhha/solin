@@ -8,6 +8,7 @@ import { ConfigLoader } from '@config/config-loader';
 import { SolidityParser } from '@parser/solidity-parser';
 import { RuleRegistry } from '@core/rule-registry';
 import { AnalysisEngine } from '@core/analysis-engine';
+import { FileWatcher, FileChangeEvent } from '@core/file-watcher';
 import { StylishFormatter } from '@formatters/stylish-formatter';
 import { JSONFormatter } from '@formatters/json-formatter';
 import { SarifFormatter } from '@formatters/sarif-formatter';
@@ -49,6 +50,11 @@ export class AnalyzeCommand {
       // Register all rules
       await this.registerRules(registry);
 
+      // Check for watch mode
+      if (args.watch) {
+        return this.runWatchMode(args, files, engine, config);
+      }
+
       // Run analysis
       if (!args.quiet) {
         console.log(`Analyzing ${files.length} file${files.length === 1 ? '' : 's'}...`);
@@ -84,6 +90,96 @@ export class AnalyzeCommand {
       console.error('Error:', error instanceof Error ? error.message : String(error));
       return 2;
     }
+  }
+
+  /**
+   * Run in watch mode
+   */
+  private async runWatchMode(
+    args: ParsedArguments,
+    initialFiles: string[],
+    engine: AnalysisEngine,
+    config: ResolvedConfig
+  ): Promise<number> {
+    const formatter = this.createFormatter(args.format);
+
+    // Initial analysis
+    console.log(`\nWatching ${initialFiles.length} file${initialFiles.length === 1 ? '' : 's'} for changes...\n`);
+
+    const runAnalysis = async (files: string[]) => {
+      const result = await engine.analyze({
+        files,
+        config,
+      });
+
+      // Clear console for fresh output (optional)
+      if (!args.quiet) {
+        console.log('\n' + '─'.repeat(60) + '\n');
+      }
+
+      const output = formatter.format(result);
+      console.log(output);
+
+      if (!args.quiet) {
+        const time = new Date().toLocaleTimeString();
+        console.log(`\n[${time}] Analysis complete. Waiting for changes...`);
+      }
+    };
+
+    // Run initial analysis
+    await runAnalysis(initialFiles);
+
+    // Create file watcher
+    const watcher = new FileWatcher({
+      debounceDelay: 300,
+      ignored: ['node_modules', '.git', 'dist', 'build'],
+    });
+
+    // Handle file changes
+    watcher.on('change', async (event: FileChangeEvent) => {
+      if (!args.quiet) {
+        const time = new Date().toLocaleTimeString();
+        console.log(`\n[${time}] File ${event.type}: ${event.filePath}`);
+      }
+
+      // Re-analyze just the changed file for speed
+      const filesToAnalyze = event.type === 'unlink'
+        ? initialFiles.filter(f => f !== event.filePath)
+        : [event.filePath];
+
+      if (filesToAnalyze.length > 0) {
+        await runAnalysis(filesToAnalyze);
+      }
+    });
+
+    watcher.on('error', (error: Error) => {
+      console.error('Watch error:', error.message);
+    });
+
+    watcher.on('ready', (stats: { filesWatched: number }) => {
+      if (!args.quiet) {
+        console.log(`Watching ${stats.filesWatched} files...`);
+      }
+    });
+
+    // Start watching
+    const patterns = args.files.length > 0 ? args.files : [process.cwd()];
+    await watcher.watch(patterns);
+
+    // Keep the process running
+    return new Promise<number>(() => {
+      // Handle graceful shutdown
+      process.on('SIGINT', async () => {
+        console.log('\nStopping watch mode...');
+        await watcher.close();
+        process.exit(0);
+      });
+
+      process.on('SIGTERM', async () => {
+        await watcher.close();
+        process.exit(0);
+      });
+    });
   }
 
   /**

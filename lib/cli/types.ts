@@ -14,6 +14,7 @@ export interface CLIOptions {
   ignorePath?: string;
   maxWarnings?: number;
   quiet?: boolean;
+  watch?: boolean;
 }
 
 export interface ParsedArguments extends CLIOptions {
