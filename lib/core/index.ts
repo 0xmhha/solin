@@ -27,3 +27,14 @@ export {
   type ProgressCallback,
   type PoolStats,
 } from './worker-pool';
+
+export {
+  FileWatcher,
+  createFileWatcher,
+  watchMode,
+  type FileChangeType,
+  type FileChangeEvent,
+  type FileWatcherOptions,
+  type WatcherStats,
+  type WatchModeOptions,
+} from './file-watcher';
