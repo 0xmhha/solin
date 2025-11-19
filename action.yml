@@ -1,0 +1,237 @@
+name: 'Solin - Solidity Static Analyzer'
+description: 'Run Solin static analysis on your Solidity smart contracts'
+author: 'Solin Team'
+
+branding:
+  icon: 'shield'
+  color: 'purple'
+
+inputs:
+  path:
+    description: 'Path to analyze (file, directory, or glob pattern)'
+    required: false
+    default: '.'
+  config:
+    description: 'Path to configuration file'
+    required: false
+    default: ''
+  format:
+    description: 'Output format (stylish, json, sarif, html)'
+    required: false
+    default: 'stylish'
+  fail-on-error:
+    description: 'Fail the action if errors are found'
+    required: false
+    default: 'true'
+  fail-on-warning:
+    description: 'Fail the action if warnings are found'
+    required: false
+    default: 'false'
+  comment-on-pr:
+    description: 'Post results as PR comment'
+    required: false
+    default: 'true'
+  sarif-upload:
+    description: 'Upload SARIF results to GitHub Code Scanning'
+    required: false
+    default: 'false'
+  working-directory:
+    description: 'Working directory for analysis'
+    required: false
+    default: '.'
+  node-version:
+    description: 'Node.js version to use'
+    required: false
+    default: '18'
+
+outputs:
+  total-issues:
+    description: 'Total number of issues found'
+  errors:
+    description: 'Number of errors found'
+  warnings:
+    description: 'Number of warnings found'
+  info:
+    description: 'Number of info issues found'
+  sarif-file:
+    description: 'Path to generated SARIF file (if sarif-upload is true)'
+
+runs:
+  using: 'composite'
+  steps:
+    - name: Setup Node.js
+      uses: actions/setup-node@v4
+      with:
+        node-version: ${{ inputs.node-version }}
+
+    - name: Install Solin
+      shell: bash
+      run: |
+        npm install -g solin
+        echo "Solin installed successfully"
+
+    - name: Run Solin Analysis
+      id: solin
+      shell: bash
+      working-directory: ${{ inputs.working-directory }}
+      env:
+        SOLIN_PATH: ${{ inputs.path }}
+        SOLIN_CONFIG: ${{ inputs.config }}
+        SOLIN_FORMAT: ${{ inputs.format }}
+        SOLIN_FAIL_ON_ERROR: ${{ inputs.fail-on-error }}
+        SOLIN_FAIL_ON_WARNING: ${{ inputs.fail-on-warning }}
+        SOLIN_SARIF_UPLOAD: ${{ inputs.sarif-upload }}
+      run: |
+        # Build command
+        CMD="solin"
+
+        # Add path
+        if [ -n "$SOLIN_PATH" ]; then
+          CMD="$CMD $SOLIN_PATH"
+        fi
+
+        # Add config if specified
+        if [ -n "$SOLIN_CONFIG" ]; then
+          CMD="$CMD --config $SOLIN_CONFIG"
+        fi
+
+        # Determine format
+        FORMAT="$SOLIN_FORMAT"
+        if [ "$SOLIN_SARIF_UPLOAD" = "true" ]; then
+          FORMAT="sarif"
+        fi
+        CMD="$CMD --format $FORMAT"
+
+        # Create output directory
+        mkdir -p .solin-output
+
+        # Run analysis and capture output
+        echo "Running: $CMD"
+        set +e
+        if [ "$FORMAT" = "sarif" ]; then
+          $CMD > .solin-output/results.sarif 2>&1
+          EXIT_CODE=$?
+          cat .solin-output/results.sarif
+        elif [ "$FORMAT" = "json" ]; then
+          $CMD > .solin-output/results.json 2>&1
+          EXIT_CODE=$?
+          cat .solin-output/results.json
+        else
+          $CMD 2>&1 | tee .solin-output/results.txt
+          EXIT_CODE=$?
+        fi
+        set -e
+
+        # Parse results for GitHub outputs
+        if [ "$FORMAT" = "json" ] && [ -f .solin-output/results.json ]; then
+          TOTAL=$(jq -r '.totalIssues // 0' .solin-output/results.json)
+          ERRORS=$(jq -r '.summary.errors // 0' .solin-output/results.json)
+          WARNINGS=$(jq -r '.summary.warnings // 0' .solin-output/results.json)
+          INFO=$(jq -r '.summary.info // 0' .solin-output/results.json)
+        else
+          TOTAL=0
+          ERRORS=0
+          WARNINGS=0
+          INFO=0
+        fi
+
+        # Set outputs
+        echo "total-issues=$TOTAL" >> $GITHUB_OUTPUT
+        echo "errors=$ERRORS" >> $GITHUB_OUTPUT
+        echo "warnings=$WARNINGS" >> $GITHUB_OUTPUT
+        echo "info=$INFO" >> $GITHUB_OUTPUT
+
+        if [ "$SOLIN_SARIF_UPLOAD" = "true" ]; then
+          echo "sarif-file=.solin-output/results.sarif" >> $GITHUB_OUTPUT
+        fi
+
+        # Determine if we should fail
+        SHOULD_FAIL=false
+        if [ "$SOLIN_FAIL_ON_ERROR" = "true" ] && [ "$ERRORS" -gt 0 ]; then
+          SHOULD_FAIL=true
+        fi
+        if [ "$SOLIN_FAIL_ON_WARNING" = "true" ] && [ "$WARNINGS" -gt 0 ]; then
+          SHOULD_FAIL=true
+        fi
+
+        # Store failure state for later
+        echo "should-fail=$SHOULD_FAIL" >> $GITHUB_OUTPUT
+        echo "exit-code=$EXIT_CODE" >> $GITHUB_OUTPUT
+
+    - name: Upload SARIF to GitHub Code Scanning
+      if: inputs.sarif-upload == 'true' && hashFiles('.solin-output/results.sarif') != ''
+      uses: github/codeql-action/upload-sarif@v3
+      with:
+        sarif_file: .solin-output/results.sarif
+
+    - name: Comment on PR
+      if: inputs.comment-on-pr == 'true' && github.event_name == 'pull_request'
+      uses: actions/github-script@v7
+      with:
+        script: |
+          const fs = require('fs');
+
+          const errors = '${{ steps.solin.outputs.errors }}';
+          const warnings = '${{ steps.solin.outputs.warnings }}';
+          const info = '${{ steps.solin.outputs.info }}';
+          const total = '${{ steps.solin.outputs.total-issues }}';
+
+          let status = '✅';
+          if (parseInt(errors) > 0) {
+            status = '❌';
+          } else if (parseInt(warnings) > 0) {
+            status = '⚠️';
+          }
+
+          let body = `## ${status} Solin Analysis Results\n\n`;
+          body += `| Severity | Count |\n`;
+          body += `|----------|-------|\n`;
+          body += `| 🔴 Errors | ${errors} |\n`;
+          body += `| 🟡 Warnings | ${warnings} |\n`;
+          body += `| 🔵 Info | ${info} |\n`;
+          body += `| **Total** | **${total}** |\n\n`;
+
+          if (parseInt(total) === 0) {
+            body += `No issues found! Your Solidity code looks good. 🎉\n`;
+          } else {
+            body += `Please review the issues above and fix them before merging.\n`;
+          }
+
+          // Find existing comment
+          const comments = await github.rest.issues.listComments({
+            owner: context.repo.owner,
+            repo: context.repo.repo,
+            issue_number: context.issue.number,
+          });
+
+          const botComment = comments.data.find(comment =>
+            comment.user.type === 'Bot' &&
+            comment.body.includes('Solin Analysis Results')
+          );
+
+          if (botComment) {
+            // Update existing comment
+            await github.rest.issues.updateComment({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              comment_id: botComment.id,
+              body: body,
+            });
+          } else {
+            // Create new comment
+            await github.rest.issues.createComment({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              issue_number: context.issue.number,
+              body: body,
+            });
+          }
+
+    - name: Check for failures
+      if: steps.solin.outputs.should-fail == 'true'
+      shell: bash
+      run: |
+        echo "❌ Solin found issues that require attention"
+        echo "Errors: ${{ steps.solin.outputs.errors }}"
+        echo "Warnings: ${{ steps.solin.outputs.warnings }}"
+        exit 1
