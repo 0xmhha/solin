@@ -116,6 +116,16 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Added
+- **--parallel option**: Control number of parallel workers for concurrent file analysis
+- **--ignore-path option**: Specify custom ignore file path (like .solinignore)
+- **Auto-load .solinignore**: Automatically loads ignore patterns from .solinignore in working directory
+- **Ignore pattern support**: Full glob pattern matching with minimatch for ignoring files
+
+### Improved
+- **File resolution**: Enhanced file resolver with comprehensive ignore pattern support
+- **Test coverage**: Added 14 new tests for ignore-path functionality (1368 total tests)
+
 ### Planned
 - Additional security detectors
 - Control flow analysis
