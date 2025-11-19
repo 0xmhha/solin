@@ -80,6 +80,7 @@ export class AnalyzeCommand {
       const analyzeOptions: any = {
         files,
         config,
+        maxConcurrency: args.parallel,
       };
 
       if (!args.quiet) {
