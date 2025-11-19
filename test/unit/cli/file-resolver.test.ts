@@ -5,7 +5,7 @@
 import * as fs from 'fs/promises';
 import * as path from 'path';
 import * as os from 'os';
-import { resolveFiles } from '@cli/file-resolver';
+import { resolveFiles, loadIgnorePatterns, shouldIgnoreFile } from '@cli/file-resolver';
 
 describe('FileResolver', () => {
   let tempDir: string;
@@ -160,6 +160,163 @@ describe('FileResolver', () => {
 
       expect(files).toHaveLength(1);
       expect(files[0]).toBe(path.resolve(testFile));
+    });
+
+    test('should respect ignore patterns from ignorePath', async () => {
+      const file1 = path.join(tempDir, 'Keep.sol');
+      const file2 = path.join(tempDir, 'Ignore.sol');
+      const ignoreFile = path.join(tempDir, '.solinignore');
+
+      await fs.writeFile(file1, 'contract Keep {}');
+      await fs.writeFile(file2, 'contract Ignore {}');
+      await fs.writeFile(ignoreFile, 'Ignore.sol');
+
+      const files = await resolveFiles([tempDir], { ignorePath: ignoreFile });
+
+      expect(files).toHaveLength(1);
+      expect(files).toContain(path.resolve(file1));
+      expect(files).not.toContain(path.resolve(file2));
+    });
+
+    test('should auto-load .solinignore from cwd', async () => {
+      const file1 = path.join(tempDir, 'Keep.sol');
+      const file2 = path.join(tempDir, 'Test.sol');
+      const ignoreFile = path.join(tempDir, '.solinignore');
+
+      await fs.writeFile(file1, 'contract Keep {}');
+      await fs.writeFile(file2, 'contract Test {}');
+      await fs.writeFile(ignoreFile, 'Test.sol');
+
+      const files = await resolveFiles([tempDir], { cwd: tempDir });
+
+      expect(files).toHaveLength(1);
+      expect(files).toContain(path.resolve(file1));
+      expect(files).not.toContain(path.resolve(file2));
+    });
+
+    test('should support glob patterns in ignore file', async () => {
+      const file1 = path.join(tempDir, 'Keep.sol');
+      const file2 = path.join(tempDir, 'test_file.sol');
+      const file3 = path.join(tempDir, 'test_another.sol');
+      const ignoreFile = path.join(tempDir, '.solinignore');
+
+      await fs.writeFile(file1, 'contract Keep {}');
+      await fs.writeFile(file2, 'contract Test1 {}');
+      await fs.writeFile(file3, 'contract Test2 {}');
+      await fs.writeFile(ignoreFile, 'test_*.sol');
+
+      const files = await resolveFiles([tempDir], { ignorePath: ignoreFile });
+
+      expect(files).toHaveLength(1);
+      expect(files).toContain(path.resolve(file1));
+      expect(files).not.toContain(path.resolve(file2));
+      expect(files).not.toContain(path.resolve(file3));
+    });
+
+    test('should ignore directories based on patterns', async () => {
+      const contractsDir = path.join(tempDir, 'contracts');
+      const mockDir = path.join(tempDir, 'mocks');
+      await fs.mkdir(contractsDir);
+      await fs.mkdir(mockDir);
+
+      const mainFile = path.join(contractsDir, 'Main.sol');
+      const mockFile = path.join(mockDir, 'Mock.sol');
+      const ignoreFile = path.join(tempDir, '.solinignore');
+
+      await fs.writeFile(mainFile, 'contract Main {}');
+      await fs.writeFile(mockFile, 'contract Mock {}');
+      await fs.writeFile(ignoreFile, 'mocks');
+
+      const files = await resolveFiles([tempDir], { ignorePath: ignoreFile });
+
+      expect(files).toHaveLength(1);
+      expect(files).toContain(path.resolve(mainFile));
+      expect(files).not.toContain(path.resolve(mockFile));
+    });
+  });
+
+  describe('loadIgnorePatterns', () => {
+    test('should load patterns from file', async () => {
+      const ignoreFile = path.join(tempDir, '.solinignore');
+      await fs.writeFile(ignoreFile, 'pattern1\npattern2\npattern3');
+
+      const patterns = await loadIgnorePatterns(ignoreFile);
+
+      expect(patterns).toHaveLength(3);
+      expect(patterns).toContain('pattern1');
+      expect(patterns).toContain('pattern2');
+      expect(patterns).toContain('pattern3');
+    });
+
+    test('should ignore comments', async () => {
+      const ignoreFile = path.join(tempDir, '.solinignore');
+      await fs.writeFile(ignoreFile, '# This is a comment\npattern1\n# Another comment\npattern2');
+
+      const patterns = await loadIgnorePatterns(ignoreFile);
+
+      expect(patterns).toHaveLength(2);
+      expect(patterns).toContain('pattern1');
+      expect(patterns).toContain('pattern2');
+    });
+
+    test('should ignore empty lines', async () => {
+      const ignoreFile = path.join(tempDir, '.solinignore');
+      await fs.writeFile(ignoreFile, 'pattern1\n\n\npattern2\n');
+
+      const patterns = await loadIgnorePatterns(ignoreFile);
+
+      expect(patterns).toHaveLength(2);
+      expect(patterns).toContain('pattern1');
+      expect(patterns).toContain('pattern2');
+    });
+
+    test('should return empty array for non-existent file', async () => {
+      const patterns = await loadIgnorePatterns(path.join(tempDir, 'nonexistent'));
+
+      expect(patterns).toHaveLength(0);
+    });
+
+    test('should trim whitespace', async () => {
+      const ignoreFile = path.join(tempDir, '.solinignore');
+      await fs.writeFile(ignoreFile, '  pattern1  \n  pattern2  ');
+
+      const patterns = await loadIgnorePatterns(ignoreFile);
+
+      expect(patterns).toHaveLength(2);
+      expect(patterns).toContain('pattern1');
+      expect(patterns).toContain('pattern2');
+    });
+  });
+
+  describe('shouldIgnoreFile', () => {
+    test('should match exact filename', () => {
+      const result = shouldIgnoreFile('/project/Test.sol', ['Test.sol'], '/project');
+
+      expect(result).toBe(true);
+    });
+
+    test('should match glob pattern', () => {
+      const result = shouldIgnoreFile('/project/test_file.sol', ['test_*.sol'], '/project');
+
+      expect(result).toBe(true);
+    });
+
+    test('should not match non-matching file', () => {
+      const result = shouldIgnoreFile('/project/Main.sol', ['Test.sol'], '/project');
+
+      expect(result).toBe(false);
+    });
+
+    test('should match nested path patterns', () => {
+      const result = shouldIgnoreFile('/project/mocks/Mock.sol', ['mocks/**'], '/project');
+
+      expect(result).toBe(true);
+    });
+
+    test('should match directory patterns', () => {
+      const result = shouldIgnoreFile('/project/mocks', ['mocks'], '/project');
+
+      expect(result).toBe(true);
     });
   });
 });
