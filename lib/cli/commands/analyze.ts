@@ -4,11 +4,14 @@
  * Main analysis command implementation
  */
 
+import * as fs from 'fs/promises';
 import { ConfigLoader } from '@config/config-loader';
 import { SolidityParser } from '@parser/solidity-parser';
 import { RuleRegistry } from '@core/rule-registry';
 import { AnalysisEngine } from '@core/analysis-engine';
+import { CacheManager } from '@core/cache-manager';
 import { FileWatcher, FileChangeEvent } from '@core/file-watcher';
+import { FixApplicator } from '../../fixer/fix-applicator';
 import { StylishFormatter } from '@formatters/stylish-formatter';
 import { JSONFormatter } from '@formatters/json-formatter';
 import { SarifFormatter } from '@formatters/sarif-formatter';
@@ -45,7 +48,21 @@ export class AnalyzeCommand {
       // Create components
       const parser = new SolidityParser();
       const registry = new RuleRegistry();
-      const engine = new AnalysisEngine(registry, parser);
+
+      // Initialize cache manager if caching is enabled
+      let cacheManager: CacheManager | undefined;
+      if (args.cache) {
+        const cacheLocation = args.cacheLocation || '.solin-cache';
+        cacheManager = new CacheManager({
+          maxEntries: 1000,
+          ttl: 3600000, // 1 hour
+          cacheDirectory: cacheLocation,
+        });
+        // Load existing cache
+        await cacheManager.load();
+      }
+
+      const engine = new AnalysisEngine(registry, parser, cacheManager);
 
       // Register all rules
       await this.registerRules(registry);
@@ -77,6 +94,59 @@ export class AnalyzeCommand {
 
       if (!args.quiet && files.length > 1) {
         console.log(''); // New line after progress
+      }
+
+      // Apply fixes if requested
+      if (args.fix || args.dryRun) {
+        const fixApplicator = new FixApplicator({ write: !args.dryRun });
+        let totalApplied = 0;
+        let totalSkipped = 0;
+
+        // Group issues by file
+        for (const fileResult of result.files) {
+          const fixableIssues = fileResult.issues.filter((issue: any) => issue.fix);
+
+          if (fixableIssues.length > 0) {
+            if (args.dryRun) {
+              // Show what would be fixed
+              const source = await this.readFile(fileResult.filePath);
+              const preview = fixApplicator.getDiff(source, fixableIssues);
+              if (!args.quiet && preview) {
+                console.log(`\nFixes for ${fileResult.filePath}:\n`);
+                console.log(preview);
+              }
+            } else {
+              // Actually apply fixes
+              const fixResult = await fixApplicator.applyToFile(
+                fileResult.filePath,
+                fixableIssues
+              );
+              totalApplied += fixResult.fixesApplied;
+              totalSkipped += fixResult.fixesSkipped;
+            }
+          }
+        }
+
+        if (!args.dryRun && !args.quiet) {
+          if (totalApplied > 0) {
+            console.log(`\nFixed ${totalApplied} issue(s)`);
+          }
+          if (totalSkipped > 0) {
+            console.log(`Skipped ${totalSkipped} conflicting fix(es)`);
+          }
+          if (totalApplied === 0 && totalSkipped === 0) {
+            console.log('\nNo auto-fixable issues found');
+          }
+        }
+      }
+
+      // Save cache if enabled
+      if (cacheManager) {
+        await cacheManager.save();
+        if (!args.quiet) {
+          const stats = cacheManager.getStats();
+          console.log(`\nCache: ${stats.hits} hits, ${stats.misses} misses`);
+        }
       }
 
       // Format and output results
@@ -355,5 +425,12 @@ export class AnalyzeCommand {
     }
 
     return 0;
+  }
+
+  /**
+   * Read file contents
+   */
+  private async readFile(filePath: string): Promise<string> {
+    return fs.readFile(filePath, 'utf-8');
   }
 }
