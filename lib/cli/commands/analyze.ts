@@ -35,7 +35,7 @@ export class AnalyzeCommand {
   async execute(args: ParsedArguments): Promise<number> {
     try {
       // Resolve files from patterns
-      const files = await this.resolveFilesFromPatterns(args.files);
+      const files = await this.resolveFilesFromPatterns(args.files, args.ignorePath);
 
       if (files.length === 0) {
         console.error('Error: No Solidity files found');
@@ -256,13 +256,24 @@ export class AnalyzeCommand {
   /**
    * Resolve files from patterns
    */
-  private async resolveFilesFromPatterns(patterns: string[]): Promise<string[]> {
+  private async resolveFilesFromPatterns(
+    patterns: string[],
+    ignorePath?: string
+  ): Promise<string[]> {
     if (patterns.length === 0) {
       // Default to current directory
       patterns = [process.cwd()];
     }
 
-    return resolveFiles(patterns);
+    const options: { cwd: string; ignorePath?: string } = {
+      cwd: process.cwd(),
+    };
+
+    if (ignorePath) {
+      options.ignorePath = ignorePath;
+    }
+
+    return resolveFiles(patterns, options);
   }
 
   /**
