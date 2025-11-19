@@ -5,7 +5,7 @@
  */
 
 import { Command } from 'commander';
-import { ParsedArguments } from './types';
+import { ParsedArguments, CLIOptions } from './types';
 import { AnalyzeCommand } from './commands/analyze';
 import { InitCommand, TemplateType } from './commands/init';
 import { ListRulesCommand } from './commands/list-rules';
@@ -48,23 +48,24 @@ export class CLI {
   parseArguments(args: string[]): ParsedArguments {
     this.program.parse(args);
 
-    const options = this.program.opts();
+    const options = this.program.opts<CLIOptions>();
     const files = this.program.args;
 
-    return {
-      files,
-      config: options.config,
-      format: options.format,
-      fix: options.fix,
-      dryRun: options.dryRun,
-      cache: options.cache,
-      cacheLocation: options.cacheLocation,
-      parallel: options.parallel,
-      ignorePath: options.ignorePath,
-      maxWarnings: options.maxWarnings,
-      quiet: options.quiet,
-      watch: options.watch,
-    };
+    const result: ParsedArguments = { files };
+
+    if (options.config) result.config = options.config;
+    if (options.format) result.format = options.format;
+    if (options.fix) result.fix = options.fix;
+    if (options.dryRun) result.dryRun = options.dryRun;
+    if (options.cache) result.cache = options.cache;
+    if (options.cacheLocation) result.cacheLocation = options.cacheLocation;
+    if (options.parallel) result.parallel = options.parallel;
+    if (options.ignorePath) result.ignorePath = options.ignorePath;
+    if (options.maxWarnings !== undefined) result.maxWarnings = options.maxWarnings;
+    if (options.quiet) result.quiet = options.quiet;
+    if (options.watch) result.watch = options.watch;
+
+    return result;
   }
 
   /**
@@ -124,7 +125,7 @@ export class CLI {
 
       if (command === 'list-rules') {
         const listRulesCommand = new ListRulesCommand();
-        return await listRulesCommand.execute();
+        return listRulesCommand.execute();
       }
 
       // Default: analyze command

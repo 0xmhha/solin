@@ -23,7 +23,7 @@ export class ListRulesCommand {
    *
    * @returns Exit code (0 = success)
    */
-  async execute(): Promise<number> {
+  execute(): number {
     try {
       const rules = this.getAllRules();
       const ruleInfos = this.extractRuleInfos(rules);

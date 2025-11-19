@@ -19,7 +19,8 @@ import { HtmlFormatter } from '@formatters/html-formatter';
 import type { IFormatter } from '@formatters/types';
 import { resolveFiles } from '../file-resolver';
 import type { ParsedArguments } from '../types';
-import type { ResolvedConfig } from '@config/types';
+import type { ResolvedConfig, ConfigLoadOptions } from '@config/types';
+import type { AnalysisOptions, AnalysisResult, Issue } from '@core/types';
 import * as Rules from '@rules/index';
 
 /**
@@ -65,7 +66,7 @@ export class AnalyzeCommand {
       const engine = new AnalysisEngine(registry, parser, cacheManager);
 
       // Register all rules
-      await this.registerRules(registry);
+      this.registerRules(registry);
 
       // Check for watch mode
       if (args.watch) {
@@ -77,14 +78,17 @@ export class AnalyzeCommand {
         console.log(`Analyzing ${files.length} file${files.length === 1 ? '' : 's'}...`);
       }
 
-      const analyzeOptions: any = {
+      const analyzeOptions: AnalysisOptions = {
         files,
         config,
-        maxConcurrency: args.parallel,
       };
 
+      if (args.parallel) {
+        analyzeOptions.maxConcurrency = args.parallel;
+      }
+
       if (!args.quiet) {
-        analyzeOptions.onProgress = (current: number, total: number) => {
+        analyzeOptions.onProgress = (current: number, total: number): void => {
           if (current % 10 === 0 || current === total) {
             process.stdout.write(`\rProgress: ${current}/${total} files`);
           }
@@ -105,7 +109,7 @@ export class AnalyzeCommand {
 
         // Group issues by file
         for (const fileResult of result.files) {
-          const fixableIssues = fileResult.issues.filter((issue: any) => issue.fix);
+          const fixableIssues = fileResult.issues.filter((issue: Issue) => issue.fix);
 
           if (fixableIssues.length > 0) {
             if (args.dryRun) {
@@ -207,7 +211,7 @@ export class AnalyzeCommand {
     });
 
     // Handle file changes
-    watcher.on('change', async (event: FileChangeEvent) => {
+    watcher.on('change', (event: FileChangeEvent) => {
       if (!args.quiet) {
         const time = new Date().toLocaleTimeString();
         console.log(`\n[${time}] File ${event.type}: ${event.filePath}`);
@@ -219,7 +223,7 @@ export class AnalyzeCommand {
         : [event.filePath];
 
       if (filesToAnalyze.length > 0) {
-        await runAnalysis(filesToAnalyze);
+        void runAnalysis(filesToAnalyze);
       }
     });
 
@@ -240,15 +244,13 @@ export class AnalyzeCommand {
     // Keep the process running
     return new Promise<number>(() => {
       // Handle graceful shutdown
-      process.on('SIGINT', async () => {
+      process.on('SIGINT', () => {
         console.log('\nStopping watch mode...');
-        await watcher.close();
-        process.exit(0);
+        void watcher.close().then(() => process.exit(0));
       });
 
-      process.on('SIGTERM', async () => {
-        await watcher.close();
-        process.exit(0);
+      process.on('SIGTERM', () => {
+        void watcher.close().then(() => process.exit(0));
       });
     });
   }
@@ -283,7 +285,7 @@ export class AnalyzeCommand {
     const loader = new ConfigLoader();
 
     try {
-      const loadOptions: any = {
+      const loadOptions: ConfigLoadOptions = {
         cwd: process.cwd(),
       };
 
@@ -297,7 +299,8 @@ export class AnalyzeCommand {
     } catch (error) {
       // If no config found, use default
       if (configPath) {
-        throw new Error(`Failed to load config from ${configPath}: ${error}`);
+        const errorMessage = error instanceof Error ? error.message : String(error);
+        throw new Error(`Failed to load config from ${configPath}: ${errorMessage}`);
       }
 
       // Return default config
@@ -311,7 +314,7 @@ export class AnalyzeCommand {
   /**
    * Register all available rules
    */
-  private async registerRules(registry: RuleRegistry): Promise<void> {
+  private registerRules(registry: RuleRegistry): void {
     // Register all rules from the rules index
     const ruleClasses = [
       // Security rules
@@ -385,7 +388,8 @@ export class AnalyzeCommand {
           registry.register(new RuleClass());
         } catch (error) {
           // Skip rules that fail to instantiate
-          console.debug(`Failed to register rule: ${error}`);
+          const errorMessage = error instanceof Error ? error.message : String(error);
+          console.debug(`Failed to register rule: ${errorMessage}`);
         }
       }
     }
@@ -415,7 +419,7 @@ export class AnalyzeCommand {
   /**
    * Determine exit code based on results
    */
-  private getExitCode(result: any, args: ParsedArguments): number {
+  private getExitCode(result: AnalysisResult, args: ParsedArguments): number {
     const { summary } = result;
 
     // Check for parse errors
