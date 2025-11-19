@@ -9,7 +9,7 @@
 import * as fs from 'fs/promises';
 import * as path from 'path';
 import * as os from 'os';
-import { CLI } from '../lib/cli/cli';
+import { execSync } from 'child_process';
 
 interface BenchmarkResult {
   name: string;
@@ -72,12 +72,17 @@ async function runBenchmark(
   args: string[],
   fileCount: number
 ): Promise<BenchmarkResult> {
-  const cli = new CLI();
+  const cliPath = path.join(__dirname, '..', 'dist', 'cli.js');
+  const command = `node "${cliPath}" ${args.map(a => `"${a}"`).join(' ')}`;
 
   const memBefore = process.memoryUsage().heapUsed;
   const start = performance.now();
 
-  await cli.run(['node', 'solin', ...args]);
+  try {
+    execSync(command, { stdio: 'pipe' });
+  } catch {
+    // CLI may exit with non-zero for warnings/errors, but we still measure performance
+  }
 
   const end = performance.now();
   const memAfter = process.memoryUsage().heapUsed;
@@ -100,10 +105,10 @@ function formatResults(results: BenchmarkResult[]): void {
   console.log('='.repeat(80) + '\n');
 
   const headers = ['Test Name', 'Files', 'Duration (ms)', 'Files/sec', 'Memory (MB)'];
-  const colWidths = [30, 8, 15, 12, 12];
+  const colWidths: [number, number, number, number, number] = [30, 8, 15, 12, 12];
 
   // Print header
-  console.log(headers.map((h, i) => h.padEnd(colWidths[i])).join(' '));
+  console.log(headers.map((h, i) => h.padEnd(colWidths[i] || 10)).join(' '));
   console.log('-'.repeat(80));
 
   // Print results
