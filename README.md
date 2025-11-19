@@ -159,7 +159,37 @@ solin . --cache
 
 # Specify cache location
 solin . --cache --cache-location .cache/solin
+
+# Watch mode for continuous analysis
+solin . --watch
+
+# Custom ignore file
+solin . --ignore-path .customignore
 ```
+
+### Ignoring Files
+
+Create a `.solinignore` file in your project root to exclude files from analysis:
+
+```
+# Ignore test files
+test/**
+*.test.sol
+
+# Ignore mock contracts
+mocks/**
+
+# Ignore dependencies
+node_modules/**
+lib/**
+```
+
+The file supports:
+- Glob patterns (`**/*.sol`, `test_*.sol`)
+- Comments starting with `#`
+- Directory patterns (`mocks/`)
+
+See [examples/.solinignore](examples/.solinignore) for a complete example.
 
 ## 📚 Documentation
 
