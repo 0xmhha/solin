@@ -1,0 +1,31 @@
+name: Solin Analysis
+
+on:
+  push:
+    branches: [main, master]
+  pull_request:
+    branches: [main, master]
+
+jobs:
+  analyze:
+    name: Run Solin Analysis
+    runs-on: ubuntu-latest
+
+    permissions:
+      contents: read
+      pull-requests: write
+      security-events: write
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Run Solin
+        uses: ./
+        with:
+          path: 'contracts'
+          format: 'stylish'
+          fail-on-error: 'true'
+          fail-on-warning: 'false'
+          comment-on-pr: 'true'
+          sarif-upload: 'true'

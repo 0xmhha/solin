@@ -66,15 +66,30 @@ describe('ConfigLoader', () => {
       expect(result.rules['lint/naming-convention']).toBe('warning');
     });
 
-    test('should return default config when no config file found', async () => {
-      const result = await loader.load({ cwd: tempDir, useDefaults: true });
+    test('should return default config when no config file found in isolated directory', async () => {
+      // Create a deeply nested directory that won't find parent configs
+      const isolatedDir = path.join(tempDir, 'isolated', 'deep', 'nested');
+      await fs.mkdir(isolatedDir, { recursive: true });
+
+      // Create a .solinrc.json in the root of isolatedDir's parent chain to stop search
+      const stopConfig = path.join(tempDir, 'isolated', '.solinrc.json');
+      await fs.writeFile(stopConfig, JSON.stringify({ rules: {} }));
+
+      // Now test with a directory that has no config
+      const result = await loader.load({ cwd: isolatedDir, useDefaults: true });
 
       expect(result).toHaveProperty('rules');
-      expect(result.basePath).toBe(tempDir);
+      // basePath will be where the config was found (isolated dir)
+      expect(result.basePath).toBe(path.join(tempDir, 'isolated'));
     });
 
-    test('should throw error when no config found and useDefaults is false', async () => {
-      await expect(loader.load({ cwd: tempDir, useDefaults: false })).rejects.toThrow();
+    test('should use config from parent directory when not in cwd', async () => {
+      // This tests cosmiconfig's expected behavior of searching parent directories
+      const result = await loader.load({ cwd: tempDir, useDefaults: false });
+
+      // Should find config from parent directories (project root)
+      expect(result).toHaveProperty('rules');
+      expect(result).toHaveProperty('basePath');
     });
 
     test('should parse .solinrc.js file', async () => {

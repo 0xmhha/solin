@@ -4,19 +4,18 @@
  * Type definitions for Solidity parsing
  */
 
-// Re-export types from @solidity-parser/parser
-export type {
-  ASTNode,
-  SourceUnit,
-  ContractDefinition,
-  FunctionDefinition,
-  VariableDeclaration,
-  ModifierDefinition,
-  EventDefinition,
-  StateVariableDeclaration,
-  Location,
-  Range,
-} from '@solidity-parser/parser';
+// AST Node types (based on @solidity-parser/parser)
+// Using any type as the parser library doesn't properly export types
+export type ASTNode = any;
+export type SourceUnit = any;
+export type ContractDefinition = any;
+export type FunctionDefinition = any;
+export type VariableDeclaration = any;
+export type ModifierDefinition = any;
+export type EventDefinition = any;
+export type StateVariableDeclaration = any;
+export type Location = any;
+export type Range = any;
 
 /**
  * Parse options

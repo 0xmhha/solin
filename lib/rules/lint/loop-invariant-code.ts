@@ -127,7 +127,7 @@ export class LoopInvariantCodeRule extends AbstractRule {
     const loops = this.findLoops(funcNode.body);
 
     for (const loop of loops) {
-      this.analyzeLoop(loop, context, stateVariables, parameters);
+      this.analyzeLoop(loop, funcNode.body, context, stateVariables, parameters);
     }
   }
 
@@ -164,6 +164,7 @@ export class LoopInvariantCodeRule extends AbstractRule {
    */
   private analyzeLoop(
     loopNode: any,
+    funcBody: any,
     context: AnalysisContext,
     stateVariables: Set<string>,
     parameters: Set<string>
@@ -172,7 +173,7 @@ export class LoopInvariantCodeRule extends AbstractRule {
     const loopVariables = this.getLoopVariables(loopNode);
 
     // Get local variables declared before loop in parent scope
-    const localVars = this.getLocalVariablesBefore(loopNode);
+    const localVars = this.getLocalVariablesBefore(funcBody, loopNode);
 
     // Find all identifiers used in loop body
     const usedIdentifiers = this.findUsedIdentifiers(loopNode.body);
@@ -223,12 +224,54 @@ export class LoopInvariantCodeRule extends AbstractRule {
   }
 
   /**
-   * Get local variables declared in function body
+   * Get local variables declared before the loop in function body
    */
-  private getLocalVariablesBefore(_loopNode: any): Set<string> {
-    // TODO: Implement proper local variable tracking
-    // For now, return empty set
-    return new Set<string>();
+  private getLocalVariablesBefore(funcBody: any, loopNode: any): Set<string> {
+    const localVars = new Set<string>();
+    const loopStartLine = loopNode.loc?.start?.line ?? Infinity;
+
+    // Walk the function body to find variable declarations before the loop
+    const walk = (n: any): void => {
+      if (!n || typeof n !== 'object') return;
+
+      // Check if this node is the loop - stop processing this branch
+      if (n === loopNode) return;
+
+      // Check for variable declarations
+      if (n.type === 'VariableDeclarationStatement') {
+        const declLine = n.loc?.start?.line ?? 0;
+        // Only include variables declared before the loop
+        if (declLine < loopStartLine && Array.isArray(n.variables)) {
+          for (const variable of n.variables) {
+            if (variable && variable.name) {
+              localVars.add(variable.name);
+            }
+          }
+        }
+      }
+
+      // Recursively walk child nodes
+      for (const key in n) {
+        if (key === 'loc' || key === 'range') continue;
+        const value = n[key];
+        if (Array.isArray(value)) {
+          value.forEach((child) => walk(child));
+        } else if (value && typeof value === 'object') {
+          walk(value);
+        }
+      }
+    };
+
+    // Walk the function body (Block node)
+    if (funcBody && funcBody.statements) {
+      for (const statement of funcBody.statements) {
+        walk(statement);
+      }
+    } else {
+      walk(funcBody);
+    }
+
+    return localVars;
   }
 
   /**

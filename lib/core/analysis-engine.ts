@@ -16,15 +16,36 @@ import type { RuleRegistry } from './rule-registry';
 import type { SolidityParser } from '@parser/solidity-parser';
 import { AnalysisContext } from './analysis-context';
 import { Severity } from './types';
+import type { CacheManager } from './cache-manager';
+import { WorkerPool } from './worker-pool';
 
 /**
  * Main analysis engine
  */
 export class AnalysisEngine implements IEngine {
+  private cacheManager: CacheManager | undefined;
+
   constructor(
     private readonly registry: RuleRegistry,
     private readonly parser: SolidityParser,
-  ) {}
+    cacheManager?: CacheManager,
+  ) {
+    this.cacheManager = cacheManager;
+  }
+
+  /**
+   * Set cache manager
+   */
+  setCache(cacheManager: CacheManager): void {
+    this.cacheManager = cacheManager;
+  }
+
+  /**
+   * Get cache manager
+   */
+  getCache(): CacheManager | undefined {
+    return this.cacheManager;
+  }
 
   /**
    * Analyze a single file
@@ -38,6 +59,15 @@ export class AnalysisEngine implements IEngine {
     try {
       // Read file
       const source = await fs.readFile(filePath, 'utf-8');
+
+      // Check cache
+      if (this.cacheManager) {
+        const configHash = this.cacheManager.hashConfig(config);
+        const cachedResult = this.cacheManager.get(filePath, source, configHash);
+        if (cachedResult) {
+          return cachedResult;
+        }
+      }
 
       // Parse file
       let parseResult;
@@ -91,6 +121,12 @@ export class AnalysisEngine implements IEngine {
         result.parseErrors = parseResult.errors;
       }
 
+      // Cache result (only if no parse errors)
+      if (this.cacheManager && !result.parseErrors) {
+        const configHash = this.cacheManager.hashConfig(config);
+        this.cacheManager.set(filePath, source, configHash, result);
+      }
+
       return result;
     } catch (error) {
       // Re-throw file read errors
@@ -103,7 +139,7 @@ export class AnalysisEngine implements IEngine {
    */
   async analyze(options: AnalysisOptions): Promise<AnalysisResult> {
     const startTime = Date.now();
-    const { files, config, onProgress } = options;
+    const { files, config, onProgress, maxConcurrency } = options;
 
     // Use provided config or create default
     const analysisConfig: ResolvedConfig = config ?? {
@@ -111,44 +147,116 @@ export class AnalysisEngine implements IEngine {
       rules: {},
     };
 
-    // Analyze each file
+    // Analyze each file (using parallel execution if multiple files)
     const fileResults: FileAnalysisResult[] = [];
     let hasParseErrors = false;
 
-    for (let i = 0; i < files.length; i++) {
-      const file = files[i];
+    if (files.length > 1 && (maxConcurrency === undefined || maxConcurrency > 1)) {
+      // Use worker pool for parallel analysis
+      const pool = new WorkerPool<string, FileAnalysisResult>({
+        maxConcurrency: maxConcurrency || 4,
+        taskTimeout: options.timeout || 30000,
+      });
 
-      try {
-        const result = await this.analyzeFile(file!, analysisConfig);
-        fileResults.push(result);
+      // Track progress
+      let completed = 0;
+      if (onProgress) {
+        pool.setProgressCallback(() => {
+          completed++;
+          onProgress(completed, files.length);
+        });
+      }
 
-        if (result.parseErrors && result.parseErrors.length > 0) {
+      // Add tasks for each file
+      for (const file of files) {
+        pool.addTask({
+          id: file,
+          data: file,
+          execute: async (filePath) => {
+            try {
+              return await this.analyzeFile(filePath, analysisConfig);
+            } catch (error) {
+              return {
+                filePath,
+                issues: [],
+                parseErrors: [
+                  {
+                    message: error instanceof Error ? error.message : 'Unknown error',
+                    line: 0,
+                    column: 0,
+                  },
+                ],
+                duration: 0,
+              };
+            }
+          },
+        });
+      }
+
+      // Execute all tasks
+      const results = await pool.execute();
+
+      // Collect results in original order
+      for (const file of files) {
+        const taskResult = results.get(file);
+        if (taskResult?.success && taskResult.result) {
+          fileResults.push(taskResult.result);
+          if (taskResult.result.parseErrors && taskResult.result.parseErrors.length > 0) {
+            hasParseErrors = true;
+          }
+        } else if (taskResult?.error) {
+          fileResults.push({
+            filePath: file,
+            issues: [],
+            parseErrors: [
+              {
+                message: taskResult.error.message,
+                line: 0,
+                column: 0,
+              },
+            ],
+            duration: taskResult.duration,
+          });
           hasParseErrors = true;
         }
+      }
+    } else {
+      // Sequential analysis for single file or when maxConcurrency is 1
+      for (let i = 0; i < files.length; i++) {
+        const file = files[i];
 
-        // Call progress callback
-        if (onProgress) {
-          onProgress(i + 1, files.length);
+        try {
+          const result = await this.analyzeFile(file!, analysisConfig);
+          fileResults.push(result);
+
+          if (result.parseErrors && result.parseErrors.length > 0) {
+            hasParseErrors = true;
+          }
+
+          // Call progress callback
+          if (onProgress) {
+            onProgress(i + 1, files.length);
+          }
+        } catch (error) {
+          // Log error and continue with next file
+          console.error(`Error analyzing file ${file}:`, error);
+
+          // Add error result
+          fileResults.push({
+            filePath: file!,
+            issues: [],
+            parseErrors: [
+              {
+                message: error instanceof Error ? error.message : 'Unknown error',
+                line: 0,
+                column: 0,
+              },
+            ],
+            duration: 0,
+          });
+
+          hasParseErrors = true;
         }
-      } catch (error) {
-        // Log error and continue with next file
-        console.error(`Error analyzing file ${file}:`, error);
-
-        // Add error result
-        fileResults.push({
-          filePath: file!,
-          issues: [],
-          parseErrors: [
-            {
-              message: error instanceof Error ? error.message : 'Unknown error',
-              line: 0,
-              column: 0,
-            },
-          ],
-          duration: 0,
-        });
-
-        hasParseErrors = true;
       }
     }
 

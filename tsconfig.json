@@ -15,7 +15,8 @@
       "@parser/*": ["lib/parser/*"],
       "@rules/*": ["lib/rules/*"],
       "@config/*": ["lib/config/*"],
-      "@cli/*": ["lib/cli/*"]
+      "@cli/*": ["lib/cli/*"],
+      "@formatters/*": ["lib/formatters/*"]
     },
 
     /* Emit */

@@ -5,7 +5,10 @@
  */
 
 import { Command } from 'commander';
-import { ParsedArguments } from './types';
+import { ParsedArguments, CLIOptions } from './types';
+import { AnalyzeCommand } from './commands/analyze';
+import { InitCommand, TemplateType } from './commands/init';
+import { ListRulesCommand } from './commands/list-rules';
 import * as packageJson from '../../package.json';
 
 export class CLI {
@@ -22,7 +25,7 @@ export class CLI {
   private setupCommands(): void {
     this.program
       .name('solin')
-      .description('Advanced Solidity static analysis tool')
+      .description('Advanced Solidity static analysis tool\n\nCommands:\n  init          Generate default .solinrc.json configuration file\n  list-rules    List all available rules\n  <files>       Analyze Solidity files (default)')
       .version(packageJson.version)
       .argument('[files...]', 'Solidity files or glob patterns to analyze')
       .option('-c, --config <path>', 'Configuration file path')
@@ -35,6 +38,7 @@ export class CLI {
       .option('--ignore-path <path>', 'Path to ignore file')
       .option('--max-warnings <n>', 'Maximum number of warnings', parseInt)
       .option('-q, --quiet', 'Report errors only')
+      .option('-w, --watch', 'Watch files for changes and re-analyze')
       .allowUnknownOption(false);
   }
 
@@ -44,22 +48,24 @@ export class CLI {
   parseArguments(args: string[]): ParsedArguments {
     this.program.parse(args);
 
-    const options = this.program.opts();
+    const options = this.program.opts<CLIOptions>();
     const files = this.program.args;
 
-    return {
-      files,
-      config: options.config,
-      format: options.format,
-      fix: options.fix,
-      dryRun: options.dryRun,
-      cache: options.cache,
-      cacheLocation: options.cacheLocation,
-      parallel: options.parallel,
-      ignorePath: options.ignorePath,
-      maxWarnings: options.maxWarnings,
-      quiet: options.quiet,
-    };
+    const result: ParsedArguments = { files };
+
+    if (options.config) result.config = options.config;
+    if (options.format) result.format = options.format;
+    if (options.fix) result.fix = options.fix;
+    if (options.dryRun) result.dryRun = options.dryRun;
+    if (options.cache) result.cache = options.cache;
+    if (options.cacheLocation) result.cacheLocation = options.cacheLocation;
+    if (options.parallel) result.parallel = options.parallel;
+    if (options.ignorePath) result.ignorePath = options.ignorePath;
+    if (options.maxWarnings !== undefined) result.maxWarnings = options.maxWarnings;
+    if (options.quiet) result.quiet = options.quiet;
+    if (options.watch) result.watch = options.watch;
+
+    return result;
   }
 
   /**
@@ -81,6 +87,48 @@ export class CLI {
    */
   async run(args: string[]): Promise<number> {
     try {
+      // Check for subcommands
+      const command = args[2];
+
+      if (command === 'init') {
+        const force = args.includes('--force');
+        let template: TemplateType | undefined;
+
+        // Parse --template flag
+        const templateIndex = args.indexOf('--template');
+        if (templateIndex !== -1 && args[templateIndex + 1]) {
+          template = args[templateIndex + 1] as TemplateType;
+        }
+
+        // Also support short form -t
+        const shortTemplateIndex = args.indexOf('-t');
+        if (shortTemplateIndex !== -1 && args[shortTemplateIndex + 1]) {
+          template = args[shortTemplateIndex + 1] as TemplateType;
+        }
+
+        const initCommand = new InitCommand();
+        const initOptions: {
+          force: boolean;
+          template?: TemplateType;
+          interactive: boolean;
+        } = {
+          force,
+          interactive: !template, // Interactive if no template specified
+        };
+
+        if (template) {
+          initOptions.template = template;
+        }
+
+        return await initCommand.execute(initOptions);
+      }
+
+      if (command === 'list-rules') {
+        const listRulesCommand = new ListRulesCommand();
+        return listRulesCommand.execute();
+      }
+
+      // Default: analyze command
       const parsedArgs = this.parseArguments(args);
 
       // Handle special cases
@@ -94,16 +142,9 @@ export class CLI {
         return 0;
       }
 
-      // Validate that files are provided
-      if (parsedArgs.files.length === 0) {
-        console.error('Error: No files specified');
-        console.log(this.showHelp());
-        return 2; // Exit code for invalid usage
-      }
-
-      // TODO: Implement actual analysis
-      console.log('Analysis not yet implemented');
-      return 0;
+      // Run analysis
+      const analyzeCommand = new AnalyzeCommand();
+      return await analyzeCommand.execute(parsedArgs);
     } catch (error) {
       console.error('Error:', error instanceof Error ? error.message : String(error));
       return 1;

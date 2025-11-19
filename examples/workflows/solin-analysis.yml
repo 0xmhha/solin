@@ -1,0 +1,73 @@
+# Example: Solin Analysis Workflow
+#
+# Copy this file to your project at:
+# .github/workflows/solin-analysis.yml
+#
+# This workflow runs Solin static analysis on every push and PR
+
+name: Solin Analysis
+
+on:
+  push:
+    branches: [main, master, develop]
+    paths:
+      - '**.sol'
+      - '.solinrc.json'
+      - '.github/workflows/solin-analysis.yml'
+  pull_request:
+    branches: [main, master, develop]
+    paths:
+      - '**.sol'
+      - '.solinrc.json'
+
+jobs:
+  analyze:
+    name: Static Analysis
+    runs-on: ubuntu-latest
+
+    permissions:
+      contents: read
+      pull-requests: write
+      security-events: write
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '18'
+          cache: 'npm'
+
+      - name: Run Solin Analysis
+        id: solin
+        uses: solin/solin-action@v1
+        with:
+          # Path to analyze - adjust to your project structure
+          path: 'contracts'
+
+          # Configuration file (optional)
+          # config: '.solinrc.json'
+
+          # Output format
+          format: 'stylish'
+
+          # Fail settings
+          fail-on-error: 'true'
+          fail-on-warning: 'false'
+
+          # PR integration
+          comment-on-pr: 'true'
+
+          # GitHub Code Scanning integration
+          sarif-upload: 'true'
+
+      - name: Print Summary
+        if: always()
+        run: |
+          echo "## Analysis Summary"
+          echo "- Total Issues: ${{ steps.solin.outputs.total-issues }}"
+          echo "- Errors: ${{ steps.solin.outputs.errors }}"
+          echo "- Warnings: ${{ steps.solin.outputs.warnings }}"
+          echo "- Info: ${{ steps.solin.outputs.info }}"

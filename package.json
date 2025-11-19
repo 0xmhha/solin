@@ -13,7 +13,9 @@
     "LICENSE"
   ],
   "scripts": {
-    "build": "tsc && esbuild lib/cli/index.ts --bundle --platform=node --outfile=dist/cli.js --external:@solidity-parser/parser",
+    "build": "tsc && node scripts/build.js --prod",
+    "build:dev": "tsc && node scripts/build.js",
+    "build:watch": "tsc && node scripts/build.js --watch",
     "dev": "tsc --watch",
     "test": "jest",
     "test:watch": "jest --watch",
@@ -24,6 +26,7 @@
     "format:check": "prettier --check \"**/*.{ts,js,json,md}\"",
     "typecheck": "tsc --noEmit",
     "clean": "rm -rf dist coverage .solin-cache",
+    "benchmark": "npx ts-node scripts/benchmark.ts",
     "prepare": "husky install",
     "prepublishOnly": "npm run clean && npm run build && npm test"
   },

@@ -1,0 +1,97 @@
+# GitLab CI/CD Example for Solin
+# Place this file as .gitlab-ci.yml in your repository root
+
+stages:
+  - lint
+  - test
+  - security
+
+variables:
+  NODE_VERSION: "18"
+
+# Cache node_modules for faster builds
+cache:
+  key: ${CI_COMMIT_REF_SLUG}
+  paths:
+    - node_modules/
+
+# Basic Solin analysis
+solin:lint:
+  stage: lint
+  image: node:${NODE_VERSION}
+  before_script:
+    - npm install -g solin
+  script:
+    - solin contracts/ --format stylish
+  allow_failure: true
+  rules:
+    - if: $CI_PIPELINE_SOURCE == "merge_request_event"
+    - if: $CI_COMMIT_BRANCH == $CI_DEFAULT_BRANCH
+
+# Solin analysis with JSON output for artifacts
+solin:report:
+  stage: lint
+  image: node:${NODE_VERSION}
+  before_script:
+    - npm install -g solin
+  script:
+    - solin contracts/ --format json > solin-report.json
+  artifacts:
+    paths:
+      - solin-report.json
+    reports:
+      codequality: solin-report.json
+    expire_in: 1 week
+  rules:
+    - if: $CI_PIPELINE_SOURCE == "merge_request_event"
+
+# Security-focused analysis with strict rules
+solin:security:
+  stage: security
+  image: node:${NODE_VERSION}
+  before_script:
+    - npm install -g solin
+  script:
+    - |
+      solin contracts/ \
+        --format sarif \
+        --config .solinrc.strict.json \
+        > gl-sast-report.json
+  artifacts:
+    reports:
+      sast: gl-sast-report.json
+    expire_in: 1 week
+  rules:
+    - if: $CI_PIPELINE_SOURCE == "merge_request_event"
+    - if: $CI_COMMIT_BRANCH == $CI_DEFAULT_BRANCH
+
+# Fail pipeline on critical errors
+solin:enforce:
+  stage: security
+  image: node:${NODE_VERSION}
+  before_script:
+    - npm install -g solin
+  script:
+    - solin contracts/ --max-warnings 0
+  rules:
+    - if: $CI_COMMIT_BRANCH == $CI_DEFAULT_BRANCH
+
+# Scheduled security scan
+solin:scheduled:
+  stage: security
+  image: node:${NODE_VERSION}
+  before_script:
+    - npm install -g solin
+  script:
+    - solin . --format json > scheduled-report.json
+    - |
+      if [ -f scheduled-report.json ]; then
+        echo "Report generated successfully"
+        cat scheduled-report.json | jq '.summary'
+      fi
+  artifacts:
+    paths:
+      - scheduled-report.json
+    expire_in: 30 days
+  rules:
+    - if: $CI_PIPELINE_SOURCE == "schedule"
