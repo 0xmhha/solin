@@ -62,7 +62,7 @@ export class SelfdestructRule extends AbstractRule {
 
       const value = node[key];
       if (Array.isArray(value)) {
-        value.forEach((child) => this.walkAst(child, context));
+        value.forEach(child => this.walkAst(child, context));
       } else if (value && typeof value === 'object') {
         this.walkAst(value, context);
       }
@@ -86,19 +86,13 @@ export class SelfdestructRule extends AbstractRule {
   /**
    * Report a selfdestruct usage
    */
-  private reportSelfdestruct(
-    node: any,
-    functionName: string,
-    context: AnalysisContext
-  ): void {
+  private reportSelfdestruct(node: any, functionName: string, context: AnalysisContext): void {
     if (!node.loc) {
       return;
     }
 
     const isSuicide = functionName === 'suicide';
-    const baseMessage = isSuicide
-      ? "Use of deprecated 'suicide' function"
-      : 'Use of selfdestruct';
+    const baseMessage = isSuicide ? "Use of deprecated 'suicide' function" : 'Use of selfdestruct';
 
     context.report({
       ruleId: this.metadata.id,

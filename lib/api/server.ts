@@ -116,8 +116,12 @@ export class SolinServer {
       this.restServer = new SolinRestServer({
         ...(this.config.rest.host && { host: this.config.rest.host }),
         ...(this.config.rest.port && { port: this.config.rest.port }),
-        ...(this.config.rest.corsEnabled !== undefined && { corsEnabled: this.config.rest.corsEnabled }),
-        ...(this.config.encryption?.enabled !== undefined && { encryptionEnabled: this.config.encryption.enabled }),
+        ...(this.config.rest.corsEnabled !== undefined && {
+          corsEnabled: this.config.rest.corsEnabled,
+        }),
+        ...(this.config.encryption?.enabled !== undefined && {
+          encryptionEnabled: this.config.encryption.enabled,
+        }),
       });
       await this.restServer.start();
       servers.push(`REST API on http://${this.config.rest.host}:${this.config.rest.port}`);
@@ -128,7 +132,9 @@ export class SolinServer {
       this.wsServer = new SolinWebSocketServer({
         ...(this.config.websocket.host && { host: this.config.websocket.host }),
         ...(this.config.websocket.port && { port: this.config.websocket.port }),
-        ...(this.config.encryption?.enabled !== undefined && { encryptionEnabled: this.config.encryption.enabled }),
+        ...(this.config.encryption?.enabled !== undefined && {
+          encryptionEnabled: this.config.encryption.enabled,
+        }),
       });
       await this.wsServer.start();
       servers.push(`WebSocket on ws://${this.config.websocket.host}:${this.config.websocket.port}`);
@@ -139,10 +145,14 @@ export class SolinServer {
       this.grpcServer = new SolinGrpcServer({
         ...(this.config.grpc.host && { host: this.config.grpc.host }),
         ...(this.config.grpc.port && { port: this.config.grpc.port }),
-        ...(this.config.grpc.tlsEnabled !== undefined && { tlsEnabled: this.config.grpc.tlsEnabled }),
+        ...(this.config.grpc.tlsEnabled !== undefined && {
+          tlsEnabled: this.config.grpc.tlsEnabled,
+        }),
         ...(this.config.grpc.certPath && { certPath: this.config.grpc.certPath }),
         ...(this.config.grpc.keyPath && { keyPath: this.config.grpc.keyPath }),
-        ...(this.config.encryption?.enabled !== undefined && { encryptionEnabled: this.config.encryption.enabled }),
+        ...(this.config.encryption?.enabled !== undefined && {
+          encryptionEnabled: this.config.encryption.enabled,
+        }),
       });
       await this.grpcServer.start();
       servers.push(`gRPC on ${this.config.grpc.host}:${this.config.grpc.port}`);
@@ -162,8 +172,10 @@ export class SolinServer {
 
     console.log('\n✅ Solin servers started successfully!\n');
     console.log('Active servers:');
-    servers.forEach((server) => console.log(`  • ${server}`));
-    console.log(`\n🔒 Encryption: ${this.config.encryption?.enabled ? 'enabled' : 'disabled (default)'}`);
+    servers.forEach(server => console.log(`  • ${server}`));
+    console.log(
+      `\n🔒 Encryption: ${this.config.encryption?.enabled ? 'enabled' : 'disabled (default)'}`
+    );
     console.log('\nPress Ctrl+C to stop all servers\n');
   }
 
@@ -222,7 +234,7 @@ if (require.main === module) {
 
   const server = new SolinServer(config);
 
-  server.start().catch((error) => {
+  server.start().catch(error => {
     console.error('Failed to start servers:', error);
     process.exit(1);
   });

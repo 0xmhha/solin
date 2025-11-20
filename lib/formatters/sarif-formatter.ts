@@ -140,9 +140,7 @@ export class SarifFormatter implements IFormatter {
   format(result: AnalysisResult): string {
     const sarifReport = this.createSarifReport(result);
 
-    return this.options.pretty
-      ? JSON.stringify(sarifReport, null, 2)
-      : JSON.stringify(sarifReport);
+    return this.options.pretty ? JSON.stringify(sarifReport, null, 2) : JSON.stringify(sarifReport);
   }
 
   /**
@@ -185,7 +183,8 @@ export class SarifFormatter implements IFormatter {
 
     // Create SARIF report
     return {
-      $schema: 'https://raw.githubusercontent.com/oasis-tcs/sarif-spec/master/Schemata/sarif-schema-2.1.0.json',
+      $schema:
+        'https://raw.githubusercontent.com/oasis-tcs/sarif-spec/master/Schemata/sarif-schema-2.1.0.json',
       version: '2.1.0',
       runs: [
         {
@@ -289,7 +288,7 @@ export class SarifFormatter implements IFormatter {
     const name = parts[parts.length - 1] || ruleId;
     return name
       .split('-')
-      .map((word) => word.charAt(0).toUpperCase() + word.slice(1))
+      .map(word => word.charAt(0).toUpperCase() + word.slice(1))
       .join(' ');
   }
 
@@ -320,7 +319,7 @@ export class SarifFormatter implements IFormatter {
 
     // Add severity tag
     const severityTag = Object.keys(Severity).find(
-      (key) => Severity[key as keyof typeof Severity] === issue.severity,
+      key => Severity[key as keyof typeof Severity] === issue.severity
     );
     if (severityTag) {
       tags.push(severityTag.toLowerCase());

@@ -85,7 +85,7 @@ export class UnaryExpressionRule extends AbstractRule {
 
       const value = node[key];
       if (Array.isArray(value)) {
-        value.forEach((child) => this.walkAst(child, context));
+        value.forEach(child => this.walkAst(child, context));
       } else if (value && typeof value === 'object') {
         this.walkAst(value, context);
       }
@@ -111,11 +111,7 @@ export class UnaryExpressionRule extends AbstractRule {
   /**
    * Report a unary-expression issue
    */
-  private reportIssue(
-    node: any,
-    context: AnalysisContext,
-    message: string
-  ): void {
+  private reportIssue(node: any, context: AnalysisContext, message: string): void {
     if (!node.loc) {
       return;
     }

@@ -189,7 +189,6 @@ describe('CostlyLoopRule', () => {
       expect(context.getIssues()).toHaveLength(0);
     });
 
-
     test('should not report loop with manual bound check', async () => {
       const source = `
         pragma solidity ^0.8.0;

@@ -42,7 +42,9 @@ describe('RuleGenerator', () => {
 
       expect(result.ruleCode).toContain("import { AbstractRule } from '../abstract-rule'");
       expect(result.ruleCode).toContain("import { ASTWalker } from '@parser/ast-walker'");
-      expect(result.ruleCode).toContain("import type { AnalysisContext } from '@core/analysis-context'");
+      expect(result.ruleCode).toContain(
+        "import type { AnalysisContext } from '@core/analysis-context'"
+      );
       expect(result.ruleCode).toContain("import { Severity, Category } from '@core/types'");
     });
 
@@ -71,8 +73,12 @@ describe('RuleGenerator', () => {
         nodeTypes: ['FunctionDefinition', 'ContractDefinition'],
       });
 
-      expect(result.ruleCode).toContain('checkFunctionDefinition(node: any, context: AnalysisContext)');
-      expect(result.ruleCode).toContain('checkContractDefinition(node: any, context: AnalysisContext)');
+      expect(result.ruleCode).toContain(
+        'checkFunctionDefinition(node: any, context: AnalysisContext)'
+      );
+      expect(result.ruleCode).toContain(
+        'checkContractDefinition(node: any, context: AnalysisContext)'
+      );
     });
 
     test('should use default FunctionDefinition node type', () => {

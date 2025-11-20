@@ -84,7 +84,7 @@ export class EventsMathRule extends AbstractRule {
 
       const value = node[key];
       if (Array.isArray(value)) {
-        value.forEach((child) => this.walkAst(child, context));
+        value.forEach(child => this.walkAst(child, context));
       } else if (value && typeof value === 'object') {
         this.walkAst(value, context);
       }
@@ -154,7 +154,7 @@ export class EventsMathRule extends AbstractRule {
 
       const value = node[key];
       if (Array.isArray(value)) {
-        if (value.some((child) => this.containsMathOperation(child))) {
+        if (value.some(child => this.containsMathOperation(child))) {
           return true;
         }
       } else if (value && typeof value === 'object') {
@@ -196,11 +196,7 @@ export class EventsMathRule extends AbstractRule {
   /**
    * Report an events-maths issue
    */
-  private reportIssue(
-    node: any,
-    context: AnalysisContext,
-    message: string
-  ): void {
+  private reportIssue(node: any, context: AnalysisContext, message: string): void {
     if (!node.loc) {
       return;
     }

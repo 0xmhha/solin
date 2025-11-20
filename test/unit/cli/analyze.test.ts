@@ -156,8 +156,8 @@ describe('AnalyzeCommand', () => {
 
       // Check that output is valid JSON
       const output = consoleLogSpy.mock.calls
-        .map((call) => call[0])
-        .filter((s) => typeof s === 'string' && s.trim().startsWith('{'))
+        .map(call => call[0])
+        .filter(s => typeof s === 'string' && s.trim().startsWith('{'))
         .join('');
 
       if (output) {
@@ -178,8 +178,8 @@ describe('AnalyzeCommand', () => {
 
       // SARIF is JSON with specific schema
       const output = consoleLogSpy.mock.calls
-        .map((call) => call[0])
-        .filter((s) => typeof s === 'string' && s.includes('$schema'))
+        .map(call => call[0])
+        .filter(s => typeof s === 'string' && s.includes('$schema'))
         .join('');
 
       if (output) {
@@ -200,7 +200,7 @@ describe('AnalyzeCommand', () => {
       await analyzeCommand.execute(args);
 
       // HTML format should contain HTML tags
-      const output = consoleLogSpy.mock.calls.map((call) => call[0]).join('');
+      const output = consoleLogSpy.mock.calls.map(call => call[0]).join('');
       expect(output).toContain('<');
     });
   });
@@ -362,7 +362,7 @@ describe('AnalyzeCommand', () => {
       await analyzeCommand.execute(args);
 
       // Should not output "Analyzing X files..."
-      const output = consoleLogSpy.mock.calls.map((call) => call[0]).join('\n');
+      const output = consoleLogSpy.mock.calls.map(call => call[0]).join('\n');
       expect(output).not.toContain('Analyzing');
     });
 
@@ -378,7 +378,7 @@ describe('AnalyzeCommand', () => {
       await analyzeCommand.execute(args);
 
       // Should output "Analyzing X file(s)..."
-      const output = consoleLogSpy.mock.calls.map((call) => call[0]).join('\n');
+      const output = consoleLogSpy.mock.calls.map(call => call[0]).join('\n');
       expect(output).toContain('Analyzing');
     });
   });

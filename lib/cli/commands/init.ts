@@ -179,7 +179,10 @@ export class InitCommand {
 
       return 0;
     } catch (error) {
-      console.error('Error creating config:', error instanceof Error ? error.message : String(error));
+      console.error(
+        'Error creating config:',
+        error instanceof Error ? error.message : String(error)
+      );
       return 1;
     }
   }
@@ -205,7 +208,7 @@ export class InitCommand {
       output: process.stdout,
     });
 
-    return new Promise((resolve) => {
+    return new Promise(resolve => {
       console.log('\nSolin Configuration Setup\n');
       console.log('Select a configuration template:\n');
       console.log('  1) default  - ' + TEMPLATE_DESCRIPTIONS.default);
@@ -214,7 +217,7 @@ export class InitCommand {
       console.log('');
 
       const askQuestion = () => {
-        rl.question('Enter your choice (1-3) [1]: ', (answer) => {
+        rl.question('Enter your choice (1-3) [1]: ', answer => {
           const choice = answer.trim() || '1';
 
           switch (choice) {

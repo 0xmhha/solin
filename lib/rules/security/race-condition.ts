@@ -59,7 +59,7 @@ export class RaceConditionRule extends AbstractRule {
       if (key === 'loc' || key === 'range') continue;
       const value = node[key];
       if (Array.isArray(value)) {
-        value.forEach((child) => this.walkAst(child, context));
+        value.forEach(child => this.walkAst(child, context));
       } else if (value && typeof value === 'object') {
         this.walkAst(value, context);
       }
@@ -144,7 +144,7 @@ export class RaceConditionRule extends AbstractRule {
       if (key === 'loc' || key === 'range') continue;
       const value = node[key];
       if (Array.isArray(value)) {
-        if (value.some((child) => this.findDirectAllowanceAssignment(child))) {
+        if (value.some(child => this.findDirectAllowanceAssignment(child))) {
           return true;
         }
       } else if (value && typeof value === 'object') {
@@ -165,11 +165,7 @@ export class RaceConditionRule extends AbstractRule {
     return [body];
   }
 
-  private findStateAccess(
-    node: any,
-    reads: Map<string, any>,
-    writes: Map<string, any>
-  ): void {
+  private findStateAccess(node: any, reads: Map<string, any>, writes: Map<string, any>): void {
     if (!node || typeof node !== 'object') return;
 
     // Detect writes (assignments)
@@ -200,7 +196,7 @@ export class RaceConditionRule extends AbstractRule {
       if (key === 'loc' || key === 'range') continue;
       const value = node[key];
       if (Array.isArray(value)) {
-        value.forEach((child) => this.findStateAccess(child, reads, writes));
+        value.forEach(child => this.findStateAccess(child, reads, writes));
       } else if (value && typeof value === 'object') {
         this.findStateAccess(value, reads, writes);
       }
@@ -227,7 +223,7 @@ export class RaceConditionRule extends AbstractRule {
       if (key === 'loc' || key === 'range') continue;
       const value = node[key];
       if (Array.isArray(value)) {
-        if (value.some((child) => this.containsVariableReference(child))) {
+        if (value.some(child => this.containsVariableReference(child))) {
           return true;
         }
       } else if (value && typeof value === 'object') {

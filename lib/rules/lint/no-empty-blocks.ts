@@ -101,7 +101,12 @@ export class NoEmptyBlocksRule extends AbstractRule {
 
     // Allow empty fallback and receive functions (they can just accept ETH)
     const functionName = node.name || '';
-    if (functionName === 'fallback' || functionName === 'receive' || node.isFallback || node.isReceiveEther) {
+    if (
+      functionName === 'fallback' ||
+      functionName === 'receive' ||
+      node.isFallback ||
+      node.isReceiveEther
+    ) {
       return;
     }
 

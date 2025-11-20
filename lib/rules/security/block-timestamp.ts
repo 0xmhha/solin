@@ -91,7 +91,7 @@ export class BlockTimestampRule extends AbstractRule {
 
       const value = node[key];
       if (Array.isArray(value)) {
-        value.forEach((child) => this.walkAst(child, context));
+        value.forEach(child => this.walkAst(child, context));
       } else if (value && typeof value === 'object') {
         this.walkAst(value, context);
       }
@@ -107,8 +107,7 @@ export class BlockTimestampRule extends AbstractRule {
     const right = node.right;
 
     // Check if either operand is a timestamp
-    const hasTimestamp =
-      this.isTimestampExpression(left) || this.isTimestampExpression(right);
+    const hasTimestamp = this.isTimestampExpression(left) || this.isTimestampExpression(right);
 
     if (!hasTimestamp) {
       return;
@@ -157,8 +156,7 @@ export class BlockTimestampRule extends AbstractRule {
           node.expression.name === 'sha256' ||
           node.expression.name === 'sha3' ||
           node.expression.name === 'ripemd160')) ||
-      (node.expression.type === 'MemberAccess' &&
-        node.expression.memberName === 'keccak256');
+      (node.expression.type === 'MemberAccess' && node.expression.memberName === 'keccak256');
 
     if (isHashFunction && this.containsTimestamp(node.arguments)) {
       this.reportIssue(
@@ -202,9 +200,7 @@ export class BlockTimestampRule extends AbstractRule {
     // Handle parentheses
     if (node.type === 'TupleExpression') {
       if (node.components && Array.isArray(node.components)) {
-        return node.components.some((component: any) =>
-          this.isTimestampExpression(component)
-        );
+        return node.components.some((component: any) => this.isTimestampExpression(component));
       }
     }
 
@@ -219,7 +215,7 @@ export class BlockTimestampRule extends AbstractRule {
       return false;
     }
 
-    return args.some((arg) => this.hasTimestampInTree(arg));
+    return args.some(arg => this.hasTimestampInTree(arg));
   }
 
   /**
@@ -241,7 +237,7 @@ export class BlockTimestampRule extends AbstractRule {
 
       const value = node[key];
       if (Array.isArray(value)) {
-        if (value.some((child) => this.hasTimestampInTree(child))) {
+        if (value.some(child => this.hasTimestampInTree(child))) {
           return true;
         }
       } else if (value && typeof value === 'object') {
@@ -257,11 +253,7 @@ export class BlockTimestampRule extends AbstractRule {
   /**
    * Report a timestamp-related issue
    */
-  private reportIssue(
-    node: any,
-    context: AnalysisContext,
-    message: string
-  ): void {
+  private reportIssue(node: any, context: AnalysisContext, message: string): void {
     if (!node.loc) {
       return;
     }

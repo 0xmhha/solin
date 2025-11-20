@@ -15,12 +15,7 @@ import { Severity, Category } from '@core/types';
  * - Should be properly protected
  */
 export class FunctionInitState extends AbstractRule {
-  private readonly INIT_PATTERNS = [
-    /^initialize/i,
-    /^init$/i,
-    /^setup$/i,
-    /_init$/i,
-  ];
+  private readonly INIT_PATTERNS = [/^initialize/i, /^init$/i, /^setup$/i, /_init$/i];
 
   constructor() {
     super({
@@ -62,7 +57,7 @@ export class FunctionInitState extends AbstractRule {
 
       const value = node[key];
       if (Array.isArray(value)) {
-        value.forEach((child) => this.walkAst(child, context));
+        value.forEach(child => this.walkAst(child, context));
       } else if (value && typeof value === 'object') {
         this.walkAst(value, context);
       }
@@ -88,8 +83,7 @@ export class FunctionInitState extends AbstractRule {
       ruleId: this.metadata.id,
       severity: this.metadata.severity,
       category: this.metadata.category,
-      message:
-        `Function '${node.name}' appears to be an initialization function. Ensure it is properly protected against re-initialization.`,
+      message: `Function '${node.name}' appears to be an initialization function. Ensure it is properly protected against re-initialization.`,
       location: {
         start: {
           line: node.loc.start.line,

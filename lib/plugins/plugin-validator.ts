@@ -4,11 +4,7 @@
  * Validates plugin structure and ensures plugins conform to the expected interface.
  */
 
-import type {
-  SolinPlugin,
-  PluginValidationError,
-  PluginRule,
-} from './types';
+import type { SolinPlugin, PluginValidationError, PluginRule } from './types';
 import { PluginErrorCode } from './types';
 
 /**
@@ -74,10 +70,7 @@ export class PluginValidator {
   /**
    * Validate plugin metadata
    */
-  private validateMetadata(
-    plugin: SolinPlugin,
-    pluginName: string,
-  ): PluginValidationError[] {
+  private validateMetadata(plugin: SolinPlugin, pluginName: string): PluginValidationError[] {
     const errors: PluginValidationError[] = [];
 
     if (!plugin.meta) {
@@ -124,7 +117,7 @@ export class PluginValidator {
    */
   private validateRules(
     rules: Record<string, PluginRule | (new () => unknown)>,
-    pluginName: string,
+    pluginName: string
   ): PluginValidationError[] {
     const errors: PluginValidationError[] = [];
 
@@ -211,7 +204,7 @@ export class PluginValidator {
    */
   private validatePresets(
     presets: Record<string, unknown>,
-    pluginName: string,
+    pluginName: string
   ): PluginValidationError[] {
     const errors: PluginValidationError[] = [];
 

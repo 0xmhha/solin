@@ -51,9 +51,7 @@ export class PragmaVersion extends AbstractRule {
 
     // Check children array (for SourceUnit)
     if (Array.isArray(node.children)) {
-      return node.children.some((child: any) =>
-        child.type === 'PragmaDirective'
-      );
+      return node.children.some((child: any) => child.type === 'PragmaDirective');
     }
 
     return false;
@@ -67,8 +65,7 @@ export class PragmaVersion extends AbstractRule {
       ruleId: this.metadata.id,
       severity: this.metadata.severity,
       category: this.metadata.category,
-      message:
-        'Missing pragma directive. Specify compiler version with pragma solidity statement.',
+      message: 'Missing pragma directive. Specify compiler version with pragma solidity statement.',
       location: {
         start: { line: 1, column: 0 },
         end: { line: 1, column: 0 },

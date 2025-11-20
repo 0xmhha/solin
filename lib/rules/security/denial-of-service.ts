@@ -39,7 +39,7 @@ export class DenialOfServiceRule extends AbstractRule {
       if (key === 'loc' || key === 'range') continue;
       const value = node[key];
       if (Array.isArray(value)) {
-        value.forEach((child) => this.walkAst(child, context));
+        value.forEach(child => this.walkAst(child, context));
       } else if (value && typeof value === 'object') {
         this.walkAst(value, context);
       }
@@ -83,7 +83,7 @@ export class DenialOfServiceRule extends AbstractRule {
       if (key === 'loc' || key === 'range') continue;
       const value = node[key];
       if (Array.isArray(value)) {
-        if (value.some((child) => this.containsArrayLength(child))) return true;
+        if (value.some(child => this.containsArrayLength(child))) return true;
       } else if (value && typeof value === 'object') {
         if (this.containsArrayLength(value)) return true;
       }

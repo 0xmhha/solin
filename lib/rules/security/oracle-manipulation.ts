@@ -35,7 +35,7 @@ export class OracleManipulationRule extends AbstractRule {
       if (key === 'loc' || key === 'range') continue;
       const value = node[key];
       if (Array.isArray(value)) {
-        value.forEach((child) => this.walkAst(child, context));
+        value.forEach(child => this.walkAst(child, context));
       } else if (value && typeof value === 'object') {
         this.walkAst(value, context);
       }
@@ -49,7 +49,7 @@ export class OracleManipulationRule extends AbstractRule {
     const methodName = expr.memberName;
     const priceKeywords = ['price', 'getPrice', 'latestAnswer', 'getReserves', 'balance'];
 
-    const isPriceQuery = priceKeywords.some((keyword) =>
+    const isPriceQuery = priceKeywords.some(keyword =>
       methodName?.toLowerCase().includes(keyword.toLowerCase())
     );
 

@@ -28,7 +28,7 @@ export class ContractNameCamelCaseRule extends AbstractRule {
 
   analyze(context: AnalysisContext): void {
     // Traverse AST to find contract-like definitions
-    this.visitNode(context.ast, (node) => {
+    this.visitNode(context.ast, node => {
       if (
         node.type === 'ContractDefinition' ||
         node.type === 'LibraryDefinition' ||
@@ -54,7 +54,7 @@ export class ContractNameCamelCaseRule extends AbstractRule {
 
       const child = node[key];
       if (Array.isArray(child)) {
-        child.forEach((item) => this.visitNode(item, callback));
+        child.forEach(item => this.visitNode(item, callback));
       } else if (typeof child === 'object' && child !== null) {
         this.visitNode(child, callback);
       }

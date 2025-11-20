@@ -39,7 +39,7 @@ export class ReentrancyBenignRule extends AbstractRule {
       if (key === 'loc' || key === 'range') continue;
       const value = node[key];
       if (Array.isArray(value)) {
-        value.forEach((child) => this.walkAst(child, context));
+        value.forEach(child => this.walkAst(child, context));
       } else if (value && typeof value === 'object') {
         this.walkAst(value, context);
       }
@@ -78,7 +78,12 @@ export class ReentrancyBenignRule extends AbstractRule {
     // Detect external calls
     if (node.type === 'MemberAccess') {
       const memberName = node.memberName;
-      if (memberName === 'call' || memberName === 'delegatecall' || memberName === 'transfer' || memberName === 'send') {
+      if (
+        memberName === 'call' ||
+        memberName === 'delegatecall' ||
+        memberName === 'transfer' ||
+        memberName === 'send'
+      ) {
         calls.push(node);
       }
     }
@@ -92,7 +97,7 @@ export class ReentrancyBenignRule extends AbstractRule {
       if (key === 'loc' || key === 'range') continue;
       const value = node[key];
       if (Array.isArray(value)) {
-        value.forEach((child) => this.collectCallsAndEvents(child, calls, events));
+        value.forEach(child => this.collectCallsAndEvents(child, calls, events));
       } else if (value && typeof value === 'object') {
         this.collectCallsAndEvents(value, calls, events);
       }

@@ -92,12 +92,7 @@ export class RtloCharacterRule extends AbstractRule {
         let columnIndex = line.indexOf(code);
 
         while (columnIndex !== -1) {
-          this.reportIssue(
-            lineIndex + 1,
-            columnIndex,
-            name,
-            context
-          );
+          this.reportIssue(lineIndex + 1, columnIndex, name, context);
 
           // Check for more occurrences in the same line
           columnIndex = line.indexOf(code, columnIndex + 1);

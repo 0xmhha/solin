@@ -5,12 +5,7 @@
  */
 
 import * as fs from 'fs/promises';
-import type {
-  IEngine,
-  AnalysisOptions,
-  AnalysisResult,
-  FileAnalysisResult,
-} from './types';
+import type { IEngine, AnalysisOptions, AnalysisResult, FileAnalysisResult } from './types';
 import type { ResolvedConfig } from '@config/types';
 import type { RuleRegistry } from './rule-registry';
 import type { SolidityParser } from '@parser/solidity-parser';
@@ -28,7 +23,7 @@ export class AnalysisEngine implements IEngine {
   constructor(
     private readonly registry: RuleRegistry,
     private readonly parser: SolidityParser,
-    cacheManager?: CacheManager,
+    cacheManager?: CacheManager
   ) {
     this.cacheManager = cacheManager;
   }
@@ -50,10 +45,7 @@ export class AnalysisEngine implements IEngine {
   /**
    * Analyze a single file
    */
-  async analyzeFile(
-    filePath: string,
-    config: ResolvedConfig,
-  ): Promise<FileAnalysisResult> {
+  async analyzeFile(filePath: string, config: ResolvedConfig): Promise<FileAnalysisResult> {
     const startTime = Date.now();
 
     // Read file
@@ -167,7 +159,7 @@ export class AnalysisEngine implements IEngine {
         pool.addTask({
           id: file,
           data: file,
-          execute: async (filePath) => {
+          execute: async filePath => {
             try {
               return await this.analyzeFile(filePath, analysisConfig);
             } catch (error) {

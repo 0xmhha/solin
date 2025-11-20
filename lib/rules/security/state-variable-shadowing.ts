@@ -72,7 +72,7 @@ export class StateVariableShadowing extends AbstractRule {
 
       const value = node[key];
       if (Array.isArray(value)) {
-        value.forEach((child) => this.collectVariables(child));
+        value.forEach(child => this.collectVariables(child));
       } else if (value && typeof value === 'object') {
         this.collectVariables(value);
       }
@@ -99,7 +99,7 @@ export class StateVariableShadowing extends AbstractRule {
 
       const value = node[key];
       if (Array.isArray(value)) {
-        value.forEach((child) => this.checkShadowing(child, context));
+        value.forEach(child => this.checkShadowing(child, context));
       } else if (value && typeof value === 'object') {
         this.checkShadowing(value, context);
       }
@@ -149,11 +149,7 @@ export class StateVariableShadowing extends AbstractRule {
   /**
    * Report shadowing issue
    */
-  private reportIssue(
-    node: any,
-    name: string,
-    context: AnalysisContext
-  ): void {
+  private reportIssue(node: any, name: string, context: AnalysisContext): void {
     if (!node.loc) {
       return;
     }
@@ -162,8 +158,7 @@ export class StateVariableShadowing extends AbstractRule {
       ruleId: this.metadata.id,
       severity: this.metadata.severity,
       category: this.metadata.category,
-      message:
-        `State variable '${name}' shadows an inherited variable. Use a different name to avoid confusion.`,
+      message: `State variable '${name}' shadows an inherited variable. Use a different name to avoid confusion.`,
       location: {
         start: {
           line: node.loc.start.line,

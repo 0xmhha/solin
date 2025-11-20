@@ -114,7 +114,7 @@ describe('NoPublicVarsRule', () => {
 
       const issues = context.getIssues();
       expect(issues).toHaveLength(3);
-      expect(issues.every((issue) => issue.ruleId === 'lint/no-public-vars')).toBe(true);
+      expect(issues.every(issue => issue.ruleId === 'lint/no-public-vars')).toBe(true);
     });
 
     test('should not report issue for public constants', async () => {

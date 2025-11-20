@@ -35,7 +35,7 @@ export class FrontRunningRule extends AbstractRule {
       if (key === 'loc' || key === 'range') continue;
       const value = node[key];
       if (Array.isArray(value)) {
-        value.forEach((child) => this.walkAst(child, context));
+        value.forEach(child => this.walkAst(child, context));
       } else if (value && typeof value === 'object') {
         this.walkAst(value, context);
       }
@@ -66,20 +66,17 @@ export class FrontRunningRule extends AbstractRule {
   }
 
   private hasStateRead(node: any): boolean {
-    return this.searchPattern(node, (n) => n.type === 'IndexAccess');
+    return this.searchPattern(node, n => n.type === 'IndexAccess');
   }
 
   private hasStateWrite(node: any): boolean {
-    return this.searchPattern(
-      node,
-      (n) => n.type === 'BinaryOperation' && n.operator === '='
-    );
+    return this.searchPattern(node, n => n.type === 'BinaryOperation' && n.operator === '=');
   }
 
   private hasValueTransfer(node: any): boolean {
     return this.searchPattern(
       node,
-      (n) => n.type === 'MemberAccess' && (n.memberName === 'transfer' || n.memberName === 'send')
+      n => n.type === 'MemberAccess' && (n.memberName === 'transfer' || n.memberName === 'send')
     );
   }
 
@@ -91,7 +88,7 @@ export class FrontRunningRule extends AbstractRule {
       if (key === 'loc' || key === 'range') continue;
       const value = node[key];
       if (Array.isArray(value)) {
-        if (value.some((child) => this.searchPattern(child, predicate))) return true;
+        if (value.some(child => this.searchPattern(child, predicate))) return true;
       } else if (value && typeof value === 'object') {
         if (this.searchPattern(value, predicate)) return true;
       }

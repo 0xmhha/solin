@@ -35,7 +35,7 @@ export class ProxyStorageCollisionRule extends AbstractRule {
       if (key === 'loc' || key === 'range') continue;
       const value = node[key];
       if (Array.isArray(value)) {
-        value.forEach((child) => this.walkAst(child, context));
+        value.forEach(child => this.walkAst(child, context));
       } else if (value && typeof value === 'object') {
         this.walkAst(value, context);
       }
@@ -45,11 +45,7 @@ export class ProxyStorageCollisionRule extends AbstractRule {
   private checkProxy(node: any, context: AnalysisContext): void {
     const name = node.name?.toLowerCase() || '';
 
-    if (
-      name.includes('proxy') ||
-      name.includes('upgradeable') ||
-      name.includes('delegate')
-    ) {
+    if (name.includes('proxy') || name.includes('upgradeable') || name.includes('delegate')) {
       const hasStateVars = this.hasStateVariables(node);
 
       if (hasStateVars && node.loc) {
@@ -70,8 +66,6 @@ export class ProxyStorageCollisionRule extends AbstractRule {
   private hasStateVariables(node: any): boolean {
     if (!node.subNodes) return false;
 
-    return node.subNodes.some(
-      (subNode: any) => subNode.type === 'StateVariableDeclaration'
-    );
+    return node.subNodes.some((subNode: any) => subNode.type === 'StateVariableDeclaration');
   }
 }

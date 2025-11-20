@@ -38,8 +38,9 @@ describe('TooManyFunctionsRule', () => {
   describe('contracts with too many functions', () => {
     test('should detect contract with more than 50 functions', async () => {
       // Generate a contract with 51 functions
-      const functions = Array.from({ length: 51 }, (_, i) =>
-        `function func${i}() public pure returns (uint256) { return ${i}; }`
+      const functions = Array.from(
+        { length: 51 },
+        (_, i) => `function func${i}() public pure returns (uint256) { return ${i}; }`
       ).join('\n    ');
 
       const source = `
@@ -61,8 +62,9 @@ describe('TooManyFunctionsRule', () => {
     });
 
     test('should detect contract with 75 functions', async () => {
-      const functions = Array.from({ length: 75 }, (_, i) =>
-        `function method${i}() public { }`
+      const functions = Array.from(
+        { length: 75 },
+        (_, i) => `function method${i}() public { }`
       ).join('\n    ');
 
       const source = `
@@ -107,9 +109,9 @@ describe('TooManyFunctionsRule', () => {
     });
 
     test('should not report contract with exactly 50 functions', async () => {
-      const functions = Array.from({ length: 50 }, (_, i) =>
-        `function func${i}() public {}`
-      ).join('\n    ');
+      const functions = Array.from({ length: 50 }, (_, i) => `function func${i}() public {}`).join(
+        '\n    '
+      );
 
       const source = `
         pragma solidity ^0.8.0;
@@ -148,8 +150,9 @@ describe('TooManyFunctionsRule', () => {
 
   describe('edge cases', () => {
     test('should handle multiple contracts with different function counts', async () => {
-      const manyFunctions = Array.from({ length: 51 }, (_, i) =>
-        `function func${i}() public {}`
+      const manyFunctions = Array.from(
+        { length: 51 },
+        (_, i) => `function func${i}() public {}`
       ).join('\n    ');
 
       const source = `

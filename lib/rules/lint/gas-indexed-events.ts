@@ -21,11 +21,7 @@ export class GasIndexedEvents extends AbstractRule {
   private static readonly MAX_INDEXED_PARAMS = 3;
 
   // Types that should typically be indexed
-  private static readonly INDEXABLE_TYPES = new Set([
-    'address',
-    'bytes32',
-    'bool',
-  ]);
+  private static readonly INDEXABLE_TYPES = new Set(['address', 'bytes32', 'bool']);
 
   constructor() {
     super({
@@ -65,7 +61,7 @@ export class GasIndexedEvents extends AbstractRule {
 
       const value = node[key];
       if (Array.isArray(value)) {
-        value.forEach((child) => this.walkAst(child, context));
+        value.forEach(child => this.walkAst(child, context));
       } else if (value && typeof value === 'object') {
         this.walkAst(value, context);
       }
@@ -81,9 +77,7 @@ export class GasIndexedEvents extends AbstractRule {
     }
 
     // Count current indexed parameters
-    const indexedCount = node.parameters.filter(
-      (param: any) => param.isIndexed
-    ).length;
+    const indexedCount = node.parameters.filter((param: any) => param.isIndexed).length;
 
     // Check each parameter
     for (const param of node.parameters) {
@@ -161,11 +155,7 @@ export class GasIndexedEvents extends AbstractRule {
   /**
    * Report issue for non-indexed parameter
    */
-  private reportIssue(
-    eventNode: any,
-    param: any,
-    context: AnalysisContext
-  ): void {
+  private reportIssue(eventNode: any, param: any, context: AnalysisContext): void {
     if (!param.loc) {
       return;
     }

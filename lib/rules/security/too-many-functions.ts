@@ -92,7 +92,7 @@ export class TooManyFunctionsRule extends AbstractRule {
 
       const value = node[key];
       if (Array.isArray(value)) {
-        value.forEach((child) => this.walkAst(child, context));
+        value.forEach(child => this.walkAst(child, context));
       } else if (value && typeof value === 'object') {
         this.walkAst(value, context);
       }
@@ -131,9 +131,7 @@ export class TooManyFunctionsRule extends AbstractRule {
       return 0;
     }
 
-    return contractNode.subNodes.filter(
-      (node: any) => node.type === 'FunctionDefinition'
-    ).length;
+    return contractNode.subNodes.filter((node: any) => node.type === 'FunctionDefinition').length;
   }
 
   /**

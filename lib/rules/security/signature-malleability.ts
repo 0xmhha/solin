@@ -65,7 +65,7 @@ export class SignatureMalleabilityRule extends AbstractRule {
       if (key === 'loc' || key === 'range') continue;
       const value = node[key];
       if (Array.isArray(value)) {
-        value.forEach((child) => this.checkECDSAImport(child));
+        value.forEach(child => this.checkECDSAImport(child));
       } else if (value && typeof value === 'object') {
         this.checkECDSAImport(value);
       }
@@ -83,7 +83,7 @@ export class SignatureMalleabilityRule extends AbstractRule {
       if (key === 'loc' || key === 'range') continue;
       const value = node[key];
       if (Array.isArray(value)) {
-        value.forEach((child) => this.walkAst(child, context));
+        value.forEach(child => this.walkAst(child, context));
       } else if (value && typeof value === 'object') {
         this.walkAst(value, context);
       }
@@ -132,7 +132,7 @@ export class SignatureMalleabilityRule extends AbstractRule {
       if (key === 'loc' || key === 'range') continue;
       const value = node[key];
       if (Array.isArray(value)) {
-        if (value.some((child) => this.usesECDSARecover(child))) {
+        if (value.some(child => this.usesECDSARecover(child))) {
           return true;
         }
       } else if (value && typeof value === 'object') {
@@ -159,7 +159,7 @@ export class SignatureMalleabilityRule extends AbstractRule {
       if (key === 'loc' || key === 'range') continue;
       const value = node[key];
       if (Array.isArray(value)) {
-        value.forEach((child) => calls.push(...this.findEcrecoverCalls(child)));
+        value.forEach(child => calls.push(...this.findEcrecoverCalls(child)));
       } else if (value && typeof value === 'object') {
         calls.push(...this.findEcrecoverCalls(value));
       }
@@ -193,7 +193,7 @@ export class SignatureMalleabilityRule extends AbstractRule {
       if (key === 'loc' || key === 'range') continue;
       const value = node[key];
       if (Array.isArray(value)) {
-        value.forEach((child) => this.checkValidations(child));
+        value.forEach(child => this.checkValidations(child));
       } else if (value && typeof value === 'object') {
         this.checkValidations(value);
       }
@@ -211,7 +211,11 @@ export class SignatureMalleabilityRule extends AbstractRule {
         // Check if comparing 's' variable to the threshold
         const left = this.extractVariableName(node.left);
         const right = this.extractNumber(node.right);
-        if (left === 's' && right && right.includes('7FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF5D576E7357A4501DDFE92F46681B20A0')) {
+        if (
+          left === 's' &&
+          right &&
+          right.includes('7FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF5D576E7357A4501DDFE92F46681B20A0')
+        ) {
           return true;
         }
       }
@@ -274,7 +278,8 @@ export class SignatureMalleabilityRule extends AbstractRule {
   private reportIssue(node: any, context: AnalysisContext): void {
     if (!node.loc) return;
 
-    let message = 'Signature malleability vulnerability: ecrecover() used without proper validation. ';
+    let message =
+      'Signature malleability vulnerability: ecrecover() used without proper validation. ';
 
     if (!this.hasSValidation) {
       message +=

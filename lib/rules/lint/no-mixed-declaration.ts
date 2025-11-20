@@ -107,8 +107,7 @@ export class NoMixedDeclarationRule extends AbstractRule {
    */
   private isVariableDeclaration(statement: any): boolean {
     return (
-      statement.type === 'VariableDeclarationStatement' ||
-      statement.type === 'VariableDeclaration'
+      statement.type === 'VariableDeclarationStatement' || statement.type === 'VariableDeclaration'
     );
   }
 }

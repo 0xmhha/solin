@@ -13,6 +13,7 @@ This guide explains how to test custom rules in Solin using the built-in testing
 ## Overview
 
 Solin provides a `RuleTester` utility that makes it easy to test custom rules. The RuleTester:
+
 - Automatically parses Solidity code
 - Runs your rule against the AST
 - Validates the reported issues
@@ -50,9 +51,10 @@ describe('MyCustomRule', () => {
 Creates a new RuleTester instance.
 
 **Options:**
+
 ```typescript
 interface RuleTesterOptions {
-  config?: Partial<ResolvedConfig>;  // Custom configuration
+  config?: Partial<ResolvedConfig>; // Custom configuration
 }
 ```
 
@@ -61,12 +63,14 @@ interface RuleTesterOptions {
 Runs a rule against the provided Solidity code and returns detected issues.
 
 **Parameters:**
+
 - `RuleClass`: The rule class to test (must extend AbstractRule)
 - `code`: Solidity source code string
 
 **Returns:** Promise<Issue[]> - Array of detected issues
 
 **Example:**
+
 ```typescript
 const issues = await tester.run(MyRule, 'contract Test {}');
 ```
@@ -188,6 +192,7 @@ expect(warnings).toHaveLength(2);
 ### 1. Test Both Valid and Invalid Code
 
 Always test that your rule:
+
 - Does NOT report issues for valid code
 - DOES report issues for invalid code
 
@@ -212,6 +217,7 @@ describe('MyRule', () => {
 ### 2. Test Edge Cases
 
 Consider edge cases like:
+
 - Empty contracts
 - Multiple violations in one file
 - Nested structures

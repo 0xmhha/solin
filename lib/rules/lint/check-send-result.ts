@@ -65,11 +65,7 @@ export class CheckSendResultRule extends AbstractRule {
       const callee = functionCall.expression;
 
       // Check if it's a member access with name 'send'
-      if (
-        callee &&
-        callee.type === 'MemberAccess' &&
-        callee.memberName === 'send'
-      ) {
+      if (callee && callee.type === 'MemberAccess' && callee.memberName === 'send') {
         // This is an unchecked send() call (result not assigned or used)
         if (node.loc) {
           context.report({

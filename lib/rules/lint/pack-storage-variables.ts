@@ -76,7 +76,7 @@ export class PackStorageVariables extends AbstractRule {
 
       const value = node[key];
       if (Array.isArray(value)) {
-        value.forEach((child) => this.walkAst(child, context));
+        value.forEach(child => this.walkAst(child, context));
       } else if (value && typeof value === 'object') {
         this.walkAst(value, context);
       }
@@ -110,9 +110,7 @@ export class PackStorageVariables extends AbstractRule {
       const gasSaved = slotsSaved * 20000; // Approximate deployment gas saved
 
       // Find the first small variable that could be packed
-      const firstPackableVar = variables.find(
-        (v) => !v.isConstant && v.size < 32,
-      );
+      const firstPackableVar = variables.find(v => !v.isConstant && v.size < 32);
 
       if (firstPackableVar && firstPackableVar.node.loc) {
         context.report({
@@ -288,15 +286,15 @@ export class PackStorageVariables extends AbstractRule {
    */
   private calculateOptimalSlots(variables: VariableInfo[]): number {
     // Filter out constants
-    const storageVars = variables.filter((v) => !v.isConstant);
+    const storageVars = variables.filter(v => !v.isConstant);
 
     if (storageVars.length === 0) {
       return 0;
     }
 
     // Separate full-slot and packable variables
-    const fullSlotVars = storageVars.filter((v) => v.size === 32);
-    const packableVars = storageVars.filter((v) => v.size < 32);
+    const fullSlotVars = storageVars.filter(v => v.size === 32);
+    const packableVars = storageVars.filter(v => v.size < 32);
 
     // Sort packable vars by size (largest first for better packing)
     packableVars.sort((a, b) => b.size - a.size);

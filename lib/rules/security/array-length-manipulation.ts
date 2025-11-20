@@ -89,7 +89,7 @@ export class ArrayLengthManipulationRule extends AbstractRule {
 
       const value = node[key];
       if (Array.isArray(value)) {
-        value.forEach((child) => this.walkAst(child, context));
+        value.forEach(child => this.walkAst(child, context));
       } else if (value && typeof value === 'object') {
         this.walkAst(value, context);
       }
@@ -140,21 +140,13 @@ export class ArrayLengthManipulationRule extends AbstractRule {
    * Check if expression is a member access to 'length' property
    */
   private isMemberAccessToLength(node: any): boolean {
-    return (
-      node &&
-      node.type === 'MemberAccess' &&
-      node.memberName === 'length'
-    );
+    return node && node.type === 'MemberAccess' && node.memberName === 'length';
   }
 
   /**
    * Report an array-length-manipulation issue
    */
-  private reportIssue(
-    node: any,
-    context: AnalysisContext,
-    message: string
-  ): void {
+  private reportIssue(node: any, context: AnalysisContext, message: string): void {
     if (!node.loc) {
       return;
     }

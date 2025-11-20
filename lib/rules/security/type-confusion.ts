@@ -56,7 +56,7 @@ export class TypeConfusionRule extends AbstractRule {
       if (key === 'loc' || key === 'range') continue;
       const value = node[key];
       if (Array.isArray(value)) {
-        value.forEach((child) => this.walkAst(child, context));
+        value.forEach(child => this.walkAst(child, context));
       } else if (value && typeof value === 'object') {
         this.walkAst(value, context);
       }
@@ -84,7 +84,7 @@ export class TypeConfusionRule extends AbstractRule {
       if (key === 'loc' || key === 'range') continue;
       const value = node[key];
       if (Array.isArray(value)) {
-        value.forEach((child) => this.checkTypeCasts(child, context));
+        value.forEach(child => this.checkTypeCasts(child, context));
       } else if (value && typeof value === 'object') {
         this.checkTypeCasts(value, context);
       }
@@ -255,7 +255,7 @@ export class TypeConfusionRule extends AbstractRule {
       if (key === 'loc' || key === 'range') continue;
       const value = body[key];
       if (Array.isArray(value)) {
-        if (value.some((child) => this.hasRequireForType(child, targetType))) {
+        if (value.some(child => this.hasRequireForType(child, targetType))) {
           return true;
         }
       } else if (value && typeof value === 'object') {

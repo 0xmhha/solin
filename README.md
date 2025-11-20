@@ -45,6 +45,7 @@ Solin is designed to be a **unified Solidity analysis platform** that combines:
 ### Analysis Categories
 
 #### Lint Analysis
+
 - Code style and formatting
 - Best practices enforcement
 - Naming convention validation
@@ -52,6 +53,7 @@ Solin is designed to be a **unified Solidity analysis platform** that combines:
 - Documentation completeness
 
 #### Security Analysis (33 rules)
+
 - Reentrancy vulnerabilities
 - tx.origin authentication bypass
 - Unchecked external calls
@@ -185,6 +187,7 @@ lib/**
 ```
 
 The file supports:
+
 - Glob patterns (`**/*.sol`, `test_*.sol`)
 - Comments starting with `#`
 - Directory patterns (`mocks/`)

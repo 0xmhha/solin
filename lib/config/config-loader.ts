@@ -7,13 +7,7 @@
 import { cosmiconfigSync } from 'cosmiconfig';
 import * as path from 'path';
 import * as fs from 'fs/promises';
-import {
-  Config,
-  ResolvedConfig,
-  ConfigLoadOptions,
-  Severity,
-  RuleConfig,
-} from './types';
+import { Config, ResolvedConfig, ConfigLoadOptions, Severity, RuleConfig } from './types';
 import { getPreset } from './presets';
 
 /**
@@ -89,10 +83,7 @@ export class ConfigLoader {
 
     // Validate extends
     if (config.extends !== undefined) {
-      if (
-        typeof config.extends !== 'string' &&
-        !Array.isArray(config.extends)
-      ) {
+      if (typeof config.extends !== 'string' && !Array.isArray(config.extends)) {
         throw new Error('extends must be a string or array of strings');
       }
 
@@ -141,31 +132,27 @@ export class ConfigLoader {
     if (Array.isArray(ruleConfig)) {
       // Array format: [severity, options]
       if (ruleConfig.length < 1 || ruleConfig.length > 2) {
-        throw new Error(
-          `Invalid rule config for ${ruleId}: array must have 1 or 2 elements`,
-        );
+        throw new Error(`Invalid rule config for ${ruleId}: array must have 1 or 2 elements`);
       }
 
       const severity = ruleConfig[0];
       if (!validSeverities.includes(severity)) {
         throw new Error(
-          `Invalid severity for ${ruleId}: must be one of ${validSeverities.join(', ')}`,
+          `Invalid severity for ${ruleId}: must be one of ${validSeverities.join(', ')}`
         );
       }
 
       if (ruleConfig.length === 2) {
         const options = ruleConfig[1];
         if (typeof options !== 'object' || options === null) {
-          throw new Error(
-            `Invalid rule options for ${ruleId}: must be an object`,
-          );
+          throw new Error(`Invalid rule options for ${ruleId}: must be an object`);
         }
       }
     } else {
       // Simple severity
       if (!validSeverities.includes(ruleConfig as Severity)) {
         throw new Error(
-          `Invalid severity for ${ruleId}: must be one of ${validSeverities.join(', ')}`,
+          `Invalid severity for ${ruleId}: must be one of ${validSeverities.join(', ')}`
         );
       }
     }
@@ -217,10 +204,7 @@ export class ConfigLoader {
   /**
    * Resolve configuration (apply extends, etc.)
    */
-  private async resolve(
-    config: Config,
-    basePath: string,
-  ): Promise<ResolvedConfig> {
+  private async resolve(config: Config, basePath: string): Promise<ResolvedConfig> {
     // Resolve extends first
     const resolvedConfig = await this.resolveExtends(config, basePath);
 
@@ -283,9 +267,7 @@ export class ConfigLoader {
     }
 
     // Load from file path
-    const resolvedPath = basePath
-      ? path.resolve(basePath, presetName)
-      : path.resolve(presetName);
+    const resolvedPath = basePath ? path.resolve(basePath, presetName) : path.resolve(presetName);
 
     try {
       const content = await fs.readFile(resolvedPath, 'utf-8');
@@ -309,7 +291,7 @@ export class ConfigLoader {
   async resolveExtends(
     config: Config,
     basePath: string,
-    visited: Set<string> = new Set(),
+    visited: Set<string> = new Set()
   ): Promise<Config> {
     // No extends, return config as-is
     if (!config.extends) {
@@ -317,9 +299,7 @@ export class ConfigLoader {
     }
 
     // Convert single string to array for uniform processing
-    const extendsArray = Array.isArray(config.extends)
-      ? config.extends
-      : [config.extends];
+    const extendsArray = Array.isArray(config.extends) ? config.extends : [config.extends];
 
     // Start with empty config
     let result: Config = {
@@ -334,9 +314,7 @@ export class ConfigLoader {
         : path.resolve(basePath, extendName);
 
       if (visited.has(extendKey)) {
-        throw new Error(
-          `Circular dependency detected in extends: ${extendKey}`,
-        );
+        throw new Error(`Circular dependency detected in extends: ${extendKey}`);
       }
 
       visited.add(extendKey);
@@ -348,7 +326,7 @@ export class ConfigLoader {
       const resolvedExtended = await this.resolveExtends(
         extendedConfig,
         basePath,
-        new Set(visited),
+        new Set(visited)
       );
 
       // Merge the extended config into result

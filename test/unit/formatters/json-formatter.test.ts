@@ -151,7 +151,7 @@ describe('JSONFormatter', () => {
       const output = formatterCompact.format(result);
 
       // Compact JSON should not have newlines (except at end)
-      const lines = output.split('\n').filter((line) => line.trim());
+      const lines = output.split('\n').filter(line => line.trim());
       expect(lines.length).toBe(1);
     });
 

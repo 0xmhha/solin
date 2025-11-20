@@ -131,7 +131,7 @@ export class CurlyOnSameLineRule extends AbstractRule {
   private findOpeningBraceLine(
     context: AnalysisContext,
     startLine: number,
-    endLine: number,
+    endLine: number
   ): number | null {
     for (let line = startLine; line <= endLine; line++) {
       const lineText = context.getLineText(line);

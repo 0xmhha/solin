@@ -93,12 +93,7 @@ export class ExplicitVisibilityRule extends AbstractRule {
     }
 
     // Fallback and receive functions
-    if (
-      name === 'fallback' ||
-      name === 'receive' ||
-      node.isFallback ||
-      node.isReceiveEther
-    ) {
+    if (name === 'fallback' || name === 'receive' || node.isFallback || node.isReceiveEther) {
       return true;
     }
 

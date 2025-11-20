@@ -41,7 +41,11 @@ export class PreferExternalOverPublicRule extends AbstractRule {
       enter: (node: ASTNode) => {
         if (node.type === 'FunctionDefinition') {
           const funcNode = node as any;
-          if (funcNode.visibility === 'public' && funcNode.name && !this.isSpecialFunction(funcNode)) {
+          if (
+            funcNode.visibility === 'public' &&
+            funcNode.name &&
+            !this.isSpecialFunction(funcNode)
+          ) {
             publicFunctions.set(funcNode.name, funcNode);
           }
         }
@@ -106,12 +110,7 @@ export class PreferExternalOverPublicRule extends AbstractRule {
       return true;
     }
 
-    if (
-      name === 'fallback' ||
-      name === 'receive' ||
-      node.isFallback ||
-      node.isReceiveEther
-    ) {
+    if (name === 'fallback' || name === 'receive' || node.isFallback || node.isReceiveEther) {
       return true;
     }
 

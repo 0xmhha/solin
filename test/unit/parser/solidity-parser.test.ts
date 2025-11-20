@@ -82,7 +82,7 @@ describe('SolidityParser', () => {
 
       // Check that contract was parsed
       const contracts = result.ast.children.filter(
-        (node: any) => node.type === 'ContractDefinition',
+        (node: any) => node.type === 'ContractDefinition'
       );
       expect(contracts.length).toBeGreaterThan(0);
     });

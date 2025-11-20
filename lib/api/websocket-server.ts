@@ -126,11 +126,7 @@ export class SolinWebSocketServer {
   /**
    * Handle WebSocket upgrade
    */
-  private handleUpgrade(
-    req: http.IncomingMessage,
-    socket: any,
-    _head: Buffer,
-  ): void {
+  private handleUpgrade(req: http.IncomingMessage, socket: any, _head: Buffer): void {
     const key = req.headers['sec-websocket-key'];
     if (!key) {
       socket.end('HTTP/1.1 400 Bad Request\r\n\r\n');
@@ -356,8 +352,8 @@ export class SolinWebSocketServer {
 
       // Count issues
       const issues = result.files[0]?.issues || [];
-      const errors = issues.filter((i) => i.severity === 'error').length;
-      const warnings = issues.filter((i) => i.severity === 'warning').length;
+      const errors = issues.filter(i => i.severity === 'error').length;
+      const warnings = issues.filter(i => i.severity === 'warning').length;
 
       // Send results
       this.sendMessage(socket, {
@@ -384,7 +380,7 @@ export class SolinWebSocketServer {
   private async handleListRules(socket: any): Promise<void> {
     try {
       const rules = this.registry.getAllRules();
-      const ruleInfos = rules.map((rule) => ({
+      const ruleInfos = rules.map(rule => ({
         id: rule.metadata.id,
         title: rule.metadata.title,
         description: rule.metadata.description,
@@ -458,11 +454,17 @@ export class SolinWebSocketServer {
    * Start the WebSocket server
    */
   async start(): Promise<void> {
-    return new Promise((resolve) => {
+    return new Promise(resolve => {
       this.server.listen(this.config.port, this.config.host, () => {
-        console.log(`Solin WebSocket server listening on ws://${this.config.host}:${this.config.port}`);
-        console.log(`Encryption: ${this.config.encryptionEnabled ? 'enabled' : 'disabled (default)'}`);
-        console.log(`\nConnect using WebSocket client to: ws://${this.config.host}:${this.config.port}`);
+        console.log(
+          `Solin WebSocket server listening on ws://${this.config.host}:${this.config.port}`
+        );
+        console.log(
+          `Encryption: ${this.config.encryptionEnabled ? 'enabled' : 'disabled (default)'}`
+        );
+        console.log(
+          `\nConnect using WebSocket client to: ws://${this.config.host}:${this.config.port}`
+        );
         resolve();
       });
     });
@@ -479,7 +481,7 @@ export class SolinWebSocketServer {
     this.clients.clear();
 
     return new Promise((resolve, reject) => {
-      this.server.close((err) => {
+      this.server.close(err => {
         if (err) reject(err);
         else resolve();
       });
@@ -497,7 +499,7 @@ if (require.main === module) {
     encryptionEnabled: process.env.ENCRYPTION_ENABLED === 'true',
   });
 
-  server.start().catch((error) => {
+  server.start().catch(error => {
     console.error('Failed to start WebSocket server:', error);
     process.exit(1);
   });

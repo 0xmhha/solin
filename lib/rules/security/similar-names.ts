@@ -53,7 +53,7 @@ export class SimilarNames extends AbstractRule {
 
       const value = node[key];
       if (Array.isArray(value)) {
-        value.forEach((child) => this.walkAst(child, context));
+        value.forEach(child => this.walkAst(child, context));
       } else if (value && typeof value === 'object') {
         this.walkAst(value, context);
       }
@@ -174,8 +174,7 @@ export class SimilarNames extends AbstractRule {
       ruleId: this.metadata.id,
       severity: this.metadata.severity,
       category: this.metadata.category,
-      message:
-        `${item1.type} '${item1.name}' is very similar to ${item2.type} '${item2.name}'. Consider using more distinct names.`,
+      message: `${item1.type} '${item1.name}' is very similar to ${item2.type} '${item2.name}'. Consider using more distinct names.`,
       location: {
         start: {
           line: item2.node.loc.start.line,

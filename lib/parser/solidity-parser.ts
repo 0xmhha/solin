@@ -70,10 +70,7 @@ export class SolidityParser implements IParser {
   /**
    * Parse Solidity file from filesystem
    */
-  async parseFile(
-    filePath: string,
-    options: ParseOptions = {},
-  ): Promise<ParseResult> {
+  async parseFile(filePath: string, options: ParseOptions = {}): Promise<ParseResult> {
     try {
       const source = await fs.readFile(filePath, 'utf-8');
       const result = await this.parse(source, options);
@@ -171,7 +168,7 @@ export class SolidityParser implements IParser {
       ];
     }
 
-    return error.errors.map((err) => ({
+    return error.errors.map(err => ({
       message: err.message || 'Parse error',
       line: err.line || 0,
       column: err.column || 0,
@@ -185,7 +182,7 @@ export class SolidityParser implements IParser {
     if (this.isParserError(error)) {
       const parseError = this.convertToParseError(error);
       return new Error(
-        `Parse error at line ${parseError.line}, column ${parseError.column}: ${parseError.message}`,
+        `Parse error at line ${parseError.line}, column ${parseError.column}: ${parseError.message}`
       );
     }
 

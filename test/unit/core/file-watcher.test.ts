@@ -58,7 +58,7 @@ describe('FileWatcher', () => {
       const testFile = path.join(testDir, 'test.sol');
       await fs.promises.writeFile(testFile, 'pragma solidity ^0.8.0;');
 
-      const readyPromise = new Promise<{ filesWatched: number }>((resolve) => {
+      const readyPromise = new Promise<{ filesWatched: number }>(resolve => {
         watcher.on('ready', resolve);
       });
 
@@ -106,13 +106,13 @@ describe('FileWatcher', () => {
       await watcher.watch([testFile]);
 
       // Wait for watcher to stabilize
-      await new Promise((resolve) => setTimeout(resolve, 100));
+      await new Promise(resolve => setTimeout(resolve, 100));
 
       // Modify file to trigger change event
       await fs.promises.writeFile(testFile, 'pragma solidity ^0.8.1;');
 
       // Wait for event to be processed (fs.watch can be slow)
-      await new Promise((resolve) => setTimeout(resolve, 500));
+      await new Promise(resolve => setTimeout(resolve, 500));
 
       // Verify at least one event was detected
       expect(events.length).toBeGreaterThan(0);
@@ -144,7 +144,7 @@ describe('FileWatcher', () => {
       await fs.promises.writeFile(testFile, 'pragma solidity ^0.8.3;');
 
       // Wait for debounce
-      await new Promise((resolve) => setTimeout(resolve, 200));
+      await new Promise(resolve => setTimeout(resolve, 200));
 
       // Should only have emitted once due to debouncing
       expect(changeCount).toBeLessThanOrEqual(2);
@@ -163,7 +163,7 @@ describe('FileWatcher', () => {
       expect(initialStats.lastChangeTime).toBeNull();
 
       // Trigger a change
-      const changePromise = new Promise<void>((resolve) => {
+      const changePromise = new Promise<void>(resolve => {
         watcher.on('change', () => resolve());
       });
 
@@ -197,7 +197,7 @@ describe('FileWatcher', () => {
       await fs.promises.writeFile(jsFile, 'console.log("updated");');
 
       // Wait for potential events
-      await new Promise((resolve) => setTimeout(resolve, 100));
+      await new Promise(resolve => setTimeout(resolve, 100));
 
       // Should not detect .js file change
       expect(changeCount).toBe(0);
@@ -293,7 +293,7 @@ describe('FileWatcher', () => {
       await fs.promises.unlink(testFile);
 
       // Wait a moment for potential error
-      await new Promise((resolve) => setTimeout(resolve, 100));
+      await new Promise(resolve => setTimeout(resolve, 100));
 
       // Error might or might not be emitted depending on OS
       // This test verifies error handler doesn't crash
@@ -317,7 +317,7 @@ describe('FileWatcher', () => {
         patterns: [testDir],
         debounceDelay: 50,
         aggregationWindow: 100,
-        onChange: (e) => {
+        onChange: e => {
           events.push(e);
         },
         onReady: () => {},
@@ -327,7 +327,7 @@ describe('FileWatcher', () => {
       await fs.promises.writeFile(testFile, 'pragma solidity ^0.8.1;');
 
       // Wait for aggregation
-      await new Promise((resolve) => setTimeout(resolve, 200));
+      await new Promise(resolve => setTimeout(resolve, 200));
 
       expect(events.length).toBeGreaterThanOrEqual(1);
     });
@@ -346,7 +346,7 @@ describe('FileWatcher', () => {
         debounceDelay: 50,
         aggregationWindow: 150,
         aggregateChanges: true,
-        onChange: (e) => {
+        onChange: e => {
           events.push(e);
         },
       });
@@ -356,7 +356,7 @@ describe('FileWatcher', () => {
       await fs.promises.writeFile(file2, 'pragma solidity ^0.8.1;');
 
       // Wait for aggregation
-      await new Promise((resolve) => setTimeout(resolve, 300));
+      await new Promise(resolve => setTimeout(resolve, 300));
 
       // Should have aggregated into fewer batches
       expect(events.length).toBeLessThanOrEqual(2);

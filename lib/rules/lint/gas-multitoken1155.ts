@@ -56,7 +56,7 @@ export class GasMultitoken1155 extends AbstractRule {
 
       const value = node[key];
       if (Array.isArray(value)) {
-        value.forEach((child) => this.walkAst(child, context));
+        value.forEach(child => this.walkAst(child, context));
       } else if (value && typeof value === 'object') {
         this.walkAst(value, context);
       }
@@ -133,10 +133,7 @@ export class GasMultitoken1155 extends AbstractRule {
     }
 
     // Check for token patterns
-    return (
-      this.isAddressToUint256Mapping(typeName) ||
-      this.isUint256ToAddressMapping(typeName)
-    );
+    return this.isAddressToUint256Mapping(typeName) || this.isUint256ToAddressMapping(typeName);
   }
 
   /**
@@ -151,8 +148,7 @@ export class GasMultitoken1155 extends AbstractRule {
     }
 
     // Key: address
-    const isAddressKey =
-      keyType.type === 'ElementaryTypeName' && keyType.name === 'address';
+    const isAddressKey = keyType.type === 'ElementaryTypeName' && keyType.name === 'address';
 
     // Value: uint256 (or uint)
     const isUint256Value =
@@ -179,8 +175,7 @@ export class GasMultitoken1155 extends AbstractRule {
       (keyType.name === 'uint256' || keyType.name === 'uint');
 
     // Value: address
-    const isAddressValue =
-      valueType.type === 'ElementaryTypeName' && valueType.name === 'address';
+    const isAddressValue = valueType.type === 'ElementaryTypeName' && valueType.name === 'address';
 
     return isUint256Key && isAddressValue;
   }
@@ -189,7 +184,7 @@ export class GasMultitoken1155 extends AbstractRule {
    * Check if mappings follow fungible token pattern (address => uint256)
    */
   private hasFungiblePattern(mappings: any[]): boolean {
-    return mappings.some((node) => {
+    return mappings.some(node => {
       const variable = node.variables?.[0];
       const typeName = variable?.typeName;
       return typeName && this.isAddressToUint256Mapping(typeName);

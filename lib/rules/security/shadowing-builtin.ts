@@ -81,7 +81,7 @@ export class ShadowingBuiltinRule extends AbstractRule {
       if (key === 'loc' || key === 'range') continue;
       const value = node[key];
       if (Array.isArray(value)) {
-        value.forEach((child) => this.walkAst(child, context));
+        value.forEach(child => this.walkAst(child, context));
       } else if (value && typeof value === 'object') {
         this.walkAst(value, context);
       }
@@ -114,11 +114,7 @@ export class ShadowingBuiltinRule extends AbstractRule {
     }
   }
 
-  private reportIssue(
-    node: any,
-    variableType: string,
-    context: AnalysisContext
-  ): void {
+  private reportIssue(node: any, variableType: string, context: AnalysisContext): void {
     if (!node.loc) return;
 
     // Create unique location key to avoid duplicate reports

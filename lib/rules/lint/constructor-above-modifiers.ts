@@ -80,18 +80,12 @@ export class ConstructorAboveModifiersRule extends AbstractRule {
 
     // Check if constructor exists and if any modifiers are defined before it
     if (constructorLine !== null && modifierLines.length > 0) {
-      const modifiersBeforeConstructor = modifierLines.filter(
-        (line) => line < constructorLine,
-      );
+      const modifiersBeforeConstructor = modifierLines.filter(line => line < constructorLine);
 
       if (modifiersBeforeConstructor.length > 0) {
         // Find the constructor node to report the issue
         for (const node of subNodes) {
-          if (
-            node.type === 'FunctionDefinition' &&
-            (node as any).isConstructor &&
-            node.loc
-          ) {
+          if (node.type === 'FunctionDefinition' && (node as any).isConstructor && node.loc) {
             context.report({
               ruleId: this.metadata.id,
               severity: this.metadata.severity,

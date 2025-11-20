@@ -88,7 +88,7 @@ export class ReentrancyNoEthRule extends AbstractRule {
 
       const value = node[key];
       if (Array.isArray(value)) {
-        value.forEach((child) => this.walkAst(child, context));
+        value.forEach(child => this.walkAst(child, context));
       } else if (value && typeof value === 'object') {
         this.walkAst(value, context);
       }
@@ -112,10 +112,7 @@ export class ReentrancyNoEthRule extends AbstractRule {
 
     // Find state variable accesses after external calls
     for (const call of externalCalls) {
-      const stateAccessesAfter = this.findStateAccessesAfter(
-        node.body,
-        call
-      );
+      const stateAccessesAfter = this.findStateAccessesAfter(node.body, call);
 
       for (const access of stateAccessesAfter) {
         this.reportIssue(
@@ -154,7 +151,7 @@ export class ReentrancyNoEthRule extends AbstractRule {
 
       const value = node[key];
       if (Array.isArray(value)) {
-        value.forEach((child) => {
+        value.forEach(child => {
           calls.push(...this.findExternalCalls(child));
         });
       } else if (value && typeof value === 'object') {
@@ -178,11 +175,7 @@ export class ReentrancyNoEthRule extends AbstractRule {
     // Check for .call(), .delegatecall(), .staticcall()
     if (expr.type === 'MemberAccess') {
       const memberName = expr.memberName;
-      return (
-        memberName === 'call' ||
-        memberName === 'delegatecall' ||
-        memberName === 'staticcall'
-      );
+      return memberName === 'call' || memberName === 'delegatecall' || memberName === 'staticcall';
     }
 
     return false;
@@ -241,7 +234,7 @@ export class ReentrancyNoEthRule extends AbstractRule {
 
       const value = node[key];
       if (Array.isArray(value)) {
-        value.forEach((child) => {
+        value.forEach(child => {
           accesses.push(...this.findStateVariableAccesses(child));
         });
       } else if (value && typeof value === 'object') {
@@ -267,11 +260,7 @@ export class ReentrancyNoEthRule extends AbstractRule {
   /**
    * Report a reentrancy issue
    */
-  private reportIssue(
-    node: any,
-    context: AnalysisContext,
-    message: string
-  ): void {
+  private reportIssue(node: any, context: AnalysisContext, message: string): void {
     if (!node.loc) {
       return;
     }

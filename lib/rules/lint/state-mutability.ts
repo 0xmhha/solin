@@ -179,7 +179,7 @@ export class StateMutabilityRule extends AbstractRule {
    */
   private analyzeFunctionBody(
     body: any,
-    localNames: Set<string>,
+    localNames: Set<string>
   ): { readsState: boolean; writesState: boolean } {
     let readsState = false;
     let writesState = false;

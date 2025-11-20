@@ -5,6 +5,7 @@ This guide explains how to deploy Solin as a gRPC service for production use wit
 ## Overview
 
 Solin provides a gRPC API for remote analysis of Solidity code. This is ideal for:
+
 - Production deployments
 - Microservices architectures
 - CI/CD pipelines
@@ -57,6 +58,7 @@ protoc --java_out=. --grpc-java_out=. lib/grpc/proto/solin.proto
 Analyzes Solidity code and returns issues.
 
 **Request:**
+
 ```protobuf
 message AnalyzeRequest {
   string code = 1;
@@ -67,6 +69,7 @@ message AnalyzeRequest {
 ```
 
 **Response:**
+
 ```protobuf
 message AnalyzeResponse {
   string result = 1;
@@ -83,6 +86,7 @@ message AnalyzeResponse {
 Lists available analysis rules.
 
 **Request:**
+
 ```protobuf
 message ListRulesRequest {
   string category = 1;
@@ -91,6 +95,7 @@ message ListRulesRequest {
 ```
 
 **Response:**
+
 ```protobuf
 message ListRulesResponse {
   repeated RuleInfo rules = 1;
@@ -103,6 +108,7 @@ message ListRulesResponse {
 Gets details of a specific rule.
 
 **Request:**
+
 ```protobuf
 message GetRuleRequest {
   string rule_id = 1;
@@ -110,6 +116,7 @@ message GetRuleRequest {
 ```
 
 **Response:**
+
 ```protobuf
 message RuleResponse {
   RuleInfo rule = 1;
@@ -122,6 +129,7 @@ message RuleResponse {
 Analyzes large files using streaming.
 
 **Request Stream:**
+
 ```protobuf
 message AnalyzeChunk {
   bytes data = 1;
@@ -131,6 +139,7 @@ message AnalyzeChunk {
 ```
 
 **Response Stream:**
+
 ```protobuf
 message AnalysisResult {
   string issue_json = 1;
@@ -152,25 +161,25 @@ const packageDefinition = protoLoader.loadSync('solin.proto');
 const solinProto = grpc.loadPackageDefinition(packageDefinition).solin;
 
 // Create client
-const client = new solinProto.SolinService(
-  'localhost:50051',
-  grpc.credentials.createInsecure()
-);
+const client = new solinProto.SolinService('localhost:50051', grpc.credentials.createInsecure());
 
 // Analyze code
-client.AnalyzeCode({
-  code: contractCode,
-  format: 'json',
-  encryption_key: 'my-key'
-}, (error, response) => {
-  if (error) {
-    console.error('Error:', error);
-    return;
-  }
+client.AnalyzeCode(
+  {
+    code: contractCode,
+    format: 'json',
+    encryption_key: 'my-key',
+  },
+  (error, response) => {
+    if (error) {
+      console.error('Error:', error);
+      return;
+    }
 
-  console.log('Issues found:', response.total_issues);
-  console.log('Result:', response.result);
-});
+    console.log('Issues found:', response.total_issues);
+    console.log('Result:', response.result);
+  }
+);
 ```
 
 ### Python
@@ -253,10 +262,13 @@ console.log('Save this key securely:', key);
 const encrypted = encryption.encrypt(contractCode, keyId);
 
 // Send to server
-client.AnalyzeCode({
-  code: encrypted,
-  encryption_key: keyId
-}, callback);
+client.AnalyzeCode(
+  {
+    code: encrypted,
+    encryption_key: keyId,
+  },
+  callback
+);
 ```
 
 ### Server-Side Decryption
@@ -302,10 +314,7 @@ import * as fs from 'fs';
 const cert = fs.readFileSync('server-cert.pem');
 const credentials = grpc.credentials.createSsl(cert);
 
-const client = new solinProto.SolinService(
-  'localhost:50051',
-  credentials
-);
+const client = new solinProto.SolinService('localhost:50051', credentials);
 ```
 
 ## Streaming Analysis
@@ -321,12 +330,12 @@ for (let i = 0; i < code.length; i += chunkSize) {
   stream.write({
     data: Buffer.from(code.slice(i, i + chunkSize)),
     chunk_index: Math.floor(i / chunkSize),
-    is_final: i + chunkSize >= code.length
+    is_final: i + chunkSize >= code.length,
   });
 }
 
 // Receive results
-stream.on('data', (result) => {
+stream.on('data', result => {
   if (!result.is_complete) {
     const issue = JSON.parse(result.issue_json);
     console.log('Issue:', issue);
@@ -388,15 +397,15 @@ spec:
         app: solin-grpc
     spec:
       containers:
-      - name: solin
-        image: solin-grpc:latest
-        ports:
-        - containerPort: 50051
-        env:
-        - name: GRPC_PORT
-          value: "50051"
-        - name: ENCRYPTION_ENABLED
-          value: "true"
+        - name: solin
+          image: solin-grpc:latest
+          ports:
+            - containerPort: 50051
+          env:
+            - name: GRPC_PORT
+              value: '50051'
+            - name: ENCRYPTION_ENABLED
+              value: 'true'
 ---
 apiVersion: v1
 kind: Service
@@ -406,9 +415,9 @@ spec:
   selector:
     app: solin-grpc
   ports:
-  - protocol: TCP
-    port: 50051
-    targetPort: 50051
+    - protocol: TCP
+      port: 50051
+      targetPort: 50051
   type: LoadBalancer
 ```
 
@@ -419,10 +428,7 @@ spec:
 ```typescript
 const pool = [];
 for (let i = 0; i < 10; i++) {
-  pool.push(new solinProto.SolinService(
-    'localhost:50051',
-    credentials
-  ));
+  pool.push(new solinProto.SolinService('localhost:50051', credentials));
 }
 
 // Use round-robin
@@ -460,13 +466,13 @@ import { collectDefaultMetrics, Counter, Histogram } from 'prom-client';
 const requestCounter = new Counter({
   name: 'solin_grpc_requests_total',
   help: 'Total gRPC requests',
-  labelNames: ['method', 'status']
+  labelNames: ['method', 'status'],
 });
 
 const requestDuration = new Histogram({
   name: 'solin_grpc_request_duration_seconds',
   help: 'gRPC request duration',
-  labelNames: ['method']
+  labelNames: ['method'],
 });
 ```
 

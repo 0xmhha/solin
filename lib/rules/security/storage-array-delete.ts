@@ -36,7 +36,7 @@ export class StorageArrayDeleteRule extends AbstractRule {
       description:
         'Detects delete operations on storage arrays. Using delete on a storage array sets its length to 0 but does not free storage gas, and can leave orphaned data causing unexpected behavior or gas issues. Delete on arrays can also create gaps in storage that are difficult to manage.',
       recommendation:
-        'Avoid using delete on storage arrays. Instead, use array.pop() in a loop to properly clean up elements, or implement a more efficient data structure like a mapping. If you need to clear an array, consider creating a new empty array or using a library like OpenZeppelin\'s EnumerableSet.',
+        "Avoid using delete on storage arrays. Instead, use array.pop() in a loop to properly clean up elements, or implement a more efficient data structure like a mapping. If you need to clear an array, consider creating a new empty array or using a library like OpenZeppelin's EnumerableSet.",
     });
   }
 
@@ -64,7 +64,7 @@ export class StorageArrayDeleteRule extends AbstractRule {
       if (key === 'loc' || key === 'range') continue;
       const value = node[key];
       if (Array.isArray(value)) {
-        value.forEach((child) => this.collectStateVariables(child));
+        value.forEach(child => this.collectStateVariables(child));
       } else if (value && typeof value === 'object') {
         this.collectStateVariables(value);
       }
@@ -84,7 +84,7 @@ export class StorageArrayDeleteRule extends AbstractRule {
       if (key === 'loc' || key === 'range') continue;
       const value = node[key];
       if (Array.isArray(value)) {
-        value.forEach((child) => this.walkAst(child, context));
+        value.forEach(child => this.walkAst(child, context));
       } else if (value && typeof value === 'object') {
         this.walkAst(value, context);
       }

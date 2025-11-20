@@ -94,7 +94,8 @@ export class TwoLinesTopLevelRule extends AbstractRule {
             },
           },
           metadata: {
-            suggestion: 'Maintain exactly two blank lines between contract, interface, and library definitions.',
+            suggestion:
+              'Maintain exactly two blank lines between contract, interface, and library definitions.',
           },
         });
       }

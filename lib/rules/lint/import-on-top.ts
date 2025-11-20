@@ -71,9 +71,7 @@ export class ImportOnTopRule extends AbstractRule {
 
     // Check each import - none should come after any definition
     for (const importItem of imports) {
-      const definitionsBefore = definitions.filter(
-        (def) => def.line < importItem.line,
-      );
+      const definitionsBefore = definitions.filter(def => def.line < importItem.line);
 
       if (definitionsBefore.length > 0) {
         const defType = definitionsBefore[0]!.type.replace('Definition', '').toLowerCase();
@@ -94,7 +92,8 @@ export class ImportOnTopRule extends AbstractRule {
             },
           },
           metadata: {
-            suggestion: 'Move this import statement to the top of the file, after the pragma directive.',
+            suggestion:
+              'Move this import statement to the top of the file, after the pragma directive.',
           },
         });
       }

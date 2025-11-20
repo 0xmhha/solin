@@ -72,7 +72,7 @@ export class CodeInjectionRule extends AbstractRule {
       if (key === 'loc' || key === 'range') continue;
       const value = node[key];
       if (Array.isArray(value)) {
-        value.forEach((child) => this.walkAst(child, context));
+        value.forEach(child => this.walkAst(child, context));
       } else if (value && typeof value === 'object') {
         this.walkAst(value, context);
       }
@@ -85,11 +85,7 @@ export class CodeInjectionRule extends AbstractRule {
     // Check for low-level calls
     if (node.type === 'MemberAccess') {
       const memberName = node.memberName;
-      if (
-        memberName === 'delegatecall' ||
-        memberName === 'call' ||
-        memberName === 'staticcall'
-      ) {
+      if (memberName === 'delegatecall' || memberName === 'call' || memberName === 'staticcall') {
         this.checkLowLevelCall(node, memberName, context);
       }
     }
@@ -104,30 +100,21 @@ export class CodeInjectionRule extends AbstractRule {
       if (key === 'loc' || key === 'range') continue;
       const value = node[key];
       if (Array.isArray(value)) {
-        value.forEach((child) => this.checkFunctionBody(child, context));
+        value.forEach(child => this.checkFunctionBody(child, context));
       } else if (value && typeof value === 'object') {
         this.checkFunctionBody(value, context);
       }
     }
   }
 
-  private checkLowLevelCall(
-    node: any,
-    callType: string,
-    context: AnalysisContext
-  ): void {
+  private checkLowLevelCall(node: any, callType: string, context: AnalysisContext): void {
     const expression = node.expression;
     if (!expression) return;
 
     // Only flag delegatecall with user-controlled address (most dangerous)
     // For call/staticcall, we're more lenient as they're commonly used
     if (callType === 'delegatecall' && this.isUserControlled(expression)) {
-      this.reportIssue(
-        node,
-        `${callType} to user-controlled address`,
-        callType,
-        context
-      );
+      this.reportIssue(node, `${callType} to user-controlled address`, callType, context);
     }
   }
 
@@ -173,7 +160,7 @@ export class CodeInjectionRule extends AbstractRule {
       if (key === 'loc' || key === 'range') continue;
       const value = node[key];
       if (Array.isArray(value)) {
-        value.forEach((child) => {
+        value.forEach(child => {
           code += this.extractAssemblyCode(child);
         });
       } else if (value && typeof value === 'object') {

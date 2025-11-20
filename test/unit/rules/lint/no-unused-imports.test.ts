@@ -208,7 +208,7 @@ describe('NoUnusedImportsRule', () => {
 
       const issues = context.getIssues();
       expect(issues.length).toBeGreaterThanOrEqual(1);
-      expect(issues.some((issue) => issue.message.includes('Unused'))).toBe(true);
+      expect(issues.some(issue => issue.message.includes('Unused'))).toBe(true);
     });
 
     test('should handle empty contract', async () => {

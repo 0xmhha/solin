@@ -81,7 +81,7 @@ export class MissingInheritanceRule extends AbstractRule {
 
       const value = node[key];
       if (Array.isArray(value)) {
-        value.forEach((child) => this.walkAst(child, context));
+        value.forEach(child => this.walkAst(child, context));
       } else if (value && typeof value === 'object') {
         this.walkAst(value, context);
       }
@@ -93,8 +93,7 @@ export class MissingInheritanceRule extends AbstractRule {
    */
   private checkContract(node: any, context: AnalysisContext): void {
     // Check if contract has base contracts
-    const hasBaseContracts =
-      node.baseContracts && node.baseContracts.length > 0;
+    const hasBaseContracts = node.baseContracts && node.baseContracts.length > 0;
 
     // Skip if contract has inheritance
     if (hasBaseContracts) {
@@ -117,11 +116,7 @@ export class MissingInheritanceRule extends AbstractRule {
   /**
    * Check if node has override keyword
    */
-  private checkForOverride(
-    node: any,
-    contractName: string,
-    context: AnalysisContext
-  ): void {
+  private checkForOverride(node: any, contractName: string, context: AnalysisContext): void {
     if (!node) {
       return;
     }
@@ -166,11 +161,7 @@ export class MissingInheritanceRule extends AbstractRule {
         if (typeof modifier === 'string' && modifier === 'override') {
           return true;
         }
-        if (
-          modifier &&
-          typeof modifier === 'object' &&
-          modifier.name === 'override'
-        ) {
+        if (modifier && typeof modifier === 'object' && modifier.name === 'override') {
           return true;
         }
       }

@@ -27,7 +27,8 @@ export class MagicNumbersRule extends AbstractRule {
       category: Category.LINT,
       severity: Severity.WARNING,
       title: 'Magic Numbers',
-      description: 'Detects unexplained numeric literals that should be replaced with named constants',
+      description:
+        'Detects unexplained numeric literals that should be replaced with named constants',
       recommendation:
         'Replace magic numbers with named constants to improve code readability and maintainability. Use descriptive names that explain the meaning of the value.',
     });
@@ -71,7 +72,7 @@ export class MagicNumbersRule extends AbstractRule {
 
       const value = node[key];
       if (Array.isArray(value)) {
-        value.forEach((child) => this.walkAst(child, context));
+        value.forEach(child => this.walkAst(child, context));
       } else if (value && typeof value === 'object') {
         this.walkAst(value, context);
       }

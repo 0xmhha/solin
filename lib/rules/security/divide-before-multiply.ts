@@ -38,7 +38,7 @@ export class DivideBeforeMultiplyRule extends AbstractRule {
       if (key === 'loc' || key === 'range') continue;
       const value = node[key];
       if (Array.isArray(value)) {
-        value.forEach((child) => this.walkAst(child, context));
+        value.forEach(child => this.walkAst(child, context));
       } else if (value && typeof value === 'object') {
         this.walkAst(value, context);
       }
@@ -47,7 +47,12 @@ export class DivideBeforeMultiplyRule extends AbstractRule {
 
   private checkBinaryOperation(node: any, context: AnalysisContext): void {
     // Check for multiplication where left side is division
-    if (node.operator === '*' && node.left && node.left.type === 'BinaryOperation' && node.left.operator === '/') {
+    if (
+      node.operator === '*' &&
+      node.left &&
+      node.left.type === 'BinaryOperation' &&
+      node.left.operator === '/'
+    ) {
       this.reportIssue(node, context);
     }
   }

@@ -61,7 +61,7 @@ export class ArrayDeclarationRule extends AbstractRule {
     const lineText = context.getLineText(node.loc.start.line);
     const lineSubstring = lineText.substring(
       node.loc.start.column,
-      Math.min(node.loc.end.column + 10, lineText.length),
+      Math.min(node.loc.end.column + 10, lineText.length)
     );
 
     // Check for unusual spacing (e.g., "uint256 []" instead of "uint256[]")

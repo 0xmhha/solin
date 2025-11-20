@@ -81,7 +81,8 @@ export class MarkdownFormatter implements IFormatter {
         lines.push(`### ${fileResult.filePath}\n`);
 
         for (const error of fileResult.parseErrors) {
-          const location = error.line > 0 ? `Line ${error.line}:${error.column}` : 'Unknown location';
+          const location =
+            error.line > 0 ? `Line ${error.line}:${error.column}` : 'Unknown location';
           lines.push(`- **${location}**: ${error.message}`);
         }
 
@@ -276,9 +277,6 @@ export class MarkdownFormatter implements IFormatter {
    * Escape special Markdown characters
    */
   private escapeMarkdown(text: string): string {
-    return text
-      .replace(/\|/g, '\\|')
-      .replace(/\[/g, '\\[')
-      .replace(/\]/g, '\\]');
+    return text.replace(/\|/g, '\\|').replace(/\[/g, '\\[').replace(/\]/g, '\\]');
   }
 }

@@ -42,7 +42,7 @@ export function activate(context: vscode.ExtensionContext): void {
     vscode.commands.registerCommand('solin.clearDiagnostics', () => {
       diagnosticsProvider.clearDiagnostics();
       vscode.window.showInformationMessage('Solin diagnostics cleared');
-    }),
+    })
   );
 
   // Register event handlers
@@ -51,46 +51,46 @@ export function activate(context: vscode.ExtensionContext): void {
   // Analyze on open
   if (config.get<boolean>('analyzeOnOpen')) {
     context.subscriptions.push(
-      vscode.workspace.onDidOpenTextDocument((document) => {
+      vscode.workspace.onDidOpenTextDocument(document => {
         if (document.languageId === 'solidity') {
           diagnosticsProvider.analyzeDocument(document);
         }
-      }),
+      })
     );
   }
 
   // Analyze on save
   if (config.get<boolean>('analyzeOnSave')) {
     context.subscriptions.push(
-      vscode.workspace.onDidSaveTextDocument((document) => {
+      vscode.workspace.onDidSaveTextDocument(document => {
         if (document.languageId === 'solidity') {
           diagnosticsProvider.analyzeDocument(document);
         }
-      }),
+      })
     );
   }
 
   // Clear diagnostics when document is closed
   context.subscriptions.push(
-    vscode.workspace.onDidCloseTextDocument((document) => {
+    vscode.workspace.onDidCloseTextDocument(document => {
       if (document.languageId === 'solidity') {
         diagnosticsProvider.clearDocumentDiagnostics(document.uri);
       }
-    }),
+    })
   );
 
   // Watch for configuration changes
   context.subscriptions.push(
-    vscode.workspace.onDidChangeConfiguration((event) => {
+    vscode.workspace.onDidChangeConfiguration(event => {
       if (event.affectsConfiguration('solin')) {
         diagnosticsProvider.updateConfiguration();
       }
-    }),
+    })
   );
 
   // Analyze currently open Solidity files
   if (config.get<boolean>('enable')) {
-    vscode.workspace.textDocuments.forEach((document) => {
+    vscode.workspace.textDocuments.forEach(document => {
       if (document.languageId === 'solidity') {
         diagnosticsProvider.analyzeDocument(document);
       }

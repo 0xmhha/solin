@@ -53,7 +53,7 @@ export class DeadCode extends AbstractRule {
 
       const value = node[key];
       if (Array.isArray(value)) {
-        value.forEach((child) => this.walkAst(child, context));
+        value.forEach(child => this.walkAst(child, context));
       } else if (value && typeof value === 'object') {
         this.walkAst(value, context);
       }
@@ -128,9 +128,11 @@ export class DeadCode extends AbstractRule {
         const callee = expr.expression;
         const args = expr.arguments;
 
-        if (callee.type === 'Identifier' &&
-            (callee.name === 'require' || callee.name === 'assert') &&
-            args.length > 0) {
+        if (
+          callee.type === 'Identifier' &&
+          (callee.name === 'require' || callee.name === 'assert') &&
+          args.length > 0
+        ) {
           const firstArg = args[0];
 
           // Check for literal false
@@ -189,8 +191,7 @@ export class DeadCode extends AbstractRule {
       ruleId: this.metadata.id,
       severity: this.metadata.severity,
       category: this.metadata.category,
-      message:
-        'Unreachable code detected. This code will never be executed and should be removed.',
+      message: 'Unreachable code detected. This code will never be executed and should be removed.',
       location: {
         start: {
           line: node.loc.start.line,

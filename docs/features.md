@@ -20,13 +20,13 @@
 
 ### Development Phases
 
-| Phase | Focus Area | Features | Priority | Status |
-|-------|-----------|----------|----------|--------|
-| Phase 1 | Foundation | 15 features | P0 | ✅ Core Complete |
-| Phase 2 | Lint Rules | 51 rules | P1 | 🚧 52.9% Complete |
-| Phase 3 | Security | 99 detectors | P1 | 🚧 35.4% Complete |
-| Phase 4 | Performance | 8 features | P2 | ⏭️ Not Started |
-| Phase 5 | Extensibility | 10 features | P2 | ⏭️ Not Started |
+| Phase   | Focus Area    | Features     | Priority | Status            |
+| ------- | ------------- | ------------ | -------- | ----------------- |
+| Phase 1 | Foundation    | 15 features  | P0       | ✅ Core Complete  |
+| Phase 2 | Lint Rules    | 51 rules     | P1       | 🚧 52.9% Complete |
+| Phase 3 | Security      | 99 detectors | P1       | 🚧 35.4% Complete |
+| Phase 4 | Performance   | 8 features   | P2       | ⏭️ Not Started    |
+| Phase 5 | Extensibility | 10 features  | P2       | ⏭️ Not Started    |
 
 ---
 
@@ -47,11 +47,13 @@
 **Status**: Partial - Entry point complete, commands pending
 
 #### Implemented
+
 - CLI entry point with Commander.js
 - Version and help commands
 - Basic argument parsing
 
 #### Pending
+
 - Main analyze command
 - Init command
 - List-rules command
@@ -106,13 +108,14 @@
   - Contracts: PascalCase
   - Functions: camelCase
   - Constants: UPPER_SNAKE_CASE
-  - Private variables: _leadingUnderscore
+  - Private variables: \_leadingUnderscore
 
 ### F2.3: Best Practices Rules
 
 **Status**: 9/25 rules complete (36%)
 
 #### Implemented Rules
+
 1. **no-empty-blocks**: Detects empty code blocks
 2. **visibility-modifiers**: Enforces explicit visibility
 3. **state-mutability**: Suggests pure/view modifiers
@@ -124,6 +127,7 @@
 9. **boolean-equality**: Unnecessary boolean comparisons
 
 #### Pending Rules (16)
+
 - explicit-visibility
 - no-public-vars
 - prefer-external-over-public
@@ -140,6 +144,7 @@
 **Status**: 11/20 rules complete (55%)
 
 #### Implemented Rules
+
 1. **indent**: Consistent indentation (2 or 4 spaces)
 2. **max-line-length**: Line length limits
 3. **no-trailing-whitespace**: Trailing whitespace detection
@@ -157,6 +162,7 @@
 **Status**: 7/10 rules complete (70%)
 
 #### Implemented Rules
+
 1. **cache-array-length**: Loop optimization (~100 gas/iteration)
 2. **loop-invariant-code**: Move invariants out of loops
 3. **unused-state-variables**: Remove unused storage
@@ -174,6 +180,7 @@
 **Status**: 15/42 detectors complete (35.7%)
 
 #### Implemented Detectors
+
 1. **reentrancy**: State changes after external calls
 2. **uninitialized-state**: Uninitialized state variables
 3. **uninitialized-storage**: Uninitialized storage pointers
@@ -195,6 +202,7 @@
 **Status**: 14/27 detectors complete (51.9%)
 
 #### Implemented Detectors
+
 1. **divide-before-multiply**: Precision loss
 2. **locked-ether**: Contracts with no withdrawal
 3. **msg-value-loop**: msg.value in loops
@@ -215,6 +223,7 @@
 **Status**: 6/30 detectors complete (20%)
 
 #### Implemented Detectors
+
 1. **assert-state-change**: State changes in assert
 2. **avoid-sha3**: Deprecated sha3
 3. **avoid-suicide**: Deprecated suicide
@@ -233,6 +242,7 @@
 
 **Priority**: P2
 **Features**:
+
 - Worker thread pool
 - File-level parallelization
 - Rule-level parallelization
@@ -244,6 +254,7 @@
 
 **Priority**: P2
 **Features**:
+
 - File content hashing
 - Configuration hashing
 - Result caching
@@ -255,6 +266,7 @@
 
 **Priority**: P2
 **Features**:
+
 - Fix interface with ranges
 - Conflict resolution
 - Confidence scoring
@@ -264,6 +276,7 @@
 
 **Priority**: P2
 **Formats**:
+
 1. **Stylish** (default): Human-readable
 2. **JSON**: Machine-readable
 3. **SARIF**: GitHub Code Scanning
@@ -280,6 +293,7 @@
 
 **Priority**: P2
 **Features**:
+
 - Plugin interface definition
 - npm package loading
 - Local file loading
@@ -289,6 +303,7 @@
 
 **Priority**: P2
 **Features**:
+
 - Rule template generator
 - RuleTester class
 - Fixture management
@@ -298,6 +313,7 @@
 
 **Priority**: P2
 **Integrations**:
+
 - GitHub Actions
 - GitLab CI
 - Jenkins
@@ -316,13 +332,13 @@
 
 ### Current Implementation Status
 
-| Phase | P0 | P1 | P2 | Complete |
-|-------|----|----|----|----|
-| Phase 1 | 15/15 | 0 | 0 | ✅ |
-| Phase 2 | 0 | 27/51 | 0 | 🚧 |
-| Phase 3 | 0 | 35/99 | 0 | 🚧 |
-| Phase 4 | 0 | 0 | 0/8 | ⏭️ |
-| Phase 5 | 0 | 0 | 0/10 | ⏭️ |
+| Phase   | P0    | P1    | P2   | Complete |
+| ------- | ----- | ----- | ---- | -------- |
+| Phase 1 | 15/15 | 0     | 0    | ✅       |
+| Phase 2 | 0     | 27/51 | 0    | 🚧       |
+| Phase 3 | 0     | 35/99 | 0    | 🚧       |
+| Phase 4 | 0     | 0     | 0/8  | ⏭️       |
+| Phase 5 | 0     | 0     | 0/10 | ⏭️       |
 
 ---
 

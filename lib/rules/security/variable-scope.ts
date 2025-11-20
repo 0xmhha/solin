@@ -84,7 +84,7 @@ export class VariableScopeRule extends AbstractRule {
 
       const value = node[key];
       if (Array.isArray(value)) {
-        value.forEach((child) => this.walkAst(child, context));
+        value.forEach(child => this.walkAst(child, context));
       } else if (value && typeof value === 'object') {
         this.walkAst(value, context);
       }
@@ -132,7 +132,7 @@ export class VariableScopeRule extends AbstractRule {
 
       const value = node[key];
       if (Array.isArray(value)) {
-        value.forEach((child) => {
+        value.forEach(child => {
           declarations.push(...this.collectVariableDeclarations(child));
         });
       } else if (value && typeof value === 'object') {

@@ -68,7 +68,7 @@ export class ArrayOutOfBoundsRule extends AbstractRule {
       if (key === 'loc' || key === 'range') continue;
       const value = node[key];
       if (Array.isArray(value)) {
-        value.forEach((child) => this.collectStateArrays(child));
+        value.forEach(child => this.collectStateArrays(child));
       } else if (value && typeof value === 'object') {
         this.collectStateArrays(value);
       }
@@ -105,7 +105,7 @@ export class ArrayOutOfBoundsRule extends AbstractRule {
       if (key === 'loc' || key === 'range') continue;
       const value = node[key];
       if (Array.isArray(value)) {
-        value.forEach((child) => this.walkAst(child, context));
+        value.forEach(child => this.walkAst(child, context));
       } else if (value && typeof value === 'object') {
         this.walkAst(value, context);
       }
@@ -153,7 +153,7 @@ export class ArrayOutOfBoundsRule extends AbstractRule {
       if (key === 'loc' || key === 'range') continue;
       const value = node[key];
       if (Array.isArray(value)) {
-        value.forEach((child) => this.collectBoundsChecks(child));
+        value.forEach(child => this.collectBoundsChecks(child));
       } else if (value && typeof value === 'object') {
         this.collectBoundsChecks(value);
       }
@@ -198,7 +198,7 @@ export class ArrayOutOfBoundsRule extends AbstractRule {
       if (key === 'loc' || key === 'range') continue;
       const value = node[key];
       if (Array.isArray(value)) {
-        value.forEach((child) => this.checkFunctionBody(child, context));
+        value.forEach(child => this.checkFunctionBody(child, context));
       } else if (value && typeof value === 'object') {
         this.checkFunctionBody(value, context);
       }

@@ -64,9 +64,11 @@ export function shouldIgnoreFile(
 
   for (const pattern of ignorePatterns) {
     // Match against both the relative path and the basename
-    if (minimatch(relativePath, pattern, { dot: true }) ||
-        minimatch(path.basename(filePath), pattern, { dot: true }) ||
-        minimatch(relativePath, `**/${pattern}`, { dot: true })) {
+    if (
+      minimatch(relativePath, pattern, { dot: true }) ||
+      minimatch(path.basename(filePath), pattern, { dot: true }) ||
+      minimatch(relativePath, `**/${pattern}`, { dot: true })
+    ) {
       return true;
     }
   }
@@ -83,12 +85,10 @@ export function shouldIgnoreFile(
  */
 export async function resolveFiles(
   patterns: string[],
-  options: ResolveFilesOptions | string = {},
+  options: ResolveFilesOptions | string = {}
 ): Promise<string[]> {
   // Handle backward compatibility
-  const opts: ResolveFilesOptions = typeof options === 'string'
-    ? { cwd: options }
-    : options;
+  const opts: ResolveFilesOptions = typeof options === 'string' ? { cwd: options } : options;
 
   const cwd = opts.cwd || process.cwd();
 
@@ -132,7 +132,7 @@ export async function resolveFiles(
       if (stat.isDirectory()) {
         // If directory, recursively find all .sol files
         const dirFiles = await findSolidityFiles(resolvedPattern, ignorePatterns, cwd);
-        dirFiles.forEach((file) => files.add(file));
+        dirFiles.forEach(file => files.add(file));
         continue;
       }
     } catch {
@@ -146,7 +146,7 @@ export async function resolveFiles(
       nodir: true,
     });
 
-    matches.forEach((match) => {
+    matches.forEach(match => {
       if (isSolidityFile(match)) {
         const resolved = path.resolve(match);
         if (!shouldIgnoreFile(resolved, ignorePatterns, cwd)) {

@@ -23,8 +23,7 @@ export class OneContractPerFileRule extends AbstractRule {
       category: Category.LINT,
       severity: Severity.WARNING,
       title: 'One Contract Per File',
-      description:
-        'Each file should contain only one contract, interface, or library definition',
+      description: 'Each file should contain only one contract, interface, or library definition',
       recommendation:
         'Split multiple contract definitions into separate files. This improves code organization, makes it easier to locate specific contracts, and follows best practices for maintainability.',
     });
@@ -58,7 +57,7 @@ export class OneContractPerFileRule extends AbstractRule {
 
     // Report issue if more than one definition exists
     if (definitions.length > 1) {
-      const names = definitions.map((def) => def.name).join(', ');
+      const names = definitions.map(def => def.name).join(', ');
       const firstDefinition = definitions[0];
 
       if (firstDefinition && firstDefinition.node.loc) {

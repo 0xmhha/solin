@@ -11,6 +11,7 @@
 **Solin**: Comprehensive Solidity static analysis tool combining linting and security detection.
 
 ### Tech Stack
+
 - **Language**: TypeScript (ES2022, strict mode)
 - **Testing**: Jest with ts-jest
 - **Parser**: @solidity-parser/parser
@@ -18,6 +19,7 @@
 - **Principles**: SOLID principles throughout
 
 ### Quality Standards
+
 - Coverage Requirements: 80% branches, 90% functions/lines/statements
 - All code follows strict TypeScript mode
 - TDD cycle: RED → GREEN → REFACTOR
@@ -29,28 +31,29 @@
 
 ### Phase 1: Foundation (Core Complete)
 
-| Component | Status | Tests |
-|-----------|--------|-------|
-| Configuration System | ✅ | 26 tests |
-| Parser System | ✅ | 35 tests |
-| Core Engine | ✅ | 39 tests |
-| Rule System | ✅ | 17 tests |
-| CLI Foundation | ✅ | 11 tests |
+| Component            | Status | Tests    |
+| -------------------- | ------ | -------- |
+| Configuration System | ✅     | 26 tests |
+| Parser System        | ✅     | 35 tests |
+| Core Engine          | ✅     | 39 tests |
+| Rule System          | ✅     | 17 tests |
+| CLI Foundation       | ✅     | 11 tests |
 
 ### Phase 2: Lint Rules (In Progress)
 
 **Implemented: 27 rules**
 
-| Category | Complete | Total | Progress |
-|----------|----------|-------|----------|
-| Naming Convention | 1 | 1 | 100% |
-| Best Practices | 9 | 25 | 36% |
-| Code Style | 11 | 20 | 55% |
-| Gas Optimization | 6 | 10 | 60% |
+| Category          | Complete | Total | Progress |
+| ----------------- | -------- | ----- | -------- |
+| Naming Convention | 1        | 1     | 100%     |
+| Best Practices    | 9        | 25    | 36%      |
+| Code Style        | 11       | 20    | 55%      |
+| Gas Optimization  | 6        | 10    | 60%      |
 
 #### Implemented Lint Rules
 
 **Best Practices:**
+
 - no-empty-blocks
 - visibility-modifiers
 - state-mutability
@@ -62,6 +65,7 @@
 - boolean-equality
 
 **Code Style:**
+
 - indent
 - max-line-length
 - no-trailing-whitespace
@@ -75,6 +79,7 @@
 - var-name-mixedcase
 
 **Gas Optimization:**
+
 - cache-array-length
 - loop-invariant-code
 - unused-state-variables
@@ -87,14 +92,15 @@
 **Implemented: 35 detectors**
 
 | Severity | Complete | Total | Progress |
-|----------|----------|-------|----------|
-| High | 15 | 42 | 35.7% |
-| Medium | 14 | 27 | 51.9% |
-| Low/Info | 6 | 30 | 20% |
+| -------- | -------- | ----- | -------- |
+| High     | 15       | 42    | 35.7%    |
+| Medium   | 14       | 27    | 51.9%    |
+| Low/Info | 6        | 30    | 20%      |
 
 #### Implemented Security Detectors
 
 **High Severity:**
+
 - reentrancy
 - uninitialized-state
 - uninitialized-storage
@@ -112,6 +118,7 @@
 - weak-prng
 
 **Medium Severity:**
+
 - divide-before-multiply
 - locked-ether
 - msg-value-loop
@@ -128,6 +135,7 @@
 - void-constructor
 
 **Low/Info:**
+
 - assert-state-change
 - avoid-sha3
 - avoid-suicide
@@ -143,6 +151,7 @@
 ### Phase 2: Remaining Lint Rules (24 rules)
 
 **Best Practices (16):**
+
 - explicit-visibility
 - no-public-vars
 - prefer-external-over-public
@@ -161,6 +170,7 @@
 - avoid-call-value
 
 **Code Style (9):**
+
 - bracket-align
 - curly-on-same-line
 - statement-indent
@@ -174,6 +184,7 @@
 ### Phase 3: Remaining Security Detectors (64 detectors)
 
 **High Severity (27):**
+
 - storage-array-delete
 - array-out-of-bounds
 - code-injection
@@ -187,6 +198,7 @@
 - And more...
 
 **Medium Severity (13):**
+
 - block-timestamp
 - boolean-cst
 - controlled-array-length
@@ -196,6 +208,7 @@
 - And more...
 
 **Low/Info (24):**
+
 - assembly-usage
 - dead-code
 - erc20-interface
@@ -253,16 +266,17 @@
 
 ### Code Metrics
 
-| Metric | Count |
-|--------|-------|
-| Lint Rules | 27 |
-| Security Detectors | 35 |
-| Test Files | ~90 |
-| Total Rules | 62 |
+| Metric             | Count |
+| ------------------ | ----- |
+| Lint Rules         | 27    |
+| Security Detectors | 35    |
+| Test Files         | ~90   |
+| Total Rules        | 62    |
 
 ### Coverage Summary
 
 All implemented rules maintain:
+
 - 80%+ branch coverage
 - 90%+ line coverage
 - Comprehensive test cases
@@ -275,6 +289,7 @@ All implemented rules maintain:
 ### Completed Architecture
 
 The foundation is solid with:
+
 - Clean separation of concerns
 - Dependency injection
 - Interface-based design
@@ -287,12 +302,12 @@ The foundation is solid with:
 
 ### Gas Impact Summary
 
-| Rule | Savings |
-|------|---------|
-| cache-array-length | ~100 gas/iteration |
-| constant-immutable | ~2000 gas/access |
+| Rule                   | Savings              |
+| ---------------------- | -------------------- |
+| cache-array-length     | ~100 gas/iteration   |
+| constant-immutable     | ~2000 gas/access     |
 | unused-state-variables | ~20,000 gas/variable |
-| gas-custom-errors | ~200-500 gas/revert |
+| gas-custom-errors      | ~200-500 gas/revert  |
 
 ---
 

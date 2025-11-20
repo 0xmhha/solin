@@ -149,7 +149,7 @@ describe('TxOriginRule', () => {
 
       const issues = context.getIssues();
       expect(issues.length).toBeGreaterThanOrEqual(3);
-      expect(issues.every((issue) => issue.ruleId === 'security/tx-origin')).toBe(true);
+      expect(issues.every(issue => issue.ruleId === 'security/tx-origin')).toBe(true);
     });
   });
 

@@ -20,6 +20,7 @@ That's it! No configuration needed. The REST API is ready to use.
 **Best for:** Web applications, simple integrations, HTTP clients
 
 **Features:**
+
 - ✅ Enabled by default
 - ✅ No setup required
 - ✅ CORS enabled
@@ -27,6 +28,7 @@ That's it! No configuration needed. The REST API is ready to use.
 - ✅ Optional encryption
 
 **Start server:**
+
 ```bash
 npm run server
 # or
@@ -55,6 +57,7 @@ curl http://localhost:3000/api/health
 ```
 
 **Response format:**
+
 ```json
 {
   "success": true,
@@ -70,12 +73,14 @@ curl http://localhost:3000/api/health
 **Best for:** Real-time analysis, IDE integration, live feedback
 
 **Features:**
+
 - 🔄 Real-time bidirectional communication
 - 📡 Progressive results streaming
 - ⚡ Low latency
 - 🔒 Optional encryption
 
 **Enable:**
+
 ```bash
 WS_ENABLED=true npm run server
 ```
@@ -87,16 +92,18 @@ const ws = new WebSocket('ws://localhost:3001');
 
 ws.onopen = () => {
   // Analyze code
-  ws.send(JSON.stringify({
-    type: 'analyze',
-    data: {
-      code: 'contract Test { ... }',
-      format: 'json'
-    }
-  }));
+  ws.send(
+    JSON.stringify({
+      type: 'analyze',
+      data: {
+        code: 'contract Test { ... }',
+        format: 'json',
+      },
+    })
+  );
 };
 
-ws.onmessage = (event) => {
+ws.onmessage = event => {
   const message = JSON.parse(event.data);
 
   switch (message.type) {
@@ -120,10 +127,12 @@ ws.onmessage = (event) => {
 ws.send(JSON.stringify({ type: 'list-rules' }));
 
 // Get specific rule
-ws.send(JSON.stringify({
-  type: 'get-rule',
-  data: { ruleId: 'security/reentrancy' }
-}));
+ws.send(
+  JSON.stringify({
+    type: 'get-rule',
+    data: { ruleId: 'security/reentrancy' },
+  })
+);
 
 // Ping
 ws.send(JSON.stringify({ type: 'ping' }));
@@ -134,12 +143,14 @@ ws.send(JSON.stringify({ type: 'ping' }));
 **Best for:** Production deployments, microservices, high performance
 
 **Features:**
+
 - ⚡ High performance binary protocol
 - 🔒 TLS/SSL support
 - 📡 Bidirectional streaming
 - 🔐 Built-in encryption
 
 **Enable:**
+
 ```bash
 GRPC_ENABLED=true npm run server
 ```
@@ -151,11 +162,13 @@ GRPC_ENABLED=true npm run server
 **Best for:** AI assistant integration (ChatGPT, Claude)
 
 **Features:**
+
 - 🤖 Direct AI assistant integration
 - 💬 Conversational interface
 - 📝 Natural language queries
 
 **Enable:**
+
 ```bash
 MCP_ENABLED=true npm run server
 ```
@@ -198,26 +211,31 @@ ENCRYPTION_ENABLED=false   # Set to 'true' to enable encryption globally
 ### Quick Examples
 
 **Start with REST API only (default):**
+
 ```bash
 npm run server
 ```
 
 **Start with REST + WebSocket:**
+
 ```bash
 WS_ENABLED=true npm run server
 ```
 
 **Start with all protocols:**
+
 ```bash
 REST_ENABLED=true WS_ENABLED=true GRPC_ENABLED=true npm run server
 ```
 
 **Start with encryption enabled:**
+
 ```bash
 ENCRYPTION_ENABLED=true npm run server
 ```
 
 **Custom ports:**
+
 ```bash
 REST_PORT=8080 WS_PORT=8081 GRPC_PORT=50052 npm run server
 ```
@@ -227,38 +245,44 @@ REST_PORT=8080 WS_PORT=8081 GRPC_PORT=50052 npm run server
 ### REST API Endpoints
 
 #### POST /api/analyze
+
 Analyze Solidity code and return issues.
 
 **Request:**
+
 ```json
 {
-  "code": "string",              // Solidity source code (required)
-  "format": "json",              // Output format: 'stylish', 'json', 'sarif' (optional)
-  "rules": ["rule-id"],          // Specific rules to enable (optional)
-  "encrypted": false,            // Whether code is encrypted (optional)
-  "encryptionKey": "key-id"      // Encryption key ID (optional)
+  "code": "string", // Solidity source code (required)
+  "format": "json", // Output format: 'stylish', 'json', 'sarif' (optional)
+  "rules": ["rule-id"], // Specific rules to enable (optional)
+  "encrypted": false, // Whether code is encrypted (optional)
+  "encryptionKey": "key-id" // Encryption key ID (optional)
 }
 ```
 
 **Response:**
+
 ```json
 {
   "success": true,
-  "result": "...",               // Formatted analysis results
-  "issues": 5,                   // Total issues found
-  "errors": 1,                   // Error count
-  "warnings": 4                  // Warning count
+  "result": "...", // Formatted analysis results
+  "issues": 5, // Total issues found
+  "errors": 1, // Error count
+  "warnings": 4 // Warning count
 }
 ```
 
 #### GET /api/rules
+
 List all available analysis rules.
 
 **Query parameters:**
+
 - `category`: Filter by category ('lint', 'security', 'all')
 - `severity`: Filter by severity ('error', 'warning', 'info', 'all')
 
 **Response:**
+
 ```json
 {
   "success": true,
@@ -277,9 +301,11 @@ List all available analysis rules.
 ```
 
 #### GET /api/rules/:ruleId
+
 Get detailed information about a specific rule.
 
 **Response:**
+
 ```json
 {
   "success": true,
@@ -296,17 +322,20 @@ Get detailed information about a specific rule.
 ```
 
 #### POST /api/suggest-fixes
+
 Analyze code and get fix suggestions.
 
 **Request:**
+
 ```json
 {
-  "code": "string",              // Solidity source code (required)
-  "issueIndex": 0                // Specific issue to fix (optional)
+  "code": "string", // Solidity source code (required)
+  "issueIndex": 0 // Specific issue to fix (optional)
 }
 ```
 
 **Response:**
+
 ```json
 {
   "success": true,
@@ -324,9 +353,11 @@ Analyze code and get fix suggestions.
 ```
 
 #### GET /api/health
+
 Health check endpoint.
 
 **Response:**
+
 ```json
 {
   "status": "ok",
@@ -365,14 +396,16 @@ The response will be encrypted with the same key.
 ### Using Encryption with WebSocket
 
 ```javascript
-ws.send(JSON.stringify({
-  type: 'analyze',
-  data: {
-    code: 'encrypted-base64-string',
-    encrypted: true,
-    encryptionKey: 'key-id-123'
-  }
-}));
+ws.send(
+  JSON.stringify({
+    type: 'analyze',
+    data: {
+      code: 'encrypted-base64-string',
+      encrypted: true,
+      encryptionKey: 'key-id-123',
+    },
+  })
+);
 ```
 
 ## 🐳 Docker Deployment
@@ -389,6 +422,7 @@ CMD ["node", "dist/api/server.js"]
 ```
 
 **Run container:**
+
 ```bash
 docker build -t solin .
 docker run -p 3000:3000 -e REST_ENABLED=true solin
@@ -408,7 +442,7 @@ const axios = require('axios');
 async function analyzeContract(code) {
   const response = await axios.post('http://localhost:3000/api/analyze', {
     code,
-    format: 'json'
+    format: 'json',
   });
 
   return response.data;
@@ -463,7 +497,7 @@ async function analyzeContract(code) {
   const response = await fetch('http://localhost:3000/api/analyze', {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify({ code, format: 'json' })
+    body: JSON.stringify({ code, format: 'json' }),
   });
 
   return await response.json();
@@ -473,26 +507,31 @@ async function analyzeContract(code) {
 ## 🎯 Use Cases
 
 ### 1. Web Application Integration
+
 - Use REST API for simple HTTP requests
 - Enable CORS for browser access
 - No encryption needed for public contracts
 
 ### 2. IDE Extension
+
 - Use WebSocket for real-time feedback
 - Low latency for as-you-type analysis
 - Progressive results for large files
 
 ### 3. CI/CD Pipeline
+
 - Use REST API or gRPC for automation
 - Run analysis on every commit
 - Fail builds on critical issues
 
 ### 4. AI Assistant Integration
+
 - Use MCP for ChatGPT/Claude
 - Natural language queries
 - Interactive code review
 
 ### 5. Microservices Architecture
+
 - Use gRPC for service-to-service communication
 - High performance binary protocol
 - Built-in load balancing
@@ -500,12 +539,14 @@ async function analyzeContract(code) {
 ## 📊 Performance
 
 **Benchmark results (average):**
+
 - REST API: ~50ms per request
 - WebSocket: ~45ms per message
 - gRPC: ~30ms per call
 - MCP stdio: ~40ms per tool call
 
 **Throughput:**
+
 - REST API: ~1000 req/s
 - WebSocket: ~1500 msg/s
 - gRPC: ~3000 req/s

@@ -121,11 +121,7 @@ export class CacheManager {
   /**
    * Get cached result for a file
    */
-  get(
-    filePath: string,
-    content: string,
-    configHash: string,
-  ): FileAnalysisResult | undefined {
+  get(filePath: string, content: string, configHash: string): FileAnalysisResult | undefined {
     const key = this.getKey(filePath);
     const contentHash = this.hashContent(content);
 
@@ -134,11 +130,7 @@ export class CacheManager {
 
     if (entry) {
       // Validate entry
-      if (
-        entry.hash === contentHash &&
-        entry.configHash === configHash &&
-        !this.isExpired(entry)
-      ) {
+      if (entry.hash === contentHash && entry.configHash === configHash && !this.isExpired(entry)) {
         this.stats.hits++;
         return entry.result;
       } else {
@@ -154,12 +146,7 @@ export class CacheManager {
   /**
    * Set cached result for a file
    */
-  set(
-    filePath: string,
-    content: string,
-    configHash: string,
-    result: FileAnalysisResult,
-  ): void {
+  set(filePath: string, content: string, configHash: string, result: FileAnalysisResult): void {
     const key = this.getKey(filePath);
     const contentHash = this.hashContent(content);
 
@@ -238,11 +225,7 @@ export class CacheManager {
 
       // Write cache file
       const cacheFilePath = path.join(this.cacheDirectory, CacheManager.CACHE_FILE);
-      await fs.promises.writeFile(
-        cacheFilePath,
-        JSON.stringify(cacheData, null, 2),
-        'utf-8',
-      );
+      await fs.promises.writeFile(cacheFilePath, JSON.stringify(cacheData, null, 2), 'utf-8');
 
       // Write metadata
       const metadata: CacheMetadata = {
@@ -251,20 +234,13 @@ export class CacheManager {
         entryCount: this.memoryCache.size,
       };
 
-      const metadataFilePath = path.join(
-        this.cacheDirectory,
-        CacheManager.METADATA_FILE,
-      );
-      await fs.promises.writeFile(
-        metadataFilePath,
-        JSON.stringify(metadata, null, 2),
-        'utf-8',
-      );
+      const metadataFilePath = path.join(this.cacheDirectory, CacheManager.METADATA_FILE);
+      await fs.promises.writeFile(metadataFilePath, JSON.stringify(metadata, null, 2), 'utf-8');
     } catch (error) {
       // Silently fail - caching is optional
       console.error(
         'Failed to save cache:',
-        error instanceof Error ? error.message : String(error),
+        error instanceof Error ? error.message : String(error)
       );
     }
   }
@@ -278,10 +254,7 @@ export class CacheManager {
     }
 
     try {
-      const metadataFilePath = path.join(
-        this.cacheDirectory,
-        CacheManager.METADATA_FILE,
-      );
+      const metadataFilePath = path.join(this.cacheDirectory, CacheManager.METADATA_FILE);
 
       // Check if cache exists
       if (!fs.existsSync(metadataFilePath)) {
@@ -316,7 +289,7 @@ export class CacheManager {
       // Silently fail - start with empty cache
       console.error(
         'Failed to load cache:',
-        error instanceof Error ? error.message : String(error),
+        error instanceof Error ? error.message : String(error)
       );
     }
   }
@@ -331,10 +304,7 @@ export class CacheManager {
 
     try {
       const cacheFilePath = path.join(this.cacheDirectory, CacheManager.CACHE_FILE);
-      const metadataFilePath = path.join(
-        this.cacheDirectory,
-        CacheManager.METADATA_FILE,
-      );
+      const metadataFilePath = path.join(this.cacheDirectory, CacheManager.METADATA_FILE);
 
       if (fs.existsSync(cacheFilePath)) {
         await fs.promises.unlink(cacheFilePath);
@@ -347,7 +317,7 @@ export class CacheManager {
       // Silently fail
       console.error(
         'Failed to delete cache:',
-        error instanceof Error ? error.message : String(error),
+        error instanceof Error ? error.message : String(error)
       );
     }
   }
@@ -405,7 +375,7 @@ export class CacheManager {
   private evictOldest(): void {
     // Find oldest entries
     const entries = Array.from(this.memoryCache.entries()).sort(
-      (a, b) => a[1].createdAt - b[1].createdAt,
+      (a, b) => a[1].createdAt - b[1].createdAt
     );
 
     // Remove 10% of oldest entries
@@ -424,8 +394,6 @@ export class CacheManager {
 /**
  * Create a cache manager with default options
  */
-export function createCacheManager(
-  options?: CacheManagerOptions,
-): CacheManager {
+export function createCacheManager(options?: CacheManagerOptions): CacheManager {
   return new CacheManager(options);
 }

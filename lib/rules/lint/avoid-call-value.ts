@@ -53,7 +53,7 @@ export class AvoidCallValueRule extends AbstractRule {
 
       const value = node[key];
       if (Array.isArray(value)) {
-        value.forEach((child) => this.walkAst(child, context));
+        value.forEach(child => this.walkAst(child, context));
       } else if (value && typeof value === 'object') {
         this.walkAst(value, context);
       }
@@ -70,10 +70,7 @@ export class AvoidCallValueRule extends AbstractRule {
       const memberAccess = node.expression;
 
       // Check if member is 'value' and the expression is another member access
-      if (
-        memberAccess.memberName === 'value' &&
-        memberAccess.expression?.type === 'MemberAccess'
-      ) {
+      if (memberAccess.memberName === 'value' && memberAccess.expression?.type === 'MemberAccess') {
         const innerMemberAccess = memberAccess.expression;
 
         // Check if the inner member is 'call', 'delegatecall', or has a 'gas' before
@@ -105,12 +102,12 @@ export class AvoidCallValueRule extends AbstractRule {
       }
 
       // Also check for .gas() pattern which is deprecated
-      if (
-        memberAccess.memberName === 'gas' &&
-        memberAccess.expression?.type === 'MemberAccess'
-      ) {
+      if (memberAccess.memberName === 'gas' && memberAccess.expression?.type === 'MemberAccess') {
         const innerMemberAccess = memberAccess.expression;
-        if (innerMemberAccess.memberName === 'call' || innerMemberAccess.memberName === 'delegatecall') {
+        if (
+          innerMemberAccess.memberName === 'call' ||
+          innerMemberAccess.memberName === 'delegatecall'
+        ) {
           if (node.loc) {
             context.report({
               ruleId: this.metadata.id,

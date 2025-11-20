@@ -260,9 +260,9 @@ describe('StylishFormatter', () => {
       const lines = output.split('\n');
 
       // Error should appear before warning, warning before info
-      const errorIndex = lines.findIndex((line) => line.includes('Error message'));
-      const warningIndex = lines.findIndex((line) => line.includes('Warning message'));
-      const infoIndex = lines.findIndex((line) => line.includes('Info message'));
+      const errorIndex = lines.findIndex(line => line.includes('Error message'));
+      const warningIndex = lines.findIndex(line => line.includes('Warning message'));
+      const infoIndex = lines.findIndex(line => line.includes('Info message'));
 
       expect(errorIndex).toBeLessThan(warningIndex);
       expect(warningIndex).toBeLessThan(infoIndex);

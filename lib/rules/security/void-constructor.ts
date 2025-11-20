@@ -45,7 +45,7 @@ export class VoidConstructorRule extends AbstractRule {
       if (key === 'loc' || key === 'range') continue;
       const value = node[key];
       if (Array.isArray(value)) {
-        value.forEach((child) => this.walkAst(child, context));
+        value.forEach(child => this.walkAst(child, context));
       } else if (value && typeof value === 'object') {
         this.walkAst(value, context);
       }
@@ -141,8 +141,8 @@ export class VoidConstructorRule extends AbstractRule {
           dp[i]![j] = dp[i - 1]![j - 1]!;
         } else {
           dp[i]![j] = Math.min(
-            dp[i - 1]![j]! + 1,    // deletion
-            dp[i]![j - 1]! + 1,    // insertion
+            dp[i - 1]![j]! + 1, // deletion
+            dp[i]![j - 1]! + 1, // insertion
             dp[i - 1]![j - 1]! + 1 // substitution
           );
         }

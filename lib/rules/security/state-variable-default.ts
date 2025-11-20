@@ -85,7 +85,7 @@ export class StateVariableDefaultRule extends AbstractRule {
 
       const value = node[key];
       if (Array.isArray(value)) {
-        value.forEach((child) => this.walkAst(child, context));
+        value.forEach(child => this.walkAst(child, context));
       } else if (value && typeof value === 'object') {
         this.walkAst(value, context);
       }
@@ -137,11 +137,7 @@ export class StateVariableDefaultRule extends AbstractRule {
     // Check for address(0)
     if (expr.type === 'FunctionCall') {
       const func = expr.expression;
-      if (
-        func &&
-        func.type === 'ElementaryTypeName' &&
-        func.name === 'address'
-      ) {
+      if (func && func.type === 'ElementaryTypeName' && func.name === 'address') {
         // Check if argument is 0
         if (expr.arguments && expr.arguments.length === 1) {
           const arg = expr.arguments[0];
@@ -158,11 +154,7 @@ export class StateVariableDefaultRule extends AbstractRule {
   /**
    * Report a state-variable-default issue
    */
-  private reportIssue(
-    node: any,
-    context: AnalysisContext,
-    message: string
-  ): void {
+  private reportIssue(node: any, context: AnalysisContext, message: string): void {
     if (!node.loc) {
       return;
     }

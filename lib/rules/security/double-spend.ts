@@ -35,7 +35,7 @@ export class DoubleSpendRule extends AbstractRule {
       if (key === 'loc' || key === 'range') continue;
       const value = node[key];
       if (Array.isArray(value)) {
-        value.forEach((child) => this.walkAst(child, context));
+        value.forEach(child => this.walkAst(child, context));
       } else if (value && typeof value === 'object') {
         this.walkAst(value, context);
       }
@@ -53,7 +53,7 @@ export class DoubleSpendRule extends AbstractRule {
     // Check if transfers happen before balance updates
     for (const transfer of transfers) {
       const hasUpdateBefore = balanceUpdates.some(
-        (update) => update.loc?.start.line < transfer.loc?.start.line
+        update => update.loc?.start.line < transfer.loc?.start.line
       );
 
       if (!hasUpdateBefore && transfer.loc) {
@@ -72,11 +72,7 @@ export class DoubleSpendRule extends AbstractRule {
     }
   }
 
-  private collectTransfersAndUpdates(
-    node: any,
-    transfers: any[],
-    updates: any[]
-  ): void {
+  private collectTransfersAndUpdates(node: any, transfers: any[], updates: any[]): void {
     if (!node || typeof node !== 'object') return;
 
     if (node.type === 'MemberAccess') {
@@ -99,7 +95,7 @@ export class DoubleSpendRule extends AbstractRule {
       if (key === 'loc' || key === 'range') continue;
       const value = node[key];
       if (Array.isArray(value)) {
-        value.forEach((child) => this.collectTransfersAndUpdates(child, transfers, updates));
+        value.forEach(child => this.collectTransfersAndUpdates(child, transfers, updates));
       } else if (value && typeof value === 'object') {
         this.collectTransfersAndUpdates(value, transfers, updates);
       }

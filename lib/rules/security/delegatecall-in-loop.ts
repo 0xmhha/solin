@@ -77,7 +77,7 @@ export class DelegatecallInLoopRule extends AbstractRule {
 
       const value = node[key];
       if (Array.isArray(value)) {
-        value.forEach((child) => this.walkAst(child, context));
+        value.forEach(child => this.walkAst(child, context));
       } else if (value && typeof value === 'object') {
         this.walkAst(value, context);
       }
@@ -113,10 +113,7 @@ export class DelegatecallInLoopRule extends AbstractRule {
   /**
    * Report a delegatecall-in-loop issue
    */
-  private reportDelegatecallInLoop(
-    node: any,
-    context: AnalysisContext
-  ): void {
+  private reportDelegatecallInLoop(node: any, context: AnalysisContext): void {
     if (!node.loc) {
       return;
     }

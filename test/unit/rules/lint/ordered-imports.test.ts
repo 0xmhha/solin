@@ -115,7 +115,7 @@ describe('OrderedImportsRule', () => {
 
       const issues = context.getIssues();
       expect(issues.length).toBeGreaterThanOrEqual(1);
-      expect(issues.every((issue) => issue.ruleId === 'lint/ordered-imports')).toBe(true);
+      expect(issues.every(issue => issue.ruleId === 'lint/ordered-imports')).toBe(true);
     });
 
     test('should handle file with no imports', async () => {

@@ -21,7 +21,8 @@ export class UncheckedCallsRule extends AbstractRule {
       category: Category.SECURITY,
       severity: Severity.ERROR,
       title: 'Unchecked Low-Level Calls',
-      description: 'Low-level calls (.call, .delegatecall, .send) must have their return values checked',
+      description:
+        'Low-level calls (.call, .delegatecall, .send) must have their return values checked',
       recommendation:
         'Always check the return value of low-level calls using require(), assert(), or if statements. Use .transfer() instead of .send() if you want automatic revert on failure.',
     });
@@ -53,7 +54,7 @@ export class UncheckedCallsRule extends AbstractRule {
 
       const value = node[key];
       if (Array.isArray(value)) {
-        value.forEach((child) => this.walkAst(child, context, node));
+        value.forEach(child => this.walkAst(child, context, node));
       } else if (value && typeof value === 'object') {
         this.walkAst(value, context, node);
       }

@@ -90,7 +90,7 @@ export class TautologyRule extends AbstractRule {
 
       const value = node[key];
       if (Array.isArray(value)) {
-        value.forEach((child) => this.walkAst(child, context));
+        value.forEach(child => this.walkAst(child, context));
       } else if (value && typeof value === 'object') {
         this.walkAst(value, context);
       }
@@ -145,11 +145,7 @@ export class TautologyRule extends AbstractRule {
   /**
    * Check self-comparison (x op x)
    */
-  private checkSelfComparison(
-    node: any,
-    operator: string,
-    context: AnalysisContext
-  ): void {
+  private checkSelfComparison(node: any, operator: string, context: AnalysisContext): void {
     const alwaysTrue = ['==', '>=', '<='];
     const alwaysFalse = ['!=', '>', '<'];
 
@@ -181,8 +177,7 @@ export class TautologyRule extends AbstractRule {
     context: AnalysisContext
   ): void {
     // Check if comparing to 0
-    const isZero = (n: any) =>
-      n && n.type === 'NumberLiteral' && n.number === '0';
+    const isZero = (n: any) => n && n.type === 'NumberLiteral' && n.number === '0';
 
     if (isZero(right) && operator === '>=') {
       if (this.isUnsignedType(left, context)) {
@@ -342,11 +337,7 @@ export class TautologyRule extends AbstractRule {
   /**
    * Report a tautology issue
    */
-  private reportIssue(
-    node: any,
-    context: AnalysisContext,
-    message: string
-  ): void {
+  private reportIssue(node: any, context: AnalysisContext, message: string): void {
     if (!node.loc) {
       return;
     }

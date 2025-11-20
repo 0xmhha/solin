@@ -56,7 +56,7 @@ export class UncheckedReturnRule extends AbstractRule {
       if (key === 'loc' || key === 'range') continue;
       const value = node[key];
       if (Array.isArray(value)) {
-        value.forEach((child) => this.walkAst(child, context));
+        value.forEach(child => this.walkAst(child, context));
       } else if (value && typeof value === 'object') {
         this.walkAst(value, context);
       }
@@ -74,7 +74,12 @@ export class UncheckedReturnRule extends AbstractRule {
         const methodName = memberAccess.memberName;
 
         // These methods return bool that should be checked
-        if (methodName === 'call' || methodName === 'delegatecall' || methodName === 'send' || methodName === 'staticcall') {
+        if (
+          methodName === 'call' ||
+          methodName === 'delegatecall' ||
+          methodName === 'send' ||
+          methodName === 'staticcall'
+        ) {
           this.reportIssue(
             expr,
             `Unchecked return value from ${methodName}(). This method returns a boolean indicating ` +
@@ -117,7 +122,7 @@ export class UncheckedReturnRule extends AbstractRule {
         'verify',
       ];
 
-      return boolReturnPatterns.some((pattern) =>
+      return boolReturnPatterns.some(pattern =>
         functionName.toLowerCase().includes(pattern.toLowerCase())
       );
     }

@@ -44,7 +44,7 @@ describe('Config Extends Mechanism', () => {
       expect(preset).toHaveProperty('rules');
       // Security preset should have security-related rules
       const ruleIds = Object.keys(preset.rules!);
-      expect(ruleIds.some((id) => id.startsWith('security/'))).toBe(true);
+      expect(ruleIds.some(id => id.startsWith('security/'))).toBe(true);
     });
 
     test('should throw error for unknown preset', async () => {
@@ -202,9 +202,7 @@ describe('Config Extends Mechanism', () => {
         extends: './config1.json',
       };
 
-      await expect(loader.resolveExtends(config, tempDir)).rejects.toThrow(
-        /circular/i,
-      );
+      await expect(loader.resolveExtends(config, tempDir)).rejects.toThrow(/circular/i);
     });
 
     test('should resolve config without extends', async () => {

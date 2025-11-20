@@ -45,10 +45,7 @@ export class NoConsoleRule extends AbstractRule {
 
       // Check for console import
       if (trimmedLine.includes('import') && trimmedLine.includes('hardhat')) {
-        if (
-          trimmedLine.includes('console.sol') ||
-          trimmedLine.includes('console2.sol')
-        ) {
+        if (trimmedLine.includes('console.sol') || trimmedLine.includes('console2.sol')) {
           this.reportConsoleUsage(i + 1, 'import', context);
         }
       }
@@ -67,9 +64,7 @@ export class NoConsoleRule extends AbstractRule {
     // Remove comments to avoid false positives
     const commentIndex = withoutStrings.indexOf('//');
     const withoutComments =
-      commentIndex >= 0
-        ? withoutStrings.substring(0, commentIndex)
-        : withoutStrings;
+      commentIndex >= 0 ? withoutStrings.substring(0, commentIndex) : withoutStrings;
 
     // Check for console.* or console2.* calls
     return (

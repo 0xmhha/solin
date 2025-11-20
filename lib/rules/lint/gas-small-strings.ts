@@ -57,7 +57,7 @@ export class GasSmallStrings extends AbstractRule {
 
       const value = node[key];
       if (Array.isArray(value)) {
-        value.forEach((child) => this.walkAst(child, context));
+        value.forEach(child => this.walkAst(child, context));
       } else if (value && typeof value === 'object') {
         this.walkAst(value, context);
       }
@@ -86,10 +86,7 @@ export class GasSmallStrings extends AbstractRule {
 
       // Check if initialization is a short string literal
       const stringLength = this.getStringLiteralLength(node.initialValue);
-      if (
-        stringLength !== null &&
-        stringLength <= GasSmallStrings.MAX_BYTES32_LENGTH
-      ) {
+      if (stringLength !== null && stringLength <= GasSmallStrings.MAX_BYTES32_LENGTH) {
         this.reportIssue(variable, stringLength, context);
       }
     }
@@ -104,10 +101,7 @@ export class GasSmallStrings extends AbstractRule {
     }
 
     // ElementaryTypeName with name 'string'
-    if (
-      typeNode.type === 'ElementaryTypeName' &&
-      typeNode.name === 'string'
-    ) {
+    if (typeNode.type === 'ElementaryTypeName' && typeNode.name === 'string') {
       return true;
     }
 
@@ -161,11 +155,7 @@ export class GasSmallStrings extends AbstractRule {
   /**
    * Report issue for short string
    */
-  private reportIssue(
-    variable: any,
-    stringLength: number,
-    context: AnalysisContext
-  ): void {
+  private reportIssue(variable: any, stringLength: number, context: AnalysisContext): void {
     if (!variable.loc) {
       return;
     }

@@ -90,7 +90,9 @@ export class HtmlFormatter implements IFormatter {
     parts.push('<head>');
     parts.push('  <meta charset="UTF-8">');
     parts.push('  <meta name="viewport" content="width=device-width, initial-scale=1.0">');
-    parts.push(`  <title>${this.escapeHtml(this.options.title || 'Solin Analysis Report')}</title>`);
+    parts.push(
+      `  <title>${this.escapeHtml(this.options.title || 'Solin Analysis Report')}</title>`
+    );
 
     if (this.options.includeStyles) {
       parts.push(this.generateStyles());
@@ -614,6 +616,6 @@ export class HtmlFormatter implements IFormatter {
       '"': '&quot;',
       "'": '&#039;',
     };
-    return text.replace(/[&<>"']/g, (char) => map[char] || char);
+    return text.replace(/[&<>"']/g, char => map[char] || char);
   }
 }

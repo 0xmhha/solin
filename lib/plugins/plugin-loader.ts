@@ -5,12 +5,7 @@
  */
 
 import * as path from 'path';
-import type {
-  SolinPlugin,
-  ResolvedPlugin,
-  PluginLoadOptions,
-  PluginLoadResult,
-} from './types';
+import type { SolinPlugin, ResolvedPlugin, PluginLoadOptions, PluginLoadResult } from './types';
 import { PluginErrorCode } from './types';
 import { PluginValidator } from './plugin-validator';
 import type { IRule } from '@core/types';
@@ -34,15 +29,8 @@ export class PluginLoader {
    * @param options - Load options
    * @returns Plugin load result
    */
-  async load(
-    plugins: string[],
-    options: PluginLoadOptions = {},
-  ): Promise<PluginLoadResult> {
-    const {
-      cwd = process.cwd(),
-      validate = true,
-      strict = true,
-    } = options;
+  async load(plugins: string[], options: PluginLoadOptions = {}): Promise<PluginLoadResult> {
+    const { cwd = process.cwd(), validate = true, strict = true } = options;
 
     const result: PluginLoadResult = {
       plugins: [],
@@ -180,11 +168,7 @@ export class PluginLoader {
 
     // Handle npm package names
     // Try common naming conventions
-    const possibleNames = [
-      pluginName,
-      `solin-plugin-${pluginName}`,
-      `@solin/plugin-${pluginName}`,
-    ];
+    const possibleNames = [pluginName, `solin-plugin-${pluginName}`, `@solin/plugin-${pluginName}`];
 
     for (const name of possibleNames) {
       try {

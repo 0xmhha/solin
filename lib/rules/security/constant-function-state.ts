@@ -57,7 +57,7 @@ export class ConstantFunctionStateRule extends AbstractRule {
       if (key === 'loc' || key === 'range') continue;
       const value = node[key];
       if (Array.isArray(value)) {
-        value.forEach((child) => this.collectStateVariables(child));
+        value.forEach(child => this.collectStateVariables(child));
       } else if (value && typeof value === 'object') {
         this.collectStateVariables(value);
       }
@@ -78,27 +78,19 @@ export class ConstantFunctionStateRule extends AbstractRule {
       if (key === 'loc' || key === 'range') continue;
       const value = node[key];
       if (Array.isArray(value)) {
-        value.forEach((child) => this.walkAst(child, context));
+        value.forEach(child => this.walkAst(child, context));
       } else if (value && typeof value === 'object') {
         this.walkAst(value, context);
       }
     }
   }
 
-  private checkFunction(
-    node: any,
-    mutability: string,
-    context: AnalysisContext
-  ): void {
+  private checkFunction(node: any, mutability: string, context: AnalysisContext): void {
     if (!node.body) return;
     this.checkForStateChanges(node.body, mutability, context);
   }
 
-  private checkForStateChanges(
-    node: any,
-    mutability: string,
-    context: AnalysisContext
-  ): void {
+  private checkForStateChanges(node: any, mutability: string, context: AnalysisContext): void {
     if (!node || typeof node !== 'object') return;
 
     // Check for assignments to state variables
@@ -120,7 +112,7 @@ export class ConstantFunctionStateRule extends AbstractRule {
       if (key === 'loc' || key === 'range') continue;
       const value = node[key];
       if (Array.isArray(value)) {
-        value.forEach((child) => this.checkForStateChanges(child, mutability, context));
+        value.forEach(child => this.checkForStateChanges(child, mutability, context));
       } else if (value && typeof value === 'object') {
         this.checkForStateChanges(value, mutability, context);
       }
@@ -145,11 +137,7 @@ export class ConstantFunctionStateRule extends AbstractRule {
     return false;
   }
 
-  private reportIssue(
-    node: any,
-    mutability: string,
-    context: AnalysisContext
-  ): void {
+  private reportIssue(node: any, mutability: string, context: AnalysisContext): void {
     if (!node.loc) return;
 
     context.report({

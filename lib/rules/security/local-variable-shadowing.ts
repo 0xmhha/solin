@@ -53,7 +53,7 @@ export class LocalVariableShadowing extends AbstractRule {
 
       const value = node[key];
       if (Array.isArray(value)) {
-        value.forEach((child) => this.walkAst(child, context));
+        value.forEach(child => this.walkAst(child, context));
       } else if (value && typeof value === 'object') {
         this.walkAst(value, context);
       }
@@ -92,11 +92,7 @@ export class LocalVariableShadowing extends AbstractRule {
   /**
    * Check function for shadowing
    */
-  private checkFunction(
-    func: any,
-    stateVariables: Set<string>,
-    context: AnalysisContext
-  ): void {
+  private checkFunction(func: any, stateVariables: Set<string>, context: AnalysisContext): void {
     // Check function parameters
     if (func.parameters && Array.isArray(func.parameters)) {
       for (const param of func.parameters) {
@@ -164,12 +160,7 @@ export class LocalVariableShadowing extends AbstractRule {
   /**
    * Report shadowing issue
    */
-  private reportIssue(
-    node: any,
-    name: string,
-    type: string,
-    context: AnalysisContext
-  ): void {
+  private reportIssue(node: any, name: string, type: string, context: AnalysisContext): void {
     if (!node.loc) {
       return;
     }
@@ -178,8 +169,7 @@ export class LocalVariableShadowing extends AbstractRule {
       ruleId: this.metadata.id,
       severity: this.metadata.severity,
       category: this.metadata.category,
-      message:
-        `Local ${type} '${name}' shadows a state variable. Consider renaming to avoid confusion.`,
+      message: `Local ${type} '${name}' shadows a state variable. Consider renaming to avoid confusion.`,
       location: {
         start: {
           line: node.loc.start.line,

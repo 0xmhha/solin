@@ -35,7 +35,7 @@ export class IncorrectModifierRule extends AbstractRule {
       if (key === 'loc' || key === 'range') continue;
       const value = node[key];
       if (Array.isArray(value)) {
-        value.forEach((child) => this.walkAst(child, context));
+        value.forEach(child => this.walkAst(child, context));
       } else if (value && typeof value === 'object') {
         this.walkAst(value, context);
       }
@@ -66,14 +66,19 @@ export class IncorrectModifierRule extends AbstractRule {
 
     // Check for various underscore representations
     if (node.type === 'PlaceholderStatement') return true;
-    if (node.type === 'ExpressionStatement' && node.expression?.type === 'Identifier' && node.expression?.name === '_') return true;
+    if (
+      node.type === 'ExpressionStatement' &&
+      node.expression?.type === 'Identifier' &&
+      node.expression?.name === '_'
+    )
+      return true;
     if (node.type === 'Identifier' && node.name === '_') return true;
 
     for (const key in node) {
       if (key === 'loc' || key === 'range') continue;
       const value = node[key];
       if (Array.isArray(value)) {
-        if (value.some((child) => this.hasPlaceholder(child))) return true;
+        if (value.some(child => this.hasPlaceholder(child))) return true;
       } else if (value && typeof value === 'object') {
         if (this.hasPlaceholder(value)) return true;
       }

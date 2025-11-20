@@ -89,9 +89,8 @@ export class RuleGenerator {
     const ruleId = `${options.category.toLowerCase()}/${options.name}`;
 
     const ruleCode = this.generateRuleCode(options, className, ruleId);
-    const testCode = options.includeTests !== false
-      ? this.generateTestCode(options, className, ruleId)
-      : '';
+    const testCode =
+      options.includeTests !== false ? this.generateTestCode(options, className, ruleId) : '';
 
     return {
       ruleCode,
@@ -107,7 +106,7 @@ export class RuleGenerator {
   private generateRuleCode(
     options: RuleGeneratorOptions,
     className: string,
-    ruleId: string,
+    ruleId: string
   ): string {
     const categoryImport = `Category.${this.categoryToString(options.category)}`;
     const severityImport = `Severity.${this.severityToString(options.severity)}`;
@@ -166,7 +165,7 @@ export class ${className} extends AbstractRule {
   private generateTestCode(
     options: RuleGeneratorOptions,
     className: string,
-    ruleId: string,
+    ruleId: string
   ): string {
     const categoryImport = `Category.${this.categoryToString(options.category)}`;
     const severityImport = `Severity.${this.severityToString(options.severity)}`;
@@ -256,9 +255,9 @@ describe('${className}', () => {
   private generateNodeChecks(nodeTypes: string[]): string {
     return nodeTypes
       .map(
-        (type) => `if (node.type === '${type}') {
+        type => `if (node.type === '${type}') {
           this.check${type}(node, context);
-        }`,
+        }`
       )
       .join('\n        ');
   }
@@ -269,7 +268,7 @@ describe('${className}', () => {
   private generateCheckMethods(nodeTypes: string[]): string {
     return nodeTypes
       .map(
-        (type) => `/**
+        type => `/**
    * Check ${type} node
    */
   private check${type}(node: any, context: AnalysisContext): void {
@@ -296,7 +295,7 @@ describe('${className}', () => {
     //     },
     //   },
     // });
-  }`,
+  }`
       )
       .join('\n\n  ');
   }
@@ -308,7 +307,7 @@ describe('${className}', () => {
     return (
       name
         .split('-')
-        .map((part) => part.charAt(0).toUpperCase() + part.slice(1))
+        .map(part => part.charAt(0).toUpperCase() + part.slice(1))
         .join('') + 'Rule'
     );
   }

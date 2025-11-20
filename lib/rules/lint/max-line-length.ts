@@ -59,7 +59,12 @@ export class MaxLineLengthRule extends AbstractRule {
       const trimmedLine = line.trim();
 
       // Ignore comment lines if configured
-      if (ignoreComments && (trimmedLine.startsWith('//') || trimmedLine.startsWith('/*') || trimmedLine.startsWith('*'))) {
+      if (
+        ignoreComments &&
+        (trimmedLine.startsWith('//') ||
+          trimmedLine.startsWith('/*') ||
+          trimmedLine.startsWith('*'))
+      ) {
         continue;
       }
 

@@ -110,8 +110,8 @@ describe('CacheArrayLengthRule', () => {
 
       const issues = context.getIssues();
       expect(issues).toHaveLength(2);
-      expect(issues.some((i) => i.message.includes('items'))).toBe(true);
-      expect(issues.some((i) => i.message.includes('values'))).toBe(true);
+      expect(issues.some(i => i.message.includes('items'))).toBe(true);
+      expect(issues.some(i => i.message.includes('values'))).toBe(true);
     });
 
     test('should not report when length is already cached', async () => {

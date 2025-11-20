@@ -68,9 +68,7 @@ export class ImportsOnTopRule extends AbstractRule {
 
     // Check each import to see if it comes after any definitions
     for (const importItem of imports) {
-      const hasDefinitionBefore = definitions.some(
-        (def) => def.line < importItem.line,
-      );
+      const hasDefinitionBefore = definitions.some(def => def.line < importItem.line);
 
       if (hasDefinitionBefore) {
         context.report({

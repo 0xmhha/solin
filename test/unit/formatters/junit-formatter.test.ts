@@ -213,7 +213,9 @@ describe('JUnitFormatter', () => {
       const output = formatter.format(result);
 
       // XML attributes should be escaped
-      expect(output).toContain('message="Test message with &lt;special&gt; &amp; &quot;characters&quot;"');
+      expect(output).toContain(
+        'message="Test message with &lt;special&gt; &amp; &quot;characters&quot;"'
+      );
       // But CDATA content doesn't need escaping
       expect(output).toContain('ERROR: Test message with <special> & "characters"');
     });

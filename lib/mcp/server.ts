@@ -39,7 +39,7 @@ export class SolinMCPServer {
         capabilities: {
           tools: {},
         },
-      },
+      }
     );
 
     // Initialize analysis components
@@ -101,7 +101,7 @@ export class SolinMCPServer {
     }));
 
     // Handle tool calls
-    this.server.setRequestHandler(CallToolRequestSchema, async (request) => {
+    this.server.setRequestHandler(CallToolRequestSchema, async request => {
       const { name, arguments: args } = request.params;
       const toolArgs = args || {};
 
@@ -190,8 +190,7 @@ export class SolinMCPServer {
       },
       {
         name: 'suggest_fixes',
-        description:
-          'Analyze code and provide specific fix suggestions for detected issues.',
+        description: 'Analyze code and provide specific fix suggestions for detected issues.',
         inputSchema: {
           type: 'object',
           properties: {
@@ -278,15 +277,14 @@ export class SolinMCPServer {
     const severity = (args.severity as string) || 'all';
 
     const rules = this.registry.getAllRules();
-    const filteredRules = rules.filter((rule) => {
+    const filteredRules = rules.filter(rule => {
       const categoryMatch = category === 'all' || rule.metadata.category.toLowerCase() === category;
-      const severityMatch =
-        severity === 'all' || rule.metadata.severity.toLowerCase() === severity;
+      const severityMatch = severity === 'all' || rule.metadata.severity.toLowerCase() === severity;
       return categoryMatch && severityMatch;
     });
 
     const ruleList = filteredRules
-      .map((rule) => {
+      .map(rule => {
         return `- **${rule.metadata.id}** (${rule.metadata.severity})\n  ${rule.metadata.title}\n  ${rule.metadata.description}`;
       })
       .join('\n\n');
@@ -426,7 +424,7 @@ ${rule.metadata.recommendation || 'Follow Solidity best practices'}
  */
 if (require.main === module) {
   const server = new SolinMCPServer();
-  server.start().catch((error) => {
+  server.start().catch(error => {
     console.error('Failed to start MCP server:', error);
     process.exit(1);
   });

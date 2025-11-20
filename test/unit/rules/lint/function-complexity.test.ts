@@ -130,7 +130,7 @@ describe('FunctionComplexityRule', () => {
 
       const issues = context.getIssues();
       expect(issues.length).toBeGreaterThan(0);
-      const complexityIssue = issues.find((i) => i.message.includes('complexity'));
+      const complexityIssue = issues.find(i => i.message.includes('complexity'));
       expect(complexityIssue).toBeDefined();
       expect(complexityIssue?.message).toContain('11'); // complexity = 11
     });
@@ -295,7 +295,7 @@ describe('FunctionComplexityRule', () => {
 
       const issues = context.getIssues();
       expect(issues.length).toBeGreaterThan(0);
-      const linesIssue = issues.find((i) => i.message.includes('lines'));
+      const linesIssue = issues.find(i => i.message.includes('lines'));
       expect(linesIssue).toBeDefined();
     });
   });
@@ -348,7 +348,7 @@ describe('FunctionComplexityRule', () => {
 
       const issues = context.getIssues();
       expect(issues.length).toBeGreaterThan(0);
-      const paramsIssue = issues.find((i) => i.message.includes('parameter'));
+      const paramsIssue = issues.find(i => i.message.includes('parameter'));
       expect(paramsIssue).toBeDefined();
       expect(paramsIssue?.message).toContain('8');
     });
@@ -394,15 +394,15 @@ describe('FunctionComplexityRule', () => {
       expect(issues.length).toBeGreaterThanOrEqual(3);
 
       // Should have complexity issue
-      const complexityIssue = issues.find((i) => i.message.includes('complexity'));
+      const complexityIssue = issues.find(i => i.message.includes('complexity'));
       expect(complexityIssue).toBeDefined();
 
       // Should have lines issue
-      const linesIssue = issues.find((i) => i.message.includes('lines'));
+      const linesIssue = issues.find(i => i.message.includes('lines'));
       expect(linesIssue).toBeDefined();
 
       // Should have parameters issue
-      const paramsIssue = issues.find((i) => i.message.includes('parameter'));
+      const paramsIssue = issues.find(i => i.message.includes('parameter'));
       expect(paramsIssue).toBeDefined();
     });
   });
@@ -412,9 +412,12 @@ describe('FunctionComplexityRule', () => {
       const customConfig: ResolvedConfig = {
         basePath: '/test',
         rules: {
-          'lint/function-complexity': ['error', {
-            maxComplexity: 3,
-          }],
+          'lint/function-complexity': [
+            'error',
+            {
+              maxComplexity: 3,
+            },
+          ],
         },
       };
 
@@ -444,7 +447,7 @@ describe('FunctionComplexityRule', () => {
 
       const issues = context.getIssues();
       expect(issues.length).toBeGreaterThan(0);
-      const complexityIssue = issues.find((i) => i.message.includes('complexity'));
+      const complexityIssue = issues.find(i => i.message.includes('complexity'));
       expect(complexityIssue).toBeDefined();
     });
 
@@ -452,9 +455,12 @@ describe('FunctionComplexityRule', () => {
       const customConfig: ResolvedConfig = {
         basePath: '/test',
         rules: {
-          'lint/function-complexity': ['error', {
-            maxLines: 10,
-          }],
+          'lint/function-complexity': [
+            'error',
+            {
+              maxLines: 10,
+            },
+          ],
         },
       };
 
@@ -481,7 +487,7 @@ describe('FunctionComplexityRule', () => {
 
       const issues = context.getIssues();
       expect(issues.length).toBeGreaterThan(0);
-      const linesIssue = issues.find((i) => i.message.includes('lines'));
+      const linesIssue = issues.find(i => i.message.includes('lines'));
       expect(linesIssue).toBeDefined();
     });
 
@@ -489,9 +495,12 @@ describe('FunctionComplexityRule', () => {
       const customConfig: ResolvedConfig = {
         basePath: '/test',
         rules: {
-          'lint/function-complexity': ['error', {
-            maxParameters: 3,
-          }],
+          'lint/function-complexity': [
+            'error',
+            {
+              maxParameters: 3,
+            },
+          ],
         },
       };
 
@@ -512,7 +521,7 @@ describe('FunctionComplexityRule', () => {
 
       const issues = context.getIssues();
       expect(issues.length).toBeGreaterThan(0);
-      const paramsIssue = issues.find((i) => i.message.includes('parameter'));
+      const paramsIssue = issues.find(i => i.message.includes('parameter'));
       expect(paramsIssue).toBeDefined();
     });
   });

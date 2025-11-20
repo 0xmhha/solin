@@ -24,7 +24,7 @@ export class MultipleInheritance extends AbstractRule {
       description:
         'Detects contracts that inherit from multiple base contracts. Multiple inheritance can increase complexity and may lead to unexpected behavior.',
       recommendation:
-        'Consider simplifying inheritance hierarchy. Ensure proper understanding of Solidity\'s C3 linearization and the diamond problem.',
+        "Consider simplifying inheritance hierarchy. Ensure proper understanding of Solidity's C3 linearization and the diamond problem.",
     });
   }
 
@@ -53,7 +53,7 @@ export class MultipleInheritance extends AbstractRule {
 
       const value = node[key];
       if (Array.isArray(value)) {
-        value.forEach((child) => this.walkAst(child, context));
+        value.forEach(child => this.walkAst(child, context));
       } else if (value && typeof value === 'object') {
         this.walkAst(value, context);
       }
@@ -76,11 +76,7 @@ export class MultipleInheritance extends AbstractRule {
   /**
    * Report issue for multiple inheritance
    */
-  private reportIssue(
-    contract: any,
-    count: number,
-    context: AnalysisContext
-  ): void {
+  private reportIssue(contract: any, count: number, context: AnalysisContext): void {
     if (!contract.loc) {
       return;
     }
@@ -89,8 +85,7 @@ export class MultipleInheritance extends AbstractRule {
       ruleId: this.metadata.id,
       severity: this.metadata.severity,
       category: this.metadata.category,
-      message:
-        `Contract '${contract.name || 'Unknown'}' inherits from ${count} base contracts. Multiple inheritance increases complexity.`,
+      message: `Contract '${contract.name || 'Unknown'}' inherits from ${count} base contracts. Multiple inheritance increases complexity.`,
       location: {
         start: {
           line: contract.loc.start.line,

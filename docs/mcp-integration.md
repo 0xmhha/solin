@@ -89,6 +89,7 @@ contract MyToken {
 ```
 
 The assistant will use the `analyze_solidity` tool and return a detailed analysis including:
+
 - Reentrancy vulnerability detection
 - Code quality issues
 - Best practice violations
@@ -127,11 +128,13 @@ The assistant will use `suggest_fixes` to provide specific fix recommendations.
 Analyzes Solidity code for bugs and vulnerabilities.
 
 **Parameters:**
+
 - `code` (required): Solidity source code
 - `format`: Output format (`stylish`, `json`)
 - `rules`: Specific rules to enable (optional)
 
 **Example:**
+
 ```json
 {
   "code": "contract Test { ... }",
@@ -144,10 +147,12 @@ Analyzes Solidity code for bugs and vulnerabilities.
 Lists all available analysis rules.
 
 **Parameters:**
+
 - `category`: Filter by category (`lint`, `security`, `all`)
 - `severity`: Filter by severity (`error`, `warning`, `info`, `all`)
 
 **Example:**
+
 ```json
 {
   "category": "security",
@@ -160,9 +165,11 @@ Lists all available analysis rules.
 Gets detailed explanation of a specific rule.
 
 **Parameters:**
+
 - `ruleId` (required): Rule identifier (e.g., "security/reentrancy")
 
 **Example:**
+
 ```json
 {
   "ruleId": "security/reentrancy"
@@ -174,10 +181,12 @@ Gets detailed explanation of a specific rule.
 Analyzes code and provides fix suggestions.
 
 **Parameters:**
+
 - `code` (required): Solidity source code with issues
 - `issueIndex`: Index of specific issue to fix (optional)
 
 **Example:**
+
 ```json
 {
   "code": "contract Test { ... }"
@@ -225,6 +234,7 @@ Structured JSON output for programmatic use:
 ### Server Not Starting
 
 Check that:
+
 - Node.js is installed and in PATH
 - Solin is built (`npm run build`)
 - Config file paths are correct (absolute paths recommended)
@@ -232,6 +242,7 @@ Check that:
 ### No Tools Available
 
 Verify:
+
 - MCP config is in the correct location
 - Server process is running
 - No errors in server logs
@@ -239,6 +250,7 @@ Verify:
 ### Analysis Fails
 
 Ensure:
+
 - Code is valid Solidity syntax
 - Code is properly escaped in JSON
 - Server has sufficient memory for large files
@@ -252,11 +264,7 @@ You can configure which rules to use:
 ```json
 {
   "code": "contract Test { ... }",
-  "rules": [
-    "security/reentrancy",
-    "security/tx-origin",
-    "lint/naming-convention"
-  ]
+  "rules": ["security/reentrancy", "security/tx-origin", "lint/naming-convention"]
 }
 ```
 
@@ -289,6 +297,7 @@ Analyze these three contracts:
 ## Support
 
 For issues or questions:
+
 - GitHub Issues: https://github.com/0xmhha/solin/issues
 - Documentation: https://github.com/0xmhha/solin/tree/main/docs
 

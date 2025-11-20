@@ -66,13 +66,15 @@ export class CompilerVersionRule extends AbstractRule {
         ruleId: this.metadata.id,
         severity: this.metadata.severity,
         category: this.metadata.category,
-        message: 'Missing pragma solidity directive. Specify the compiler version to ensure compatibility.',
+        message:
+          'Missing pragma solidity directive. Specify the compiler version to ensure compatibility.',
         location: {
           start: { line: 1, column: 0 },
           end: { line: 1, column: 1 },
         },
         metadata: {
-          suggestion: 'Add a pragma solidity directive at the top of the file, e.g., pragma solidity ^0.8.0;',
+          suggestion:
+            'Add a pragma solidity directive at the top of the file, e.g., pragma solidity ^0.8.0;',
         },
       });
     }
@@ -121,7 +123,8 @@ export class CompilerVersionRule extends AbstractRule {
         ruleId: this.metadata.id,
         severity: this.metadata.severity,
         category: this.metadata.category,
-        message: 'Exact compiler version is too restrictive. Use caret (^) or range constraints for better compatibility.',
+        message:
+          'Exact compiler version is too restrictive. Use caret (^) or range constraints for better compatibility.',
         location: {
           start: {
             line: node.loc.start.line,

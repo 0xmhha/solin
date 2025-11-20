@@ -82,7 +82,7 @@ describe('ConstantImmutableRule', () => {
 
       const issues = context.getIssues();
       expect(issues).toHaveLength(3);
-      expect(issues.every((i) => i.message.includes('constant'))).toBe(true);
+      expect(issues.every(i => i.message.includes('constant'))).toBe(true);
     });
 
     test('should not suggest constant for already constant variables', async () => {
@@ -181,7 +181,7 @@ describe('ConstantImmutableRule', () => {
 
       const issues = context.getIssues();
       expect(issues).toHaveLength(2);
-      expect(issues.every((i) => i.message.includes('immutable'))).toBe(true);
+      expect(issues.every(i => i.message.includes('immutable'))).toBe(true);
     });
 
     test('should not suggest immutable for already immutable variables', async () => {
@@ -343,7 +343,7 @@ describe('ConstantImmutableRule', () => {
 
       const issues = context.getIssues();
       expect(issues).toHaveLength(2);
-      expect(issues.every((i) => i.message.includes('constant'))).toBe(true);
+      expect(issues.every(i => i.message.includes('constant'))).toBe(true);
     });
   });
 
@@ -375,8 +375,8 @@ describe('ConstantImmutableRule', () => {
       const issues = context.getIssues();
       expect(issues).toHaveLength(2); // alreadyConstant and shouldBeImmutable
 
-      const constantIssue = issues.find((i) => i.message.includes('alreadyConstant'));
-      const immutableIssue = issues.find((i) => i.message.includes('shouldBeImmutable'));
+      const constantIssue = issues.find(i => i.message.includes('alreadyConstant'));
+      const immutableIssue = issues.find(i => i.message.includes('shouldBeImmutable'));
 
       expect(constantIssue?.message).toMatch(/constant/i);
       expect(immutableIssue?.message).toMatch(/immutable/i);
@@ -407,7 +407,7 @@ describe('ConstantImmutableRule', () => {
 
       const issues = context.getIssues();
       expect(issues).toHaveLength(2);
-      expect(issues.every((i) => i.message.includes('immutable'))).toBe(true);
+      expect(issues.every(i => i.message.includes('immutable'))).toBe(true);
     });
 
     test('should not suggest immutable for variables with declaration initialization and constructor assignment', async () => {

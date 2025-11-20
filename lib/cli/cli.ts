@@ -26,7 +26,9 @@ export class CLI {
   private setupCommands(): void {
     this.program
       .name('solin')
-      .description('Advanced Solidity static analysis tool\n\nCommands:\n  init          Generate default .solinrc.json configuration file\n  list-rules    List all available rules\n  generate-rule Generate a custom rule template\n  <files>       Analyze Solidity files (default)')
+      .description(
+        'Advanced Solidity static analysis tool\n\nCommands:\n  init          Generate default .solinrc.json configuration file\n  list-rules    List all available rules\n  generate-rule Generate a custom rule template\n  <files>       Analyze Solidity files (default)'
+      )
       .version(packageJson.version)
       .argument('[files...]', 'Solidity files or glob patterns to analyze')
       .option('-c, --config <path>', 'Configuration file path')

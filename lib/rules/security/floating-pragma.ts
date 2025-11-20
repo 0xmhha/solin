@@ -41,7 +41,7 @@ export class FloatingPragmaRule extends AbstractRule {
       if (key === 'loc' || key === 'range') continue;
       const value = node[key];
       if (Array.isArray(value)) {
-        value.forEach((child) => this.walkAst(child, context));
+        value.forEach(child => this.walkAst(child, context));
       } else if (value && typeof value === 'object') {
         this.walkAst(value, context);
       }
@@ -65,7 +65,7 @@ export class FloatingPragmaRule extends AbstractRule {
   private isFloatingVersion(version: string): boolean {
     // Check for floating operators
     const floatingOperators = ['^', '>', '<', '>=', '<='];
-    return floatingOperators.some((op) => version.includes(op));
+    return floatingOperators.some(op => version.includes(op));
   }
 
   private reportIssue(node: any, version: string, context: AnalysisContext): void {

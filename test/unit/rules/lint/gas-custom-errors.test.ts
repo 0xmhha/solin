@@ -106,7 +106,7 @@ describe('GasCustomErrors', () => {
       const issues = context.getIssues();
 
       expect(issues).toHaveLength(3);
-      issues.forEach((issue) => {
+      issues.forEach(issue => {
         expect(issue.message).toContain('require()');
       });
     });

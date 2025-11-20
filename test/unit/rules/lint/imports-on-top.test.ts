@@ -191,7 +191,7 @@ describe('ImportsOnTopRule', () => {
 
       const issues = context.getIssues();
       expect(issues.length).toBeGreaterThanOrEqual(1);
-      expect(issues.every((issue) => issue.ruleId === 'lint/imports-on-top')).toBe(true);
+      expect(issues.every(issue => issue.ruleId === 'lint/imports-on-top')).toBe(true);
     });
 
     test('should handle empty file', async () => {

@@ -26,6 +26,7 @@ That's it! ✅
 1. **Install Claude Desktop** from https://claude.ai/download
 
 2. **Start Solin MCP server:**
+
    ```bash
    npm run mcp-server
    ```
@@ -38,6 +39,7 @@ That's it! ✅
    - Linux: `~/.config/Claude/claude_desktop_config.json`
 
    Add:
+
    ```json
    {
      "mcpServers": {
@@ -119,16 +121,18 @@ docker-compose up -d
 ## 🎯 Common Use Cases
 
 ### Web App Integration
+
 ```javascript
 const response = await fetch('http://localhost:3000/api/analyze', {
   method: 'POST',
   headers: { 'Content-Type': 'application/json' },
-  body: JSON.stringify({ code: solidityCode })
+  body: JSON.stringify({ code: solidityCode }),
 });
 const result = await response.json();
 ```
 
 ### CI/CD Pipeline
+
 ```yaml
 # .github/workflows/security.yml
 - name: Analyze contracts
@@ -138,12 +142,15 @@ const result = await response.json();
 ```
 
 ### IDE Extension
+
 ```javascript
 const ws = new WebSocket('ws://localhost:3001');
-ws.send(JSON.stringify({
-  type: 'analyze',
-  data: { code: editor.getValue() }
-}));
+ws.send(
+  JSON.stringify({
+    type: 'analyze',
+    data: { code: editor.getValue() },
+  })
+);
 ```
 
 ## ⚙️ Configuration
@@ -187,16 +194,19 @@ ENCRYPTION_ENABLED=true npm run server
 ## 🆘 Troubleshooting
 
 **Port already in use:**
+
 ```bash
 REST_PORT=8080 npm run server
 ```
 
 **MCP not showing in Claude:**
+
 - Check absolute path in config
 - Restart Claude Desktop
 - Run `npm run build` first
 
 **API not accessible:**
+
 - Check firewall settings
 - Verify port is open
 - Test: `curl http://localhost:3000/api/health`
@@ -208,6 +218,7 @@ REST_PORT=8080 npm run server
 Solin is listed on Smithery: https://smithery.ai/server/solin
 
 Install via Smithery:
+
 ```bash
 npx @smithery/cli install solin
 ```

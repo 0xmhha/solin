@@ -65,7 +65,7 @@ export class ERC20Interface extends AbstractRule {
 
       const value = node[key];
       if (Array.isArray(value)) {
-        value.forEach((child) => this.walkAst(child, context));
+        value.forEach(child => this.walkAst(child, context));
       } else if (value && typeof value === 'object') {
         this.walkAst(value, context);
       }
@@ -87,15 +87,11 @@ export class ERC20Interface extends AbstractRule {
       .filter(Boolean);
 
     // Check if this looks like a token contract (has at least 2 ERC20 functions)
-    const erc20FunctionsPresent = REQUIRED_ERC20_FUNCTIONS.filter(
-      fn => functions.includes(fn)
-    );
+    const erc20FunctionsPresent = REQUIRED_ERC20_FUNCTIONS.filter(fn => functions.includes(fn));
 
     if (erc20FunctionsPresent.length >= 2) {
       // This appears to be a token contract, check for missing functions
-      const missingFunctions = REQUIRED_ERC20_FUNCTIONS.filter(
-        fn => !functions.includes(fn)
-      );
+      const missingFunctions = REQUIRED_ERC20_FUNCTIONS.filter(fn => !functions.includes(fn));
 
       if (missingFunctions.length > 0) {
         this.reportIssue(contract, missingFunctions, context);
@@ -106,11 +102,7 @@ export class ERC20Interface extends AbstractRule {
   /**
    * Report issue for missing ERC20 functions
    */
-  private reportIssue(
-    contract: any,
-    missingFunctions: string[],
-    context: AnalysisContext
-  ): void {
+  private reportIssue(contract: any, missingFunctions: string[], context: AnalysisContext): void {
     if (!contract.loc) {
       return;
     }
@@ -121,8 +113,7 @@ export class ERC20Interface extends AbstractRule {
       ruleId: this.metadata.id,
       severity: this.metadata.severity,
       category: this.metadata.category,
-      message:
-        `Contract appears to implement ERC20 but is missing required functions: ${functionList}`,
+      message: `Contract appears to implement ERC20 but is missing required functions: ${functionList}`,
       location: {
         start: {
           line: contract.loc.start.line,

@@ -82,7 +82,7 @@ export class StorageCollisionRule extends AbstractRule {
       if (key === 'loc' || key === 'range') continue;
       const value = node[key];
       if (Array.isArray(value)) {
-        value.forEach((child) => this.collectContracts(child));
+        value.forEach(child => this.collectContracts(child));
       } else if (value && typeof value === 'object') {
         this.collectContracts(value);
       }
@@ -100,7 +100,7 @@ export class StorageCollisionRule extends AbstractRule {
       if (key === 'loc' || key === 'range') continue;
       const value = node[key];
       if (Array.isArray(value)) {
-        value.forEach((child) => this.walkAst(child, context));
+        value.forEach(child => this.walkAst(child, context));
       } else if (value && typeof value === 'object') {
         this.walkAst(value, context);
       }
@@ -108,7 +108,6 @@ export class StorageCollisionRule extends AbstractRule {
   }
 
   private checkContract(node: any, context: AnalysisContext): void {
-
     // Check for variable name shadowing in inheritance
     if (node.baseContracts && Array.isArray(node.baseContracts) && node.baseContracts.length > 0) {
       this.checkInheritanceShadowing(node, context);
@@ -159,7 +158,7 @@ export class StorageCollisionRule extends AbstractRule {
     const vars = this.stateVariables.get(contractName) || [];
 
     // Check if contract has storage gap
-    const hasGap = vars.some((v) => v.includes('__gap') || v.includes('_gap'));
+    const hasGap = vars.some(v => v.includes('__gap') || v.includes('_gap'));
 
     // If contract has state variables and inheritance but no gap, warn
     if (vars.length > 0 && !hasGap) {
@@ -205,7 +204,7 @@ export class StorageCollisionRule extends AbstractRule {
       if (key === 'loc' || key === 'range') continue;
       const value = node[key];
       if (Array.isArray(value)) {
-        value.forEach((child) => this.checkDelegatecallUsage(child, context));
+        value.forEach(child => this.checkDelegatecallUsage(child, context));
       } else if (value && typeof value === 'object') {
         this.checkDelegatecallUsage(value, context);
       }
@@ -217,8 +216,8 @@ export class StorageCollisionRule extends AbstractRule {
 
     // Check if this looks like a proxy (has upgrade functions)
     const hasUpgradeFunction = this.hasUpgradeFunction(node);
-    const hasImplementationVar = (this.stateVariables.get(contractName) || []).some(
-      (v) => v.toLowerCase().includes('implementation')
+    const hasImplementationVar = (this.stateVariables.get(contractName) || []).some(v =>
+      v.toLowerCase().includes('implementation')
     );
 
     if ((hasUpgradeFunction || hasImplementationVar) && !this.hasEIP1967Slots(contractName)) {
@@ -271,7 +270,7 @@ export class StorageCollisionRule extends AbstractRule {
       if (key === 'loc' || key === 'range') continue;
       const value = node[key];
       if (Array.isArray(value)) {
-        if (value.some((child) => this.findEIP1967Constants(child))) {
+        if (value.some(child => this.findEIP1967Constants(child))) {
           return true;
         }
       } else if (value && typeof value === 'object') {
@@ -299,8 +298,7 @@ export class StorageCollisionRule extends AbstractRule {
     // Simple check: if node's line is within contract's line range
     if (!node.loc || !contract.loc) return false;
     return (
-      node.loc.start.line >= contract.loc.start.line &&
-      node.loc.end.line <= contract.loc.end.line
+      node.loc.start.line >= contract.loc.start.line && node.loc.end.line <= contract.loc.end.line
     );
   }
 

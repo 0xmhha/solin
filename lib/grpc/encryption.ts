@@ -87,7 +87,9 @@ export class EncryptionService {
 
       return Buffer.from(JSON.stringify(result)).toString('base64');
     } catch (error) {
-      throw new Error(`Encryption failed: ${error instanceof Error ? error.message : 'Unknown error'}`);
+      throw new Error(
+        `Encryption failed: ${error instanceof Error ? error.message : 'Unknown error'}`
+      );
     }
   }
 
@@ -113,7 +115,9 @@ export class EncryptionService {
 
       return decrypted;
     } catch (error) {
-      throw new Error(`Decryption failed: ${error instanceof Error ? error.message : 'Unknown error'}`);
+      throw new Error(
+        `Decryption failed: ${error instanceof Error ? error.message : 'Unknown error'}`
+      );
     }
   }
 

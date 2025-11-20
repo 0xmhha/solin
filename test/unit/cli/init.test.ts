@@ -50,7 +50,7 @@ describe('InitCommand', () => {
     test('should create strict config when template is strict', async () => {
       const result = await initCommand.execute({
         template: 'strict',
-        interactive: false
+        interactive: false,
       });
 
       expect(result).toBe(0);
@@ -67,7 +67,7 @@ describe('InitCommand', () => {
     test('should create minimal config when template is minimal', async () => {
       const result = await initCommand.execute({
         template: 'minimal',
-        interactive: false
+        interactive: false,
       });
 
       expect(result).toBe(0);
@@ -104,7 +104,7 @@ describe('InitCommand', () => {
 
       const result = await initCommand.execute({
         force: true,
-        interactive: false
+        interactive: false,
       });
 
       expect(result).toBe(0);
@@ -121,7 +121,7 @@ describe('InitCommand', () => {
 
       const result = await initCommand.execute({
         template: 'unknown' as TemplateType,
-        interactive: false
+        interactive: false,
       });
 
       expect(result).toBe(1);
@@ -166,7 +166,7 @@ describe('InitCommand', () => {
     test('default config should have expected structure', async () => {
       await initCommand.execute({
         template: 'default',
-        interactive: false
+        interactive: false,
       });
 
       const configPath = path.join(testDir, '.solinrc.json');
@@ -190,7 +190,7 @@ describe('InitCommand', () => {
     test('strict config should have all rules as errors', async () => {
       await initCommand.execute({
         template: 'strict',
-        interactive: false
+        interactive: false,
       });
 
       const configPath = path.join(testDir, '.solinrc.json');
@@ -209,7 +209,7 @@ describe('InitCommand', () => {
     test('minimal config should have only critical security rules', async () => {
       await initCommand.execute({
         template: 'minimal',
-        interactive: false
+        interactive: false,
       });
 
       const configPath = path.join(testDir, '.solinrc.json');
@@ -250,12 +250,10 @@ describe('InitCommand', () => {
 
       await initCommand.execute({
         template: 'strict',
-        interactive: false
+        interactive: false,
       });
 
-      expect(consoleSpy).toHaveBeenCalledWith(
-        expect.stringContaining("'strict' template")
-      );
+      expect(consoleSpy).toHaveBeenCalledWith(expect.stringContaining("'strict' template"));
 
       consoleSpy.mockRestore();
     });

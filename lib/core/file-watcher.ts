@@ -207,11 +207,11 @@ export class FileWatcher extends EventEmitter {
     }
 
     try {
-      const watcher = fs.watch(filePath, (eventType) => {
+      const watcher = fs.watch(filePath, eventType => {
         this.handleFileChange(filePath, eventType === 'rename' ? 'unlink' : 'change');
       });
 
-      watcher.on('error', (error) => {
+      watcher.on('error', error => {
         this.emit('error', error);
         this.removeFile(filePath);
       });
@@ -244,7 +244,7 @@ export class FileWatcher extends EventEmitter {
           const filePath = path.join(dirPath, filename);
 
           // Check if file was added or removed
-          fs.access(filePath, fs.constants.F_OK, (err) => {
+          fs.access(filePath, fs.constants.F_OK, err => {
             if (err) {
               // File was removed
               this.handleFileChange(filePath, 'unlink');
@@ -258,7 +258,7 @@ export class FileWatcher extends EventEmitter {
         }
       });
 
-      watcher.on('error', (error) => {
+      watcher.on('error', error => {
         this.emit('error', error);
       });
 

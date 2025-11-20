@@ -135,7 +135,9 @@ export class SolinRestServer {
     this.registerRules();
 
     // Create HTTP server
-    this.server = http.createServer(this.handleRequest.bind(this));
+    this.server = http.createServer((req, res) => {
+      void this.handleRequest(req, res);
+    });
   }
 
   /**
@@ -178,10 +180,7 @@ export class SolinRestServer {
   /**
    * Handle HTTP requests
    */
-  private async handleRequest(
-    req: http.IncomingMessage,
-    res: http.ServerResponse,
-  ): Promise<void> {
+  private async handleRequest(req: http.IncomingMessage, res: http.ServerResponse): Promise<void> {
     // Set CORS headers if enabled
     if (this.config.corsEnabled) {
       res.setHeader('Access-Control-Allow-Origin', '*');
@@ -238,10 +237,7 @@ export class SolinRestServer {
   /**
    * Handle analyze request
    */
-  private async handleAnalyze(
-    req: http.IncomingMessage,
-    res: http.ServerResponse,
-  ): Promise<void> {
+  private async handleAnalyze(req: http.IncomingMessage, res: http.ServerResponse): Promise<void> {
     const body = await this.readBody(req);
     const request: AnalyzeRequest = JSON.parse(body);
 
@@ -288,8 +284,8 @@ export class SolinRestServer {
 
       // Count issues
       const issues = result.files[0]?.issues || [];
-      const errors = issues.filter((i) => i.severity === 'error').length;
-      const warnings = issues.filter((i) => i.severity === 'warning').length;
+      const errors = issues.filter(i => i.severity === 'error').length;
+      const warnings = issues.filter(i => i.severity === 'warning').length;
 
       const response: AnalyzeResponse = {
         success: true,
@@ -313,7 +309,7 @@ export class SolinRestServer {
    */
   private async handleListRules(
     req: http.IncomingMessage,
-    res: http.ServerResponse,
+    res: http.ServerResponse
   ): Promise<void> {
     const url = new URL(req.url || '/', `http://${req.headers.host}`);
     const category = (url.searchParams.get('category') as ListRulesRequest['category']) || 'all';
@@ -321,7 +317,7 @@ export class SolinRestServer {
 
     try {
       const rules = this.registry.getAllRules();
-      const filteredRules = rules.filter((rule) => {
+      const filteredRules = rules.filter(rule => {
         const categoryMatch =
           category === 'all' || rule.metadata.category.toLowerCase() === category;
         const severityMatch =
@@ -329,7 +325,7 @@ export class SolinRestServer {
         return categoryMatch && severityMatch;
       });
 
-      const ruleInfos: RuleInfo[] = filteredRules.map((rule) => ({
+      const ruleInfos: RuleInfo[] = filteredRules.map(rule => ({
         id: rule.metadata.id,
         title: rule.metadata.title,
         description: rule.metadata.description,
@@ -356,10 +352,7 @@ export class SolinRestServer {
   /**
    * Handle get rule request
    */
-  private async handleGetRule(
-    req: http.IncomingMessage,
-    res: http.ServerResponse,
-  ): Promise<void> {
+  private async handleGetRule(req: http.IncomingMessage, res: http.ServerResponse): Promise<void> {
     const url = new URL(req.url || '/', `http://${req.headers.host}`);
     const ruleId = url.pathname.replace('/api/rules/', '');
 
@@ -402,7 +395,7 @@ export class SolinRestServer {
    */
   private async handleSuggestFixes(
     req: http.IncomingMessage,
-    res: http.ServerResponse,
+    res: http.ServerResponse
   ): Promise<void> {
     const body = await this.readBody(req);
     const request: SuggestFixesRequest = JSON.parse(body);
@@ -435,7 +428,7 @@ export class SolinRestServer {
         return;
       }
 
-      const suggestions = issues.map((issue) => ({
+      const suggestions = issues.map(issue => ({
         issue: issue.message,
         location: {
           line: issue.location.start.line,
@@ -443,8 +436,7 @@ export class SolinRestServer {
         },
         severity: issue.severity,
         ruleId: issue.ruleId,
-        suggestion:
-          issue.metadata?.suggestion || 'Review and fix according to rule guidelines',
+        suggestion: issue.metadata?.suggestion || 'Review and fix according to rule guidelines',
       }));
 
       const response: SuggestFixesResponse = {
@@ -500,16 +492,20 @@ export class SolinRestServer {
    * Start the server
    */
   async start(): Promise<void> {
-    return new Promise((resolve) => {
+    return new Promise(resolve => {
       this.server.listen(this.config.port, this.config.host, () => {
-        console.log(`Solin REST API server listening on http://${this.config.host}:${this.config.port}`);
+        console.log(
+          `Solin REST API server listening on http://${this.config.host}:${this.config.port}`
+        );
         console.log(`\nAvailable endpoints:`);
         console.log(`  POST   http://${this.config.host}:${this.config.port}/api/analyze`);
         console.log(`  GET    http://${this.config.host}:${this.config.port}/api/rules`);
         console.log(`  GET    http://${this.config.host}:${this.config.port}/api/rules/:ruleId`);
         console.log(`  POST   http://${this.config.host}:${this.config.port}/api/suggest-fixes`);
         console.log(`  GET    http://${this.config.host}:${this.config.port}/api/health`);
-        console.log(`\nEncryption: ${this.config.encryptionEnabled ? 'enabled' : 'disabled (default)'}`);
+        console.log(
+          `\nEncryption: ${this.config.encryptionEnabled ? 'enabled' : 'disabled (default)'}`
+        );
         console.log(`CORS: ${this.config.corsEnabled ? 'enabled' : 'disabled'}`);
         resolve();
       });
@@ -521,7 +517,7 @@ export class SolinRestServer {
    */
   async stop(): Promise<void> {
     return new Promise((resolve, reject) => {
-      this.server.close((err) => {
+      this.server.close(err => {
         if (err) reject(err);
         else resolve();
       });
@@ -540,7 +536,7 @@ if (require.main === module) {
     encryptionEnabled: process.env.ENCRYPTION_ENABLED === 'true',
   });
 
-  server.start().catch((error) => {
+  server.start().catch(error => {
     console.error('Failed to start REST API server:', error);
     process.exit(1);
   });

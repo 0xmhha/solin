@@ -41,7 +41,12 @@ export function registerGenerateRuleCommand(program: Command): void {
  * Generate rule template
  */
 async function generateRule(name: string, options: GenerateRuleOptions): Promise<void> {
-  const { category = 'custom', severity = 'warning', output = './custom-rules', test = false } = options;
+  const {
+    category = 'custom',
+    severity = 'warning',
+    output = './custom-rules',
+    test = false,
+  } = options;
 
   // Validate inputs
   const validCategories = ['lint', 'security', 'custom'];
@@ -227,7 +232,7 @@ describe('${className}', () => {
 function toPascalCase(str: string): string {
   return str
     .split('-')
-    .map((word) => word.charAt(0).toUpperCase() + word.slice(1))
+    .map(word => word.charAt(0).toUpperCase() + word.slice(1))
     .join('');
 }
 
@@ -237,6 +242,6 @@ function toPascalCase(str: string): string {
 function toTitleCase(str: string): string {
   return str
     .split('-')
-    .map((word) => word.charAt(0).toUpperCase() + word.slice(1))
+    .map(word => word.charAt(0).toUpperCase() + word.slice(1))
     .join(' ');
 }

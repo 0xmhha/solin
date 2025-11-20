@@ -49,12 +49,14 @@ Solin is a **unified Solidity static analysis platform** that combines comprehen
 #### 1. Single Responsibility Principle (SRP)
 
 **Implementation**:
+
 - Each rule focuses on ONE specific pattern or vulnerability
 - Engine orchestrates but doesn't implement analysis logic
 - Formatters only handle output formatting
 - Parser only parses AST, doesn't analyze
 
 **Example**:
+
 ```javascript
 // ✅ GOOD: Single responsibility
 class ReentrancyDetector {
@@ -65,20 +67,22 @@ class ReentrancyDetector {
 
 // ❌ BAD: Multiple responsibilities
 class SecurityChecker {
-  detectReentrancy(ast) { }
-  detectOverflow(ast) { }
-  formatReport(results) { }
+  detectReentrancy(ast) {}
+  detectOverflow(ast) {}
+  formatReport(results) {}
 }
 ```
 
 #### 2. Open/Closed Principle (OCP)
 
 **Implementation**:
+
 - Rules are open for extension via inheritance
 - Engine is closed for modification but extensible via plugins
 - Formatters can be added without modifying core
 
 **Example**:
+
 ```javascript
 // Base detector - closed for modification
 class AbstractDetector {
@@ -103,11 +107,13 @@ class CustomReentrancyDetector extends AbstractDetector {
 #### 3. Liskov Substitution Principle (LSP)
 
 **Implementation**:
+
 - All detectors implement the same interface
 - Any detector can replace another without breaking the system
 - Formatters are interchangeable
 
 **Example**:
+
 ```javascript
 // All detectors must be substitutable
 interface IDetector {
@@ -127,11 +133,13 @@ class Engine {
 #### 4. Interface Segregation Principle (ISP)
 
 **Implementation**:
+
 - Small, focused interfaces instead of monolithic ones
 - Rules don't depend on features they don't use
 - Optional interfaces for auto-fix, metadata, etc.
 
 **Example**:
+
 ```javascript
 // Segregated interfaces
 interface IDetector {
@@ -160,11 +168,13 @@ class NamingConventionRule implements IDetector, IFixable {
 #### 5. Dependency Inversion Principle (DIP)
 
 **Implementation**:
+
 - High-level modules (Engine) depend on abstractions
 - Low-level modules (Rules) depend on abstractions
 - No direct dependencies on concrete implementations
 
 **Example**:
+
 ```javascript
 // High-level module depends on abstraction
 class AnalysisEngine {
@@ -276,6 +286,7 @@ class CLI {
 ```
 
 **Key Classes**:
+
 - `CLI`: Main entry point
 - `ArgumentParser`: Parses command-line arguments
 - `ConfigLoader`: Loads and merges configuration files
@@ -764,6 +775,7 @@ class CustomPlugin implements IPlugin {
 ### 1. Parallel Processing
 
 **Implementation**:
+
 ```javascript
 // Use Worker Threads for CPU-bound tasks
 const { Worker } = require('worker_threads');
@@ -784,6 +796,7 @@ class WorkerPool {
 ```
 
 **Benefits**:
+
 - 4x-8x speedup on multi-core systems
 - Better CPU utilization
 - Isolated memory per worker
@@ -791,6 +804,7 @@ class WorkerPool {
 ### 2. Caching Strategy
 
 **Multi-Level Cache**:
+
 ```javascript
 class CacheManager {
   // L1: Memory cache (fastest)
@@ -818,6 +832,7 @@ class CacheManager {
 ### 3. Incremental Analysis
 
 **Smart File Filtering**:
+
 ```javascript
 class IncrementalAnalyzer {
   async analyze(files: string[]): Promise<Issue[]> {
@@ -841,6 +856,7 @@ class IncrementalAnalyzer {
 ### 4. AST Reuse
 
 **Memoized Parsing**:
+
 ```javascript
 class Parser {
   private astCache: Map<string, AST> = new Map();
@@ -955,10 +971,7 @@ engine.registerFormatter('custom', new CustomFormatter());
 module.exports = {
   name: '@company/solin-plugin',
   version: '1.0.0',
-  rules: [
-    require('./rules/custom-rule-1'),
-    require('./rules/custom-rule-2')
-  ]
+  rules: [require('./rules/custom-rule-1'), require('./rules/custom-rule-2')],
 };
 ```
 

@@ -124,10 +124,7 @@ export class AnalyzeCommand {
               }
             } else {
               // Actually apply fixes
-              const fixResult = await fixApplicator.applyToFile(
-                fileResult.filePath,
-                fixableIssues
-              );
+              const fixResult = await fixApplicator.applyToFile(fileResult.filePath, fixableIssues);
               totalApplied += fixResult.fixesApplied;
               totalSkipped += fixResult.fixesSkipped;
             }
@@ -181,7 +178,9 @@ export class AnalyzeCommand {
     const formatter = this.createFormatter(args.format);
 
     // Initial analysis
-    console.log(`\nWatching ${initialFiles.length} file${initialFiles.length === 1 ? '' : 's'} for changes...\n`);
+    console.log(
+      `\nWatching ${initialFiles.length} file${initialFiles.length === 1 ? '' : 's'} for changes...\n`
+    );
 
     const runAnalysis = async (files: string[]) => {
       const result = await engine.analyze({
@@ -220,9 +219,8 @@ export class AnalyzeCommand {
       }
 
       // Re-analyze just the changed file for speed
-      const filesToAnalyze = event.type === 'unlink'
-        ? initialFiles.filter(f => f !== event.filePath)
-        : [event.filePath];
+      const filesToAnalyze =
+        event.type === 'unlink' ? initialFiles.filter(f => f !== event.filePath) : [event.filePath];
 
       if (filesToAnalyze.length > 0) {
         void runAnalysis(filesToAnalyze);
@@ -539,9 +537,7 @@ export class AnalyzeCommand {
 
     // Check max warnings
     if (args.maxWarnings !== undefined && summary.warnings > args.maxWarnings) {
-      console.error(
-        `Error: ${summary.warnings} warnings exceeded maximum of ${args.maxWarnings}`,
-      );
+      console.error(`Error: ${summary.warnings} warnings exceeded maximum of ${args.maxWarnings}`);
       return 1;
     }
 

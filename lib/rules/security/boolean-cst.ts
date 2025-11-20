@@ -78,7 +78,7 @@ export class BooleanConstantRule extends AbstractRule {
 
       const value = node[key];
       if (Array.isArray(value)) {
-        value.forEach((child) => this.walkAst(child, context));
+        value.forEach(child => this.walkAst(child, context));
       } else if (value && typeof value === 'object') {
         this.walkAst(value, context);
       }
@@ -107,9 +107,7 @@ export class BooleanConstantRule extends AbstractRule {
     }
 
     // Determine which side is the boolean and what value it has
-    const boolValue = leftIsBool
-      ? this.getBooleanValue(left)
-      : this.getBooleanValue(right);
+    const boolValue = leftIsBool ? this.getBooleanValue(left) : this.getBooleanValue(right);
 
     // Build recommendation based on the comparison
     let recommendation: string;
@@ -147,10 +145,7 @@ export class BooleanConstantRule extends AbstractRule {
     }
 
     // Check for true/false as identifiers (in older Solidity versions)
-    if (
-      node.type === 'Identifier' &&
-      (node.name === 'true' || node.name === 'false')
-    ) {
+    if (node.type === 'Identifier' && (node.name === 'true' || node.name === 'false')) {
       return true;
     }
 
@@ -175,11 +170,7 @@ export class BooleanConstantRule extends AbstractRule {
   /**
    * Report a boolean constant issue
    */
-  private reportIssue(
-    node: any,
-    context: AnalysisContext,
-    message: string
-  ): void {
+  private reportIssue(node: any, context: AnalysisContext, message: string): void {
     if (!node.loc) {
       return;
     }

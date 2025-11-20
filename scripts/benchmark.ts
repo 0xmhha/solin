@@ -194,7 +194,6 @@ async function main() {
     }
 
     formatResults(results);
-
   } finally {
     // Cleanup
     await fs.rm(tempDir, { recursive: true, force: true });

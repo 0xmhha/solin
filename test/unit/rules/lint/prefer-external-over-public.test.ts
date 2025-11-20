@@ -179,9 +179,7 @@ describe('PreferExternalOverPublicRule', () => {
 
       const issues = context.getIssues();
       expect(issues).toHaveLength(3);
-      expect(issues.every((issue) => issue.ruleId === 'lint/prefer-external-over-public')).toBe(
-        true,
-      );
+      expect(issues.every(issue => issue.ruleId === 'lint/prefer-external-over-public')).toBe(true);
     });
 
     test('should handle empty contract', async () => {

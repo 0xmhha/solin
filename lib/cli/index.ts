@@ -12,7 +12,7 @@ async function main(): Promise<void> {
   process.exit(exitCode);
 }
 
-main().catch((error) => {
+main().catch(error => {
   console.error('Fatal error:', error);
   process.exit(2);
 });

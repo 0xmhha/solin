@@ -4,11 +4,7 @@
 
 import * as fs from 'fs';
 import * as path from 'path';
-import {
-  FixApplicator,
-  createFixApplicator,
-  applyFixes,
-} from '@/fixer/fix-applicator';
+import { FixApplicator, createFixApplicator, applyFixes } from '@/fixer/fix-applicator';
 import type { Issue } from '@core/types';
 import { Severity, Category } from '@core/types';
 
@@ -24,7 +20,7 @@ describe('FixApplicator', () => {
     endLine: number,
     endColumn: number,
     replacement: string,
-    description: string = 'Test fix',
+    description: string = 'Test fix'
   ): Issue {
     return {
       ruleId,
@@ -170,9 +166,7 @@ describe('FixApplicator', () => {
       // First fix should be applied, second skipped
       expect(result.fixesApplied).toBe(1);
       expect(result.fixesSkipped).toBe(1);
-      expect(result.results.find((r) => !r.applied)?.error).toContain(
-        'overlapping',
-      );
+      expect(result.results.find(r => !r.applied)?.error).toContain('overlapping');
     });
 
     test('should handle contained fixes', () => {
@@ -218,9 +212,7 @@ describe('FixApplicator', () => {
 
     test('should generate diff output', () => {
       const source = 'pragma solidity ^0.8.0;';
-      const issues = [
-        createIssue('test/rule', 1, 0, 1, 6, 'PRAGMA', 'Uppercase pragma'),
-      ];
+      const issues = [createIssue('test/rule', 1, 0, 1, 6, 'PRAGMA', 'Uppercase pragma')];
 
       const diff = applicator.getDiff(source, issues);
 
@@ -293,16 +285,7 @@ describe('FixApplicator', () => {
   describe('Edge cases', () => {
     test('should handle multiline fixes', () => {
       const source = 'function foo() {\n  return 0;\n}';
-      const issues = [
-        createIssue(
-          'test/rule',
-          1,
-          15,
-          3,
-          1,
-          '{\n  return 1;\n}',
-        ),
-      ];
+      const issues = [createIssue('test/rule', 1, 15, 3, 1, '{\n  return 1;\n}')];
 
       const result = applicator.applyToSource(source, issues);
 
@@ -333,18 +316,13 @@ describe('FixApplicator', () => {
       const source = 'uint foo; uint bar;';
       const issues = [
         createIssue('test/rule1', 1, 0, 1, 4, 'uint256', 'Fix uint to uint256'),
-        createIssue(
-          'test/rule2',
-          1, 10, 1, 14,
-          'uint256',
-          'Fix uint to uint256',
-        ),
+        createIssue('test/rule2', 1, 10, 1, 14, 'uint256', 'Fix uint to uint256'),
       ];
 
       const result = applicator.applyToSource(source, issues);
 
       expect(result.results).toHaveLength(2);
-      expect(result.results.every((r) => r.applied)).toBe(true);
+      expect(result.results.every(r => r.applied)).toBe(true);
       expect(result.results[0]?.description).toBe('Fix uint to uint256');
     });
   });

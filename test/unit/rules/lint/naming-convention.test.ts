@@ -392,7 +392,7 @@ describe('NamingConventionRule', () => {
 
       const issues = context.getIssues();
       expect(issues.length).toBeGreaterThanOrEqual(3);
-      expect(issues.every((issue) => issue.ruleId === 'lint/naming-convention')).toBe(true);
+      expect(issues.every(issue => issue.ruleId === 'lint/naming-convention')).toBe(true);
     });
   });
 

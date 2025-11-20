@@ -54,7 +54,7 @@ describe('MagicNumbersRule', () => {
 
       const issues = context.getIssues();
       expect(issues.length).toBeGreaterThan(0);
-      const magicIssue = issues.find((i) => i.message.includes('100'));
+      const magicIssue = issues.find(i => i.message.includes('100'));
       expect(magicIssue).toBeDefined();
       expect(magicIssue?.message).toMatch(/magic number/i);
     });
@@ -77,7 +77,7 @@ describe('MagicNumbersRule', () => {
 
       const issues = context.getIssues();
       expect(issues.length).toBeGreaterThan(0);
-      const magicIssue = issues.find((i) => i.message.includes('42'));
+      const magicIssue = issues.find(i => i.message.includes('42'));
       expect(magicIssue).toBeDefined();
     });
 
@@ -100,7 +100,7 @@ describe('MagicNumbersRule', () => {
 
       const issues = context.getIssues();
       expect(issues.length).toBeGreaterThan(0);
-      const magicIssue = issues.find((i) => i.message.includes('1000'));
+      const magicIssue = issues.find(i => i.message.includes('1000'));
       expect(magicIssue).toBeDefined();
     });
 
@@ -211,8 +211,8 @@ describe('MagicNumbersRule', () => {
 
       const issues = context.getIssues();
       expect(issues.length).toBe(2); // 2 and 10
-      expect(issues.some((i) => i.message.includes('2'))).toBe(true);
-      expect(issues.some((i) => i.message.includes('10'))).toBe(true);
+      expect(issues.some(i => i.message.includes('2'))).toBe(true);
+      expect(issues.some(i => i.message.includes('10'))).toBe(true);
     });
   });
 
@@ -295,9 +295,9 @@ describe('MagicNumbersRule', () => {
 
       const issues = context.getIssues();
       expect(issues.length).toBe(2); // 2 and 50
-      expect(issues.some((i) => i.message.includes('100'))).toBe(false);
-      expect(issues.some((i) => i.message.includes('2'))).toBe(true);
-      expect(issues.some((i) => i.message.includes('50'))).toBe(true);
+      expect(issues.some(i => i.message.includes('100'))).toBe(false);
+      expect(issues.some(i => i.message.includes('2'))).toBe(true);
+      expect(issues.some(i => i.message.includes('50'))).toBe(true);
     });
 
     test('should handle empty allowed numbers list', async () => {
@@ -352,7 +352,7 @@ describe('MagicNumbersRule', () => {
 
       const issues = context.getIssues();
       expect(issues.length).toBeGreaterThan(0);
-      const magicIssue = issues.find((i) => i.message.includes('100') || i.message.includes('-100'));
+      const magicIssue = issues.find(i => i.message.includes('100') || i.message.includes('-100'));
       expect(magicIssue).toBeDefined();
     });
   });
@@ -415,7 +415,7 @@ describe('MagicNumbersRule', () => {
 
       const issues = context.getIssues();
       expect(issues.length).toBeGreaterThan(0);
-      const magicIssue = issues.find((i) => i.message.includes('1000000000000000000'));
+      const magicIssue = issues.find(i => i.message.includes('1000000000000000000'));
       expect(magicIssue).toBeDefined();
     });
   });

@@ -53,7 +53,7 @@ export class MissingInitializer extends AbstractRule {
 
       const value = node[key];
       if (Array.isArray(value)) {
-        value.forEach((child) => this.walkAst(child, context));
+        value.forEach(child => this.walkAst(child, context));
       } else if (value && typeof value === 'object') {
         this.walkAst(value, context);
       }
@@ -80,8 +80,7 @@ export class MissingInitializer extends AbstractRule {
     // Check for constructor or initializer
     const hasConstructor = contract.subNodes.some(
       (node: any) =>
-        node.type === 'FunctionDefinition' &&
-        (node.isConstructor || node.name === 'constructor')
+        node.type === 'FunctionDefinition' && (node.isConstructor || node.name === 'constructor')
     );
 
     const hasInitializer = contract.subNodes.some(
@@ -108,8 +107,7 @@ export class MissingInitializer extends AbstractRule {
       ruleId: this.metadata.id,
       severity: this.metadata.severity,
       category: this.metadata.category,
-      message:
-        `Contract '${contract.name || 'Unknown'}' has state variables but no constructor or initializer function.`,
+      message: `Contract '${contract.name || 'Unknown'}' has state variables but no constructor or initializer function.`,
       location: {
         start: {
           line: contract.loc.start.line,

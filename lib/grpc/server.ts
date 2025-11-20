@@ -114,7 +114,7 @@ export class SolinGrpcServer {
    */
   private async analyzeCode(
     call: grpc.ServerUnaryCall<any, any>,
-    callback: grpc.sendUnaryData<any>,
+    callback: grpc.sendUnaryData<any>
   ): Promise<void> {
     try {
       const { code, format = 'stylish', encryption_key } = call.request;
@@ -172,7 +172,7 @@ export class SolinGrpcServer {
           code: grpc.status.INTERNAL,
           message: error instanceof Error ? error.message : 'Analysis failed',
         },
-        null,
+        null
       );
     }
   }
@@ -182,13 +182,13 @@ export class SolinGrpcServer {
    */
   private async listRules(
     call: grpc.ServerUnaryCall<any, any>,
-    callback: grpc.sendUnaryData<any>,
+    callback: grpc.sendUnaryData<any>
   ): Promise<void> {
     try {
       const { category = 'all', severity = 'all' } = call.request;
 
       const rules = this.registry.getAllRules();
-      const filteredRules = rules.filter((rule) => {
+      const filteredRules = rules.filter(rule => {
         const categoryMatch =
           category === 'all' || rule.metadata.category.toLowerCase() === category;
         const severityMatch =
@@ -196,7 +196,7 @@ export class SolinGrpcServer {
         return categoryMatch && severityMatch;
       });
 
-      const ruleInfos = filteredRules.map((rule) => ({
+      const ruleInfos = filteredRules.map(rule => ({
         id: rule.metadata.id,
         title: rule.metadata.title,
         description: rule.metadata.description,
@@ -216,7 +216,7 @@ export class SolinGrpcServer {
           code: grpc.status.INTERNAL,
           message: 'Failed to list rules',
         },
-        null,
+        null
       );
     }
   }
@@ -226,7 +226,7 @@ export class SolinGrpcServer {
    */
   private async getRule(
     call: grpc.ServerUnaryCall<any, any>,
-    callback: grpc.sendUnaryData<any>,
+    callback: grpc.sendUnaryData<any>
   ): Promise<void> {
     try {
       const { rule_id } = call.request;
@@ -259,7 +259,7 @@ export class SolinGrpcServer {
           code: grpc.status.INTERNAL,
           message: 'Failed to get rule',
         },
-        null,
+        null
       );
     }
   }
@@ -267,9 +267,7 @@ export class SolinGrpcServer {
   /**
    * Stream analysis handler
    */
-  private async analyzeStream(
-    call: grpc.ServerDuplexStream<any, any>,
-  ): Promise<void> {
+  private async analyzeStream(call: grpc.ServerDuplexStream<any, any>): Promise<void> {
     const chunks: Buffer[] = [];
 
     call.on('data', (chunk: any) => {
@@ -280,7 +278,7 @@ export class SolinGrpcServer {
       }
     });
 
-    call.on('error', (error) => {
+    call.on('error', error => {
       console.error('Stream error:', error);
     });
   }
@@ -290,7 +288,7 @@ export class SolinGrpcServer {
    */
   private async processStreamAnalysis(
     chunks: Buffer[],
-    call: grpc.ServerDuplexStream<any, any>,
+    call: grpc.ServerDuplexStream<any, any>
   ): Promise<void> {
     try {
       const code = Buffer.concat(chunks).toString('utf-8');
@@ -337,20 +335,16 @@ export class SolinGrpcServer {
 
     return new Promise((resolve, reject) => {
       // Use insecure credentials for now (TLS can be added later)
-      this.server.bindAsync(
-        address,
-        grpc.ServerCredentials.createInsecure(),
-        (error, _port) => {
-          if (error) {
-            reject(error);
-            return;
-          }
+      this.server.bindAsync(address, grpc.ServerCredentials.createInsecure(), (error, _port) => {
+        if (error) {
+          reject(error);
+          return;
+        }
 
-          this.server.start();
-          console.log(`Solin gRPC server listening on ${address}`);
-          resolve();
-        },
-      );
+        this.server.start();
+        console.log(`Solin gRPC server listening on ${address}`);
+        resolve();
+      });
     });
   }
 
@@ -358,7 +352,7 @@ export class SolinGrpcServer {
    * Stop the server
    */
   async stop(): Promise<void> {
-    return new Promise((resolve) => {
+    return new Promise(resolve => {
       this.server.tryShutdown(() => {
         console.log('Solin gRPC server stopped');
         resolve();
@@ -378,7 +372,7 @@ if (require.main === module) {
     encryptionEnabled: process.env.ENCRYPTION_ENABLED !== 'false',
   });
 
-  server.start().catch((error) => {
+  server.start().catch(error => {
     console.error('Failed to start gRPC server:', error);
     process.exit(1);
   });

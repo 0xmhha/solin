@@ -33,20 +33,20 @@ All CI/CD integrations follow a similar pattern:
 
 ### Exit Codes
 
-| Code | Meaning |
-|------|---------|
-| 0 | Success (no errors) |
-| 1 | Errors found |
-| 2 | Invalid usage or parse errors |
+| Code | Meaning                       |
+| ---- | ----------------------------- |
+| 0    | Success (no errors)           |
+| 1    | Errors found                  |
+| 2    | Invalid usage or parse errors |
 
 ### Output Formats
 
-| Format | Use Case |
-|--------|----------|
-| `stylish` | Human-readable console output |
-| `json` | Programmatic processing, artifacts |
-| `sarif` | GitHub Security tab, IDE integration |
-| `html` | Shareable reports, dashboards |
+| Format    | Use Case                             |
+| --------- | ------------------------------------ |
+| `stylish` | Human-readable console output        |
+| `json`    | Programmatic processing, artifacts   |
+| `sarif`   | GitHub Security tab, IDE integration |
+| `html`    | Shareable reports, dashboards        |
 
 ## GitHub Actions
 

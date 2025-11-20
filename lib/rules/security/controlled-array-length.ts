@@ -89,7 +89,7 @@ export class ControlledArrayLengthRule extends AbstractRule {
 
       const value = node[key];
       if (Array.isArray(value)) {
-        value.forEach((child) => this.walkAst(child, context));
+        value.forEach(child => this.walkAst(child, context));
       } else if (value && typeof value === 'object') {
         this.walkAst(value, context);
       }
@@ -169,7 +169,7 @@ export class ControlledArrayLengthRule extends AbstractRule {
 
       const value = node[key];
       if (Array.isArray(value)) {
-        value.forEach((child) => this.checkForLoops(child, context));
+        value.forEach(child => this.checkForLoops(child, context));
       } else if (value && typeof value === 'object') {
         this.checkForLoops(value, context);
       }
@@ -184,9 +184,7 @@ export class ControlledArrayLengthRule extends AbstractRule {
       return;
     }
 
-    const arrayName = this.getArrayNameFromCondition(
-      node.conditionExpression
-    );
+    const arrayName = this.getArrayNameFromCondition(node.conditionExpression);
     if (arrayName && this.externalArrays.has(arrayName)) {
       this.reportIssue(
         node,
@@ -231,11 +229,7 @@ export class ControlledArrayLengthRule extends AbstractRule {
       const right = condition.right;
 
       // Check if right side is array.length
-      if (
-        right &&
-        right.type === 'MemberAccess' &&
-        right.memberName === 'length'
-      ) {
+      if (right && right.type === 'MemberAccess' && right.memberName === 'length') {
         const arrayExpr = right.expression;
         if (arrayExpr && arrayExpr.type === 'Identifier') {
           return arrayExpr.name;
@@ -275,11 +269,7 @@ export class ControlledArrayLengthRule extends AbstractRule {
   /**
    * Report a controlled array length issue
    */
-  private reportIssue(
-    node: any,
-    context: AnalysisContext,
-    message: string
-  ): void {
+  private reportIssue(node: any, context: AnalysisContext, message: string): void {
     if (!node.loc) {
       return;
     }

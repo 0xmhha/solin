@@ -78,10 +78,7 @@ export class OrderingRule extends AbstractRule {
   /**
    * Check member ordering within a contract
    */
-  private checkContractMemberOrdering(
-    contractNode: ASTNode,
-    context: AnalysisContext,
-  ): void {
+  private checkContractMemberOrdering(contractNode: ASTNode, context: AnalysisContext): void {
     const subNodes = (contractNode as any).subNodes;
 
     if (!subNodes || !Array.isArray(subNodes)) {

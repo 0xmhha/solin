@@ -39,7 +39,7 @@ export class UnprotectedSelfdestructRule extends AbstractRule {
       if (key === 'loc' || key === 'range') continue;
       const value = node[key];
       if (Array.isArray(value)) {
-        value.forEach((child) => this.walkAst(child, context));
+        value.forEach(child => this.walkAst(child, context));
       } else if (value && typeof value === 'object') {
         this.walkAst(value, context);
       }
@@ -77,7 +77,7 @@ export class UnprotectedSelfdestructRule extends AbstractRule {
       if (key === 'loc' || key === 'range') continue;
       const value = node[key];
       if (Array.isArray(value)) {
-        if (value.some((child) => this.hasSelfdestructCall(child))) {
+        if (value.some(child => this.hasSelfdestructCall(child))) {
           return true;
         }
       } else if (value && typeof value === 'object') {
@@ -129,7 +129,7 @@ export class UnprotectedSelfdestructRule extends AbstractRule {
       if (key === 'loc' || key === 'range') continue;
       const value = node[key];
       if (Array.isArray(value)) {
-        if (value.some((child) => this.hasOwnerCheck(child))) {
+        if (value.some(child => this.hasOwnerCheck(child))) {
           return true;
         }
       } else if (value && typeof value === 'object') {

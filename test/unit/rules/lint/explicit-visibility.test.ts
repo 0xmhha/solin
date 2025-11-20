@@ -97,7 +97,7 @@ describe('ExplicitVisibilityRule', () => {
 
       const issues = context.getIssues();
       expect(issues.length).toBeGreaterThanOrEqual(3);
-      expect(issues.every((issue) => issue.ruleId === 'lint/explicit-visibility')).toBe(true);
+      expect(issues.every(issue => issue.ruleId === 'lint/explicit-visibility')).toBe(true);
     });
 
     test('should not report issue for constructor', async () => {

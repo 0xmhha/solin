@@ -87,7 +87,7 @@ export class UnusedStateRule extends AbstractRule {
 
         const value = n[key];
         if (Array.isArray(value)) {
-          value.forEach((child) => walk(child));
+          value.forEach(child => walk(child));
         } else if (value && typeof value === 'object') {
           walk(value);
         }
@@ -172,7 +172,7 @@ export class UnusedStateRule extends AbstractRule {
 
         const value = node[key];
         if (Array.isArray(value)) {
-          value.forEach((child) => walk(child));
+          value.forEach(child => walk(child));
         } else if (value && typeof value === 'object') {
           walk(value);
         }
@@ -194,11 +194,7 @@ export class UnusedStateRule extends AbstractRule {
   /**
    * Report an unused-state issue
    */
-  private reportIssue(
-    node: any,
-    context: AnalysisContext,
-    message: string
-  ): void {
+  private reportIssue(node: any, context: AnalysisContext, message: string): void {
     if (!node.loc) {
       return;
     }

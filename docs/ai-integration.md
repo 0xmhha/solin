@@ -6,11 +6,11 @@ Complete guide to integrate Solin with ChatGPT, Claude, and Gemini AI assistants
 
 Solin can be integrated with major AI platforms in different ways:
 
-| Platform | Method | Difficulty | Best For |
-|----------|--------|------------|----------|
-| **Claude Desktop** | MCP (Native) | ⭐ Easy | Best experience, full MCP support |
-| **ChatGPT** | Custom GPT + REST API | ⭐⭐ Medium | Web-based, no installation |
-| **Gemini** | REST API | ⭐⭐ Medium | API integration |
+| Platform           | Method                | Difficulty  | Best For                          |
+| ------------------ | --------------------- | ----------- | --------------------------------- |
+| **Claude Desktop** | MCP (Native)          | ⭐ Easy     | Best experience, full MCP support |
+| **ChatGPT**        | Custom GPT + REST API | ⭐⭐ Medium | Web-based, no installation        |
+| **Gemini**         | REST API              | ⭐⭐ Medium | API integration                   |
 
 ---
 
@@ -62,6 +62,7 @@ Add this configuration:
 **Important:** Replace `/absolute/path/to/solin/` with your actual path!
 
 **Example (macOS):**
+
 ```json
 {
   "mcpServers": {
@@ -74,6 +75,7 @@ Add this configuration:
 ```
 
 **Example (Windows):**
+
 ```json
 {
   "mcpServers": {
@@ -94,6 +96,7 @@ Close and reopen Claude Desktop. You should see "Solin" available in the tools m
 Now you can ask Claude to analyze Solidity code:
 
 **Example prompts:**
+
 - "Analyze this Solidity contract: [paste code]"
 - "List all security rules in Solin"
 - "Explain the reentrancy rule"
@@ -102,6 +105,7 @@ Now you can ask Claude to analyze Solidity code:
 ### Verification
 
 In Claude Desktop, you should see:
+
 - 🔧 Tools icon with "Solin" listed
 - 4 available tools: analyze_solidity, list_rules, explain_rule, suggest_fixes
 
@@ -116,6 +120,7 @@ ChatGPT doesn't support MCP natively, but we can use **Custom GPTs with Actions*
 You need a **publicly accessible** Solin instance. Options:
 
 **Option A: Local with ngrok (for testing)**
+
 ```bash
 # Terminal 1: Start Solin
 npm run server
@@ -127,6 +132,7 @@ npx ngrok http 3000
 ```
 
 **Option B: Deploy to cloud (recommended for production)**
+
 - Deploy to Heroku, Railway, Render, or any cloud platform
 - See deployment section below
 
@@ -139,6 +145,7 @@ npx ngrok http 3000
 **Name:** Solin - Solidity Security Analyzer
 
 **Description:**
+
 ```
 Expert Solidity security analyzer and linter. Analyzes smart contracts for vulnerabilities,
 gas optimization, and code quality issues. Powered by 155+ rules covering security,
@@ -146,6 +153,7 @@ best practices, and gas optimization.
 ```
 
 **Instructions:**
+
 ```
 You are a Solidity security expert using the Solin static analyzer. When users provide
 Solidity code, analyze it using the analyze endpoint and provide clear, actionable feedback.
@@ -167,6 +175,7 @@ Be concise, security-focused, and always recommend fixes.
 ```
 
 **Conversation starters:**
+
 ```
 - Analyze this Solidity contract for vulnerabilities
 - What security rules does Solin check?
@@ -179,6 +188,7 @@ Be concise, security-focused, and always recommend fixes.
 Click "Configure" → "Actions" → "Create new action"
 
 **Schema:**
+
 ```json
 {
   "openapi": "3.0.0",
@@ -336,6 +346,7 @@ Click "Configure" → "Actions" → "Create new action"
 ### Step 4: Test Your Custom GPT
 
 Click "Test" and try:
+
 ```
 Analyze this contract:
 contract Test {
@@ -631,6 +642,7 @@ For ChatGPT and Gemini integrations, you need a publicly accessible Solin instan
 ### Option 1: Railway.app (Easiest)
 
 1. Create `railway.json`:
+
 ```json
 {
   "$schema": "https://railway.app/railway.schema.json",
@@ -645,6 +657,7 @@ For ChatGPT and Gemini integrations, you need a publicly accessible Solin instan
 ```
 
 2. Deploy:
+
 ```bash
 # Install Railway CLI
 npm install -g @railway/cli
@@ -661,6 +674,7 @@ railway up
 ### Option 2: Render.com
 
 1. Create `render.yaml`:
+
 ```yaml
 services:
   - type: web
@@ -670,9 +684,9 @@ services:
     startCommand: npm run server
     envVars:
       - key: REST_ENABLED
-        value: "true"
+        value: 'true'
       - key: REST_PORT
-        value: "10000"
+        value: '10000'
 ```
 
 2. Push to GitHub and connect to Render
@@ -710,15 +724,15 @@ docker run -p 3000:3000 solin
 
 ## 📊 Comparison Table
 
-| Feature | Claude Desktop | ChatGPT Custom GPT | Gemini Function Calling |
-|---------|----------------|-------------------|------------------------|
-| **Setup Difficulty** | ⭐ Easy | ⭐⭐ Medium | ⭐⭐⭐ Advanced |
-| **Integration Type** | Native MCP | REST API | REST API |
-| **Deployment** | Local | Cloud required | Cloud required |
-| **Cost** | Free | Free (+ cloud) | Free (+ cloud) |
-| **Best Use Case** | Development | Public sharing | Custom apps |
-| **Real-time** | ✅ Yes | ✅ Yes | ✅ Yes |
-| **Privacy** | ✅ Local | ⚠️ Cloud | ⚠️ Cloud |
+| Feature              | Claude Desktop | ChatGPT Custom GPT | Gemini Function Calling |
+| -------------------- | -------------- | ------------------ | ----------------------- |
+| **Setup Difficulty** | ⭐ Easy        | ⭐⭐ Medium        | ⭐⭐⭐ Advanced         |
+| **Integration Type** | Native MCP     | REST API           | REST API                |
+| **Deployment**       | Local          | Cloud required     | Cloud required          |
+| **Cost**             | Free           | Free (+ cloud)     | Free (+ cloud)          |
+| **Best Use Case**    | Development    | Public sharing     | Custom apps             |
+| **Real-time**        | ✅ Yes         | ✅ Yes             | ✅ Yes                  |
+| **Privacy**          | ✅ Local       | ⚠️ Cloud           | ⚠️ Cloud                |
 
 ---
 
@@ -727,12 +741,14 @@ docker run -p 3000:3000 solin
 ### Claude Desktop
 
 **Issue:** "Solin not showing in tools"
+
 - Check config file path is correct
 - Ensure absolute paths (not relative)
 - Restart Claude Desktop completely
 - Check Node.js is installed: `node --version`
 
 **Issue:** "Connection failed"
+
 - Verify MCP server is running
 - Check dist/mcp/server.js exists
 - Run `npm run build` first
@@ -740,17 +756,20 @@ docker run -p 3000:3000 solin
 ### ChatGPT
 
 **Issue:** "Action endpoint not reachable"
+
 - Ensure Solin REST API is publicly accessible
 - Test URL directly: `curl https://your-url.com/api/health`
 - Check ngrok is running (if using ngrok)
 
 **Issue:** "Invalid schema"
+
 - Validate OpenAPI schema at https://editor.swagger.io
 - Ensure all required fields are present
 
 ### Gemini
 
 **Issue:** "Function not called"
+
 - Verify function declaration matches API
 - Check API endpoint is accessible
 - Review Gemini API key permissions
