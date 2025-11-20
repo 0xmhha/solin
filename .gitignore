@@ -54,5 +54,5 @@ yarn.lock
 pnpm-lock.yaml
 
 # Claude Code
-CLAUDE.md
-.claude/
+#CLAUDE.md
+#.claude/

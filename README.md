@@ -309,7 +309,3 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 - **Discussions**: [GitHub Discussions](https://github.com/0xmhha/solin/discussions)
 
 ---
-
-<p align="center">
-  Made with ❤️ by the Solin team
-</p>

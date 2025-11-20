@@ -84,12 +84,29 @@ describe('ConfigLoader', () => {
     });
 
     test('should use config from parent directory when not in cwd', async () => {
-      // This tests cosmiconfig's expected behavior of searching parent directories
-      const result = await loader.load({ cwd: tempDir, useDefaults: false });
+      // Create parent directory with config
+      const parentDir = path.join(tempDir, 'parent');
+      const childDir = path.join(parentDir, 'child');
+      await fs.mkdir(childDir, { recursive: true });
 
-      // Should find config from parent directories (project root)
+      // Create config in parent directory
+      const parentConfig: Config = {
+        rules: {
+          'security/reentrancy': 'warning',
+        },
+      };
+      await fs.writeFile(
+        path.join(parentDir, '.solinrc.json'),
+        JSON.stringify(parentConfig, null, 2)
+      );
+
+      // Load from child directory - should find parent config
+      const result = await loader.load({ cwd: childDir });
+
+      // Should find config from parent directory
       expect(result).toHaveProperty('rules');
-      expect(result).toHaveProperty('basePath');
+      expect(result.rules).toHaveProperty('security/reentrancy');
+      expect(result.basePath).toBe(parentDir);
     });
 
     test('should parse .solinrc.js file', async () => {
