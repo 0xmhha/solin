@@ -10,8 +10,6 @@ import type {
   ResolvedPlugin,
   PluginLoadOptions,
   PluginLoadResult,
-  PluginRule,
-  PluginPreset,
 } from './types';
 import { PluginErrorCode } from './types';
 import { PluginValidator } from './plugin-validator';
@@ -238,7 +236,7 @@ export class PluginLoader {
           resolved.rules.set(fullRuleId, ruleDefinition as new () => IRule);
         } else {
           // PluginRule object
-          const pluginRule = ruleDefinition as PluginRule;
+          const pluginRule = ruleDefinition;
           resolved.rules.set(fullRuleId, pluginRule.rule);
         }
       }
@@ -249,11 +247,11 @@ export class PluginLoader {
       for (const [presetName, presetDefinition] of Object.entries(plugin.presets)) {
         if ('config' in presetDefinition) {
           // PluginPreset object
-          const pluginPreset = presetDefinition as PluginPreset;
+          const pluginPreset = presetDefinition;
           resolved.presets.set(presetName, pluginPreset.config);
         } else {
           // Direct config object
-          resolved.presets.set(presetName, presetDefinition as Partial<Config>);
+          resolved.presets.set(presetName, presetDefinition);
         }
       }
     }

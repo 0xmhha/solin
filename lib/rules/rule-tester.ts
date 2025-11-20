@@ -382,7 +382,7 @@ export class RuleTester {
 
     // Run rule
     const rule = new RuleClass();
-    rule.analyze(context);
+    await rule.analyze(context);
 
     return context.getIssues();
   }

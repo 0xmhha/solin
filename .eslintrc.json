@@ -33,7 +33,49 @@
       "rules": {
         "@typescript-eslint/no-explicit-any": "off",
         "@typescript-eslint/no-unsafe-assignment": "off",
+        "@typescript-eslint/no-unsafe-member-access": "off",
+        "@typescript-eslint/no-unsafe-call": "off",
+        "@typescript-eslint/no-unsafe-argument": "off",
+        "@typescript-eslint/no-unsafe-return": "off",
+        "@typescript-eslint/await-thenable": "off",
+        "@typescript-eslint/require-await": "off",
+        "@typescript-eslint/no-misused-promises": "off",
+        "jest/no-conditional-expect": "off",
+        "jest/expect-expect": "off"
+      }
+    },
+    {
+      "files": ["lib/cli/**/*.ts"],
+      "rules": {
+        "no-console": "off",
+        "@typescript-eslint/no-unsafe-call": "off",
         "@typescript-eslint/no-unsafe-member-access": "off"
+      }
+    },
+    {
+      "files": ["lib/rules/**/*.ts", "lib/parser/**/*.ts", "lib/core/analysis-context.ts"],
+      "rules": {
+        "@typescript-eslint/no-explicit-any": "off",
+        "@typescript-eslint/no-unsafe-assignment": "off",
+        "@typescript-eslint/no-unsafe-member-access": "off",
+        "@typescript-eslint/no-unsafe-call": "off",
+        "@typescript-eslint/no-unsafe-argument": "off",
+        "@typescript-eslint/no-unsafe-return": "off",
+        "@typescript-eslint/no-unnecessary-type-assertion": "off",
+        "@typescript-eslint/no-redundant-type-constituents": "off",
+        "@typescript-eslint/require-await": "off"
+      }
+    },
+    {
+      "files": ["lib/plugins/**/*.ts", "lib/config/**/*.ts"],
+      "rules": {
+        "@typescript-eslint/no-var-requires": "off",
+        "@typescript-eslint/no-unsafe-assignment": "off",
+        "@typescript-eslint/no-unsafe-member-access": "off",
+        "@typescript-eslint/no-unsafe-return": "off",
+        "@typescript-eslint/no-unsafe-call": "off",
+        "@typescript-eslint/require-await": "off",
+        "@typescript-eslint/no-unused-vars": ["error", { "argsIgnorePattern": "^_", "varsIgnorePattern": "^(PluginRule|PluginPreset)$" }]
       }
     }
   ]

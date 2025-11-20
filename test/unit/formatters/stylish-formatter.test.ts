@@ -300,6 +300,7 @@ describe('StylishFormatter', () => {
       const output = formatter.format(result);
 
       // Check that output contains ANSI color codes for red (error)
+      // eslint-disable-next-line no-control-regex
       expect(output).toMatch(/\x1b\[31m.*error.*\x1b\[39m/i);
     });
 
@@ -333,6 +334,7 @@ describe('StylishFormatter', () => {
       const output = formatter.format(result);
 
       // Check that output contains ANSI color codes for yellow (warning)
+      // eslint-disable-next-line no-control-regex
       expect(output).toMatch(/\x1b\[33m.*warning.*\x1b\[39m/i);
     });
   });

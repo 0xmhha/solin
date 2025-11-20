@@ -309,12 +309,7 @@ describe('SolidityParser', () => {
         }
       `;
 
-      try {
-        await parser.parse(source, { tolerant: false });
-        fail('Should have thrown error');
-      } catch (error) {
-        expect(error).toBeDefined();
-      }
+      await expect(parser.parse(source, { tolerant: false })).rejects.toThrow();
     });
 
     test('should handle empty source', async () => {

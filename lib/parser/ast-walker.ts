@@ -242,6 +242,6 @@ export class ASTWalker {
     }
 
     // Filter out null/undefined
-    return children.filter((child) => child != null);
+    return children.filter((child) => child !== null && child !== undefined);
   }
 }

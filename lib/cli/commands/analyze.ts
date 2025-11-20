@@ -248,11 +248,13 @@ export class AnalyzeCommand {
       // Handle graceful shutdown
       process.on('SIGINT', () => {
         console.log('\nStopping watch mode...');
-        void watcher.close().then(() => process.exit(0));
+        watcher.close();
+        process.exit(0);
       });
 
       process.on('SIGTERM', () => {
-        void watcher.close().then(() => process.exit(0));
+        watcher.close();
+        process.exit(0);
       });
     });
   }

@@ -261,7 +261,7 @@ describe('FileWatcher', () => {
       const testFile = path.join(testDir, 'test.sol');
       await fs.promises.writeFile(testFile, 'pragma solidity ^0.8.0;');
 
-      await expect(watcher.addFile(testFile)).rejects.toThrow('not running');
+      expect(() => watcher.addFile(testFile)).toThrow('not running');
     });
   });
 

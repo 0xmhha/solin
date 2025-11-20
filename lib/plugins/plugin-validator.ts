@@ -169,7 +169,7 @@ export class PluginValidator {
         }
       } else if (typeof ruleDefinition === 'object' && ruleDefinition !== null) {
         // It's a PluginRule object
-        const pluginRule = ruleDefinition as PluginRule;
+        const pluginRule = ruleDefinition;
         if (typeof pluginRule.rule !== 'function') {
           errors.push({
             pluginName,

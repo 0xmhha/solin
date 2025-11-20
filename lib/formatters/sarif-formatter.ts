@@ -42,6 +42,85 @@ export interface SarifFormatterOptions extends FormatterOptions {
 }
 
 /**
+ * SARIF v2.1.0 type definitions
+ */
+interface SarifMessage {
+  text: string;
+}
+
+interface SarifRegion {
+  startLine: number;
+  startColumn: number;
+  endLine: number;
+  endColumn: number;
+}
+
+interface SarifArtifactLocation {
+  uri: string;
+  uriBaseId: string;
+}
+
+interface SarifPhysicalLocation {
+  artifactLocation: SarifArtifactLocation;
+  region: SarifRegion;
+}
+
+interface SarifLocation {
+  physicalLocation: SarifPhysicalLocation;
+}
+
+interface SarifResult {
+  ruleId: string;
+  ruleIndex: number;
+  level: string;
+  message: SarifMessage;
+  locations: SarifLocation[];
+}
+
+interface SarifRuleConfiguration {
+  level: string;
+}
+
+interface SarifRuleProperties {
+  category: string;
+  tags: string[];
+}
+
+interface SarifRule {
+  id: string;
+  name: string;
+  shortDescription: SarifMessage;
+  fullDescription?: SarifMessage;
+  helpUri?: string;
+  defaultConfiguration?: SarifRuleConfiguration;
+  properties?: SarifRuleProperties;
+}
+
+interface SarifToolDriver {
+  name: string;
+  version: string;
+  informationUri: string;
+  semanticVersion: string;
+  rules: SarifRule[];
+}
+
+interface SarifTool {
+  driver: SarifToolDriver;
+}
+
+interface SarifRun {
+  tool: SarifTool;
+  results: SarifResult[];
+  columnKind: string;
+}
+
+interface SarifReport {
+  $schema: string;
+  version: string;
+  runs: SarifRun[];
+}
+
+/**
  * SARIF v2.1.0 formatter
  */
 export class SarifFormatter implements IFormatter {
@@ -69,7 +148,7 @@ export class SarifFormatter implements IFormatter {
   /**
    * Create SARIF report structure
    */
-  private createSarifReport(result: AnalysisResult): any {
+  private createSarifReport(result: AnalysisResult): SarifReport {
     // Collect all unique rules from issues
     const ruleIds = new Set<string>();
     const issuesByRule = new Map<string, Issue[]>();
@@ -86,7 +165,7 @@ export class SarifFormatter implements IFormatter {
     }
 
     // Create SARIF results
-    const sarifResults: any[] = [];
+    const sarifResults: SarifResult[] = [];
 
     for (const fileResult of result.files) {
       for (const issue of fileResult.issues) {
@@ -95,7 +174,7 @@ export class SarifFormatter implements IFormatter {
     }
 
     // Create SARIF rules
-    const sarifRules: any[] = [];
+    const sarifRules: SarifRule[] = [];
 
     for (const ruleId of Array.from(ruleIds).sort()) {
       const issues = issuesByRule.get(ruleId) || [];
@@ -129,10 +208,10 @@ export class SarifFormatter implements IFormatter {
   /**
    * Create SARIF result (individual issue)
    */
-  private createSarifResult(issue: Issue, filePath: string): any {
+  private createSarifResult(issue: Issue, filePath: string): SarifResult {
     const level = SARIF_LEVEL_MAP[issue.severity] || 'warning';
 
-    const result: any = {
+    const result: SarifResult = {
       ruleId: issue.ruleId,
       ruleIndex: 0, // Will be set correctly by the consumer
       level,
@@ -163,8 +242,8 @@ export class SarifFormatter implements IFormatter {
   /**
    * Create SARIF rule metadata
    */
-  private createSarifRule(issue: Issue): any {
-    const rule: any = {
+  private createSarifRule(issue: Issue): SarifRule {
+    const rule: SarifRule = {
       id: issue.ruleId,
       name: this.getRuleName(issue.ruleId),
       shortDescription: {
