@@ -1,0 +1,13 @@
+{
+  "mcpServers": {
+    "solin": {
+      "command": "node",
+      "args": [
+        "/absolute/path/to/solin/dist/mcp/server.js"
+      ],
+      "env": {
+        "NODE_ENV": "production"
+      }
+    }
+  }
+}

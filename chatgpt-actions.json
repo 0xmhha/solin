@@ -1,0 +1,351 @@
+{
+  "openapi": "3.0.0",
+  "info": {
+    "title": "Solin API",
+    "description": "Solidity static analysis and security scanner with 155+ rules",
+    "version": "0.1.0"
+  },
+  "servers": [
+    {
+      "url": "https://your-solin-instance.com",
+      "description": "Replace with your deployed Solin instance URL"
+    }
+  ],
+  "paths": {
+    "/api/analyze": {
+      "post": {
+        "operationId": "analyzeContract",
+        "summary": "Analyze Solidity smart contract code",
+        "description": "Performs comprehensive static analysis on Solidity code including security vulnerabilities, gas optimization, and code quality checks",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "code": {
+                    "type": "string",
+                    "description": "Solidity source code to analyze"
+                  },
+                  "format": {
+                    "type": "string",
+                    "enum": ["json", "stylish", "sarif"],
+                    "default": "json",
+                    "description": "Output format for analysis results"
+                  },
+                  "rules": {
+                    "type": "array",
+                    "items": {
+                      "type": "string"
+                    },
+                    "description": "Optional array of specific rule IDs to enable"
+                  }
+                },
+                "required": ["code"]
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Analysis results with issue count and details",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "success": {
+                      "type": "boolean",
+                      "description": "Whether analysis completed successfully"
+                    },
+                    "result": {
+                      "type": "string",
+                      "description": "Formatted analysis results"
+                    },
+                    "issues": {
+                      "type": "number",
+                      "description": "Total number of issues found"
+                    },
+                    "errors": {
+                      "type": "number",
+                      "description": "Number of error-level issues"
+                    },
+                    "warnings": {
+                      "type": "number",
+                      "description": "Number of warning-level issues"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad request - invalid code or parameters"
+          },
+          "500": {
+            "description": "Internal server error"
+          }
+        }
+      }
+    },
+    "/api/rules": {
+      "get": {
+        "operationId": "listRules",
+        "summary": "List all available analysis rules",
+        "description": "Returns a list of all 155+ analysis rules with filtering options",
+        "parameters": [
+          {
+            "name": "category",
+            "in": "query",
+            "description": "Filter rules by category",
+            "schema": {
+              "type": "string",
+              "enum": ["lint", "security", "all"],
+              "default": "all"
+            }
+          },
+          {
+            "name": "severity",
+            "in": "query",
+            "description": "Filter rules by severity level",
+            "schema": {
+              "type": "string",
+              "enum": ["error", "warning", "info", "all"],
+              "default": "all"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "List of rules matching the filter criteria",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "success": {
+                      "type": "boolean"
+                    },
+                    "rules": {
+                      "type": "array",
+                      "items": {
+                        "type": "object",
+                        "properties": {
+                          "id": {
+                            "type": "string",
+                            "description": "Unique rule identifier"
+                          },
+                          "title": {
+                            "type": "string",
+                            "description": "Human-readable rule name"
+                          },
+                          "description": {
+                            "type": "string",
+                            "description": "Detailed rule description"
+                          },
+                          "category": {
+                            "type": "string",
+                            "description": "Rule category (lint/security)"
+                          },
+                          "severity": {
+                            "type": "string",
+                            "description": "Default severity level"
+                          },
+                          "fixable": {
+                            "type": "boolean",
+                            "description": "Whether rule has auto-fix capability"
+                          }
+                        }
+                      }
+                    },
+                    "count": {
+                      "type": "number",
+                      "description": "Number of rules returned"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/rules/{ruleId}": {
+      "get": {
+        "operationId": "getRule",
+        "summary": "Get details of a specific rule",
+        "description": "Returns detailed information about a specific analysis rule",
+        "parameters": [
+          {
+            "name": "ruleId",
+            "in": "path",
+            "required": true,
+            "description": "Rule identifier (e.g., 'security/reentrancy')",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Rule details",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "success": {
+                      "type": "boolean"
+                    },
+                    "rule": {
+                      "type": "object",
+                      "properties": {
+                        "id": {
+                          "type": "string"
+                        },
+                        "title": {
+                          "type": "string"
+                        },
+                        "description": {
+                          "type": "string"
+                        },
+                        "category": {
+                          "type": "string"
+                        },
+                        "severity": {
+                          "type": "string"
+                        },
+                        "fixable": {
+                          "type": "boolean"
+                        },
+                        "recommendation": {
+                          "type": "string",
+                          "description": "How to fix violations of this rule"
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Rule not found"
+          }
+        }
+      }
+    },
+    "/api/suggest-fixes": {
+      "post": {
+        "operationId": "suggestFixes",
+        "summary": "Get fix suggestions for code issues",
+        "description": "Analyzes code and provides specific, actionable suggestions to fix detected issues",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "code": {
+                    "type": "string",
+                    "description": "Solidity source code with issues"
+                  },
+                  "issueIndex": {
+                    "type": "number",
+                    "description": "Optional index of specific issue to fix"
+                  }
+                },
+                "required": ["code"]
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Fix suggestions for detected issues",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "success": {
+                      "type": "boolean"
+                    },
+                    "suggestions": {
+                      "type": "array",
+                      "items": {
+                        "type": "object",
+                        "properties": {
+                          "issue": {
+                            "type": "string",
+                            "description": "Description of the issue"
+                          },
+                          "location": {
+                            "type": "object",
+                            "properties": {
+                              "line": {
+                                "type": "number"
+                              },
+                              "column": {
+                                "type": "number"
+                              }
+                            }
+                          },
+                          "severity": {
+                            "type": "string"
+                          },
+                          "ruleId": {
+                            "type": "string"
+                          },
+                          "suggestion": {
+                            "type": "string",
+                            "description": "Specific fix recommendation"
+                          }
+                        }
+                      }
+                    },
+                    "count": {
+                      "type": "number",
+                      "description": "Number of suggestions provided"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/health": {
+      "get": {
+        "operationId": "healthCheck",
+        "summary": "Health check endpoint",
+        "description": "Check if the Solin API is running and responsive",
+        "responses": {
+          "200": {
+            "description": "API is healthy",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "status": {
+                      "type": "string",
+                      "example": "ok"
+                    },
+                    "version": {
+                      "type": "string",
+                      "example": "0.1.0"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+}

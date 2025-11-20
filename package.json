@@ -45,8 +45,20 @@
     "smart-contracts",
     "analyzer",
     "detector",
-    "vulnerability"
+    "vulnerability",
+    "mcp",
+    "model-context-protocol",
+    "claude",
+    "ai-tools",
+    "chatgpt",
+    "rest-api"
   ],
+  "mcp": {
+    "server": {
+      "command": "node",
+      "args": ["dist/mcp/server.js"]
+    }
+  },
   "author": "Solin Contributors",
   "license": "MIT",
   "repository": {
