@@ -9,6 +9,7 @@ import { ParsedArguments, CLIOptions } from './types';
 import { AnalyzeCommand } from './commands/analyze';
 import { InitCommand, TemplateType } from './commands/init';
 import { ListRulesCommand } from './commands/list-rules';
+import { registerGenerateRuleCommand } from './commands/generate-rule';
 import * as packageJson from '../../package.json';
 
 export class CLI {
@@ -25,7 +26,7 @@ export class CLI {
   private setupCommands(): void {
     this.program
       .name('solin')
-      .description('Advanced Solidity static analysis tool\n\nCommands:\n  init          Generate default .solinrc.json configuration file\n  list-rules    List all available rules\n  <files>       Analyze Solidity files (default)')
+      .description('Advanced Solidity static analysis tool\n\nCommands:\n  init          Generate default .solinrc.json configuration file\n  list-rules    List all available rules\n  generate-rule Generate a custom rule template\n  <files>       Analyze Solidity files (default)')
       .version(packageJson.version)
       .argument('[files...]', 'Solidity files or glob patterns to analyze')
       .option('-c, --config <path>', 'Configuration file path')
@@ -40,6 +41,9 @@ export class CLI {
       .option('-q, --quiet', 'Report errors only')
       .option('-w, --watch', 'Watch files for changes and re-analyze')
       .allowUnknownOption(false);
+
+    // Register subcommands
+    registerGenerateRuleCommand(this.program);
   }
 
   /**
@@ -126,6 +130,12 @@ export class CLI {
       if (command === 'list-rules') {
         const listRulesCommand = new ListRulesCommand();
         return listRulesCommand.execute();
+      }
+
+      if (command === 'generate-rule') {
+        // Let commander handle the generate-rule command
+        this.program.parse(args);
+        return 0;
       }
 
       // Default: analyze command
