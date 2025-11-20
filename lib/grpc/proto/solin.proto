@@ -1,0 +1,84 @@
+syntax = "proto3";
+
+package solin;
+
+// Solin gRPC Service
+service SolinService {
+  // Analyze Solidity code
+  rpc AnalyzeCode(AnalyzeRequest) returns (AnalyzeResponse);
+
+  // List available rules
+  rpc ListRules(ListRulesRequest) returns (ListRulesResponse);
+
+  // Get rule details
+  rpc GetRule(GetRuleRequest) returns (RuleResponse);
+
+  // Stream analysis for large files
+  rpc AnalyzeStream(stream AnalyzeChunk) returns (stream AnalysisResult);
+}
+
+// Request to analyze code
+message AnalyzeRequest {
+  string code = 1;              // Solidity source code (encrypted)
+  string format = 2;            // Output format (stylish, json, sarif)
+  repeated string rules = 3;    // Specific rules to enable
+  string encryption_key = 4;    // Encryption key ID
+}
+
+// Analysis response
+message AnalyzeResponse {
+  string result = 1;            // Analysis result (encrypted)
+  int32 total_issues = 2;       // Total issues found
+  int32 errors = 3;             // Error count
+  int32 warnings = 4;           // Warning count
+  int32 info = 5;               // Info count
+  int64 duration_ms = 6;        // Analysis duration in milliseconds
+}
+
+// Request to list rules
+message ListRulesRequest {
+  string category = 1;          // Filter by category (lint, security, all)
+  string severity = 2;          // Filter by severity (error, warning, info, all)
+}
+
+// List rules response
+message ListRulesResponse {
+  repeated RuleInfo rules = 1;
+  int32 total_count = 2;
+}
+
+// Request to get specific rule
+message GetRuleRequest {
+  string rule_id = 1;
+}
+
+// Rule response
+message RuleResponse {
+  RuleInfo rule = 1;
+  bool found = 2;
+}
+
+// Rule information
+message RuleInfo {
+  string id = 1;
+  string title = 2;
+  string description = 3;
+  string category = 4;
+  string severity = 5;
+  bool fixable = 6;
+  string recommendation = 7;
+}
+
+// Chunk for streaming
+message AnalyzeChunk {
+  bytes data = 1;               // Chunk of encrypted code
+  int32 chunk_index = 2;        // Chunk sequence number
+  bool is_final = 3;            // Last chunk indicator
+}
+
+// Streaming analysis result
+message AnalysisResult {
+  string issue_json = 1;        // JSON-encoded issue
+  int32 issue_index = 2;        // Issue sequence number
+  bool is_complete = 3;         // Analysis complete indicator
+}
