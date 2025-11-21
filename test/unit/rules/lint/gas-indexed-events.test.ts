@@ -89,7 +89,7 @@ describe('GasIndexedEvents', () => {
       const issues = context.getIssues();
 
       expect(issues.length).toBeGreaterThan(0);
-      expect(issues.some((i) => i.message.includes('key'))).toBe(true);
+      expect(issues.some(i => i.message.includes('key'))).toBe(true);
     });
 
     test('should not flag uint256 parameters (less commonly indexed)', async () => {

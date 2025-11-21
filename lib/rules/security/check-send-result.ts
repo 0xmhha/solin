@@ -94,7 +94,7 @@ export class CheckSendResult extends AbstractRule {
       }
       const value = node[key];
       if (Array.isArray(value)) {
-        value.forEach((child) => this.findCheckedSends(child));
+        value.forEach(child => this.findCheckedSends(child));
       } else if (value && typeof value === 'object') {
         this.findCheckedSends(value);
       }
@@ -199,7 +199,7 @@ export class CheckSendResult extends AbstractRule {
 
       const value = node[key];
       if (Array.isArray(value)) {
-        value.forEach((child) => this.walkAst(child, context));
+        value.forEach(child => this.walkAst(child, context));
       } else if (value && typeof value === 'object') {
         this.walkAst(value, context);
       }

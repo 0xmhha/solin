@@ -5,12 +5,7 @@
  */
 
 import * as fs from 'fs/promises';
-import type {
-  IEngine,
-  AnalysisOptions,
-  AnalysisResult,
-  FileAnalysisResult,
-} from './types';
+import type { IEngine, AnalysisOptions, AnalysisResult, FileAnalysisResult } from './types';
 import type { ResolvedConfig } from '@config/types';
 import type { RuleRegistry } from './rule-registry';
 import type { SolidityParser } from '@parser/solidity-parser';
@@ -28,7 +23,7 @@ export class AnalysisEngine implements IEngine {
   constructor(
     private readonly registry: RuleRegistry,
     private readonly parser: SolidityParser,
-    cacheManager?: CacheManager,
+    cacheManager?: CacheManager
   ) {
     this.cacheManager = cacheManager;
   }
@@ -50,88 +45,80 @@ export class AnalysisEngine implements IEngine {
   /**
    * Analyze a single file
    */
-  async analyzeFile(
-    filePath: string,
-    config: ResolvedConfig,
-  ): Promise<FileAnalysisResult> {
+  async analyzeFile(filePath: string, config: ResolvedConfig): Promise<FileAnalysisResult> {
     const startTime = Date.now();
 
+    // Read file
+    const source = await fs.readFile(filePath, 'utf-8');
+
+    // Check cache
+    if (this.cacheManager) {
+      const configHash = this.cacheManager.hashConfig(config);
+      const cachedResult = this.cacheManager.get(filePath, source, configHash);
+      if (cachedResult) {
+        return cachedResult;
+      }
+    }
+
+    // Parse file
+    let parseResult;
     try {
-      // Read file
-      const source = await fs.readFile(filePath, 'utf-8');
-
-      // Check cache
-      if (this.cacheManager) {
-        const configHash = this.cacheManager.hashConfig(config);
-        const cachedResult = this.cacheManager.get(filePath, source, configHash);
-        if (cachedResult) {
-          return cachedResult;
-        }
-      }
-
-      // Parse file
-      let parseResult;
-      try {
-        parseResult = await this.parser.parse(source, {
-          loc: true,
-          tolerant: true, // Continue parsing even with errors
-        });
-      } catch (parseError) {
-        // If parsing fails completely, return result with parse error
-        return {
-          filePath,
-          issues: [],
-          parseErrors: [
-            {
-              message: parseError instanceof Error ? parseError.message : 'Parse error',
-              line: 0,
-              column: 0,
-            },
-          ],
-          duration: Date.now() - startTime,
-        };
-      }
-
-      // Create analysis context
-      const context = new AnalysisContext(filePath, source, parseResult.ast, config);
-
-      // Execute all registered rules
-      const rules = this.registry.getAllRules();
-      for (const rule of rules) {
-        try {
-          await rule.analyze(context);
-        } catch (error) {
-          // Log rule execution error but continue with other rules
-          console.error(`Error executing rule ${rule.metadata.id}:`, error);
-        }
-      }
-
-      // Get issues
-      const issues = context.getIssues();
-
-      // Build result
-      const result: FileAnalysisResult = {
+      parseResult = await this.parser.parse(source, {
+        loc: true,
+        tolerant: true, // Continue parsing even with errors
+      });
+    } catch (parseError) {
+      // If parsing fails completely, return result with parse error
+      return {
         filePath,
-        issues,
+        issues: [],
+        parseErrors: [
+          {
+            message: parseError instanceof Error ? parseError.message : 'Parse error',
+            line: 0,
+            column: 0,
+          },
+        ],
         duration: Date.now() - startTime,
       };
-
-      // Add parse errors if any
-      if (parseResult.errors.length > 0) {
-        result.parseErrors = parseResult.errors;
-      }
-
-      // Cache result (only if no parse errors)
-      if (this.cacheManager && !result.parseErrors) {
-        const configHash = this.cacheManager.hashConfig(config);
-        this.cacheManager.set(filePath, source, configHash, result);
-      }
-
-      return result;
-    } catch (error) {
-      // Re-throw file read errors
-      throw error;
     }
+
+    // Create analysis context
+    const context = new AnalysisContext(filePath, source, parseResult.ast, config);
+
+    // Execute all registered rules
+    const rules = this.registry.getAllRules();
+    for (const rule of rules) {
+      try {
+        await rule.analyze(context);
+      } catch (error) {
+        // Log rule execution error but continue with other rules
+        console.error(`Error executing rule ${rule.metadata.id}:`, error);
+      }
+    }
+
+    // Get issues
+    const issues = context.getIssues();
+
+    // Build result
+    const result: FileAnalysisResult = {
+      filePath,
+      issues,
+      duration: Date.now() - startTime,
+    };
+
+    // Add parse errors if any
+    if (parseResult.errors.length > 0) {
+      result.parseErrors = parseResult.errors;
+    }
+
+    // Cache result (only if no parse errors)
+    if (this.cacheManager && !result.parseErrors) {
+      const configHash = this.cacheManager.hashConfig(config);
+      this.cacheManager.set(filePath, source, configHash, result);
+    }
+
+    return result;
   }
 
   /**
@@ -172,7 +159,7 @@ export class AnalysisEngine implements IEngine {
         pool.addTask({
           id: file,
           data: file,
-          execute: async (filePath) => {
+          execute: async filePath => {
             try {
               return await this.analyzeFile(filePath, analysisConfig);
             } catch (error) {

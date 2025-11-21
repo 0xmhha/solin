@@ -287,15 +287,10 @@ describe('ASTWalker', () => {
 
       const { ast } = await parser.parse(source);
 
-      const contracts = walker.findNodes(
-        ast,
-        (node) => node.type === 'ContractDefinition',
-      );
+      const contracts = walker.findNodes(ast, node => node.type === 'ContractDefinition');
 
       expect(contracts.length).toBe(3);
-      expect(contracts.every((n) => n.type === 'ContractDefinition')).toBe(
-        true,
-      );
+      expect(contracts.every(n => n.type === 'ContractDefinition')).toBe(true);
     });
 
     test('should return empty array if no matches', async () => {
@@ -306,10 +301,7 @@ describe('ASTWalker', () => {
 
       const { ast } = await parser.parse(source);
 
-      const events = walker.findNodes(
-        ast,
-        (node) => node.type === 'EventDefinition',
-      );
+      const events = walker.findNodes(ast, node => node.type === 'EventDefinition');
 
       expect(events).toEqual([]);
     });
@@ -326,10 +318,7 @@ describe('ASTWalker', () => {
 
       const { ast } = await parser.parse(source);
 
-      const contract = walker.findNode(
-        ast,
-        (node) => node.type === 'ContractDefinition',
-      );
+      const contract = walker.findNode(ast, node => node.type === 'ContractDefinition');
 
       expect(contract).toBeDefined();
       expect(contract?.type).toBe('ContractDefinition');
@@ -343,10 +332,7 @@ describe('ASTWalker', () => {
 
       const { ast } = await parser.parse(source);
 
-      const event = walker.findNode(
-        ast,
-        (node) => node.type === 'EventDefinition',
-      );
+      const event = walker.findNode(ast, node => node.type === 'EventDefinition');
 
       expect(event).toBeUndefined();
     });
@@ -364,10 +350,7 @@ describe('ASTWalker', () => {
 
       const { ast } = await parser.parse(source);
 
-      const func = walker.findNode(
-        ast,
-        (node) => node.type === 'FunctionDefinition',
-      );
+      const func = walker.findNode(ast, node => node.type === 'FunctionDefinition');
 
       if (func) {
         const path = walker.getNodePath(ast, func);

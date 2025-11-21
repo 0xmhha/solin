@@ -43,7 +43,7 @@ export class CostlyLoopRule extends AbstractRule {
       if (key === 'loc' || key === 'range') continue;
       const value = node[key];
       if (Array.isArray(value)) {
-        value.forEach((child) => this.walkAst(child, context));
+        value.forEach(child => this.walkAst(child, context));
       } else if (value && typeof value === 'object') {
         this.walkAst(value, context);
       }
@@ -97,10 +97,7 @@ export class CostlyLoopRule extends AbstractRule {
     if (node.type === 'MemberAccess' && node.memberName === 'length') {
       const expression = node.expression;
       // If expression is Identifier or IndexAccess, it could be dynamic array
-      if (
-        expression &&
-        (expression.type === 'Identifier' || expression.type === 'IndexAccess')
-      ) {
+      if (expression && (expression.type === 'Identifier' || expression.type === 'IndexAccess')) {
         // Check if it's not a fixed-size array type
         // Fixed-size arrays would have [N] in type, but we can't easily detect from AST
         // So we conservatively assume .length means dynamic array
@@ -113,7 +110,7 @@ export class CostlyLoopRule extends AbstractRule {
       if (key === 'loc' || key === 'range') continue;
       const value = node[key];
       if (Array.isArray(value)) {
-        if (value.some((child) => this.containsDynamicLength(child))) {
+        if (value.some(child => this.containsDynamicLength(child))) {
           return true;
         }
       } else if (value && typeof value === 'object') {
@@ -181,8 +178,8 @@ export class CostlyLoopRule extends AbstractRule {
   private reportIssue(node: any, context: AnalysisContext): void {
     if (!node.loc) return;
 
-    const loopType = node.type === 'ForStatement' ? 'for' :
-                     node.type === 'WhileStatement' ? 'while' : 'do-while';
+    const loopType =
+      node.type === 'ForStatement' ? 'for' : node.type === 'WhileStatement' ? 'while' : 'do-while';
 
     context.report({
       ruleId: this.metadata.id,

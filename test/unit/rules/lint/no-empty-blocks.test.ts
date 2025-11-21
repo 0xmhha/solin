@@ -117,7 +117,7 @@ describe('NoEmptyBlocksRule', () => {
 
       const issues = context.getIssues();
       expect(issues.length).toBeGreaterThan(0);
-      expect(issues.every((issue) => issue.ruleId === 'lint/no-empty-blocks')).toBe(true);
+      expect(issues.every(issue => issue.ruleId === 'lint/no-empty-blocks')).toBe(true);
     });
 
     test('should not report issue for constructor with only super call', async () => {
@@ -158,8 +158,8 @@ describe('NoEmptyBlocksRule', () => {
       const issues = context.getIssues();
       // Fallback and receive can be empty (just accept ETH)
       // Filter out these special functions
-      const nonFallbackIssues = issues.filter((issue) =>
-        !issue.message.includes('fallback') && !issue.message.includes('receive')
+      const nonFallbackIssues = issues.filter(
+        issue => !issue.message.includes('fallback') && !issue.message.includes('receive')
       );
 
       expect(nonFallbackIssues).toHaveLength(0);

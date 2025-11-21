@@ -29,7 +29,7 @@ export class FunctionNameMixedcaseRule extends AbstractRule {
 
   analyze(context: AnalysisContext): void {
     // Traverse AST to find function definitions
-    this.visitNode(context.ast, (node) => {
+    this.visitNode(context.ast, node => {
       if (node.type === 'FunctionDefinition') {
         this.checkNamingConvention(node, context);
       }
@@ -51,7 +51,7 @@ export class FunctionNameMixedcaseRule extends AbstractRule {
 
       const child = node[key];
       if (Array.isArray(child)) {
-        child.forEach((item) => this.visitNode(item, callback));
+        child.forEach(item => this.visitNode(item, callback));
       } else if (typeof child === 'object' && child !== null) {
         this.visitNode(child, callback);
       }
@@ -109,11 +109,7 @@ export class FunctionNameMixedcaseRule extends AbstractRule {
     return true;
   }
 
-  private reportInvalidName(
-    line: number,
-    name: string,
-    context: AnalysisContext
-  ): void {
+  private reportInvalidName(line: number, name: string, context: AnalysisContext): void {
     context.report({
       ruleId: this.metadata.id,
       severity: this.metadata.severity,

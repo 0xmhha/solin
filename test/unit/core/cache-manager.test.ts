@@ -4,10 +4,7 @@
 
 import * as fs from 'fs';
 import * as path from 'path';
-import {
-  CacheManager,
-  createCacheManager,
-} from '@core/cache-manager';
+import { CacheManager, createCacheManager } from '@core/cache-manager';
 import type { FileAnalysisResult } from '@core/types';
 import { Severity, Category } from '@core/types';
 
@@ -116,9 +113,7 @@ describe('CacheManager', () => {
       cacheManager.set(filePath, originalContent, configHash, sampleResult);
 
       // Same content should hit
-      expect(cacheManager.get(filePath, originalContent, configHash)).toEqual(
-        sampleResult,
-      );
+      expect(cacheManager.get(filePath, originalContent, configHash)).toEqual(sampleResult);
 
       // Different content should miss
       expect(cacheManager.get(filePath, newContent, configHash)).toBeUndefined();
@@ -133,9 +128,7 @@ describe('CacheManager', () => {
       cacheManager.set(filePath, content, originalConfig, sampleResult);
 
       // Same config should hit
-      expect(cacheManager.get(filePath, content, originalConfig)).toEqual(
-        sampleResult,
-      );
+      expect(cacheManager.get(filePath, content, originalConfig)).toEqual(sampleResult);
 
       // Different config should miss
       expect(cacheManager.get(filePath, content, newConfig)).toBeUndefined();
@@ -165,12 +158,10 @@ describe('CacheManager', () => {
       const configHash = 'config123';
 
       shortTtlCache.set(filePath, content, configHash, sampleResult);
-      expect(shortTtlCache.get(filePath, content, configHash)).toEqual(
-        sampleResult,
-      );
+      expect(shortTtlCache.get(filePath, content, configHash)).toEqual(sampleResult);
 
       // Wait for expiration
-      return new Promise<void>((resolve) => {
+      return new Promise<void>(resolve => {
         setTimeout(() => {
           expect(shortTtlCache.get(filePath, content, configHash)).toBeUndefined();
           resolve();
@@ -187,7 +178,7 @@ describe('CacheManager', () => {
       shortTtlCache.set('/file1.sol', 'content1', 'config', sampleResult);
       shortTtlCache.set('/file2.sol', 'content2', 'config', sampleResult);
 
-      return new Promise<void>((resolve) => {
+      return new Promise<void>(resolve => {
         setTimeout(() => {
           const removed = shortTtlCache.cleanup();
           expect(removed).toBe(2);
@@ -376,7 +367,7 @@ describe('CacheManager', () => {
       await shortTtlCache.save();
 
       // Wait for expiration
-      await new Promise((resolve) => setTimeout(resolve, 100));
+      await new Promise(resolve => setTimeout(resolve, 100));
 
       // Load into new cache
       const newCacheManager = new CacheManager({

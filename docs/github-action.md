@@ -42,27 +42,27 @@ jobs:
 
 ## Inputs
 
-| Input | Description | Required | Default |
-|-------|-------------|----------|---------|
-| `path` | Path to analyze (file, directory, or glob) | No | `.` |
-| `config` | Path to configuration file | No | - |
-| `format` | Output format (stylish, json, sarif, html) | No | `stylish` |
-| `fail-on-error` | Fail if errors are found | No | `true` |
-| `fail-on-warning` | Fail if warnings are found | No | `false` |
-| `comment-on-pr` | Post results as PR comment | No | `true` |
-| `sarif-upload` | Upload SARIF to Code Scanning | No | `false` |
-| `working-directory` | Working directory | No | `.` |
-| `node-version` | Node.js version | No | `18` |
+| Input               | Description                                | Required | Default   |
+| ------------------- | ------------------------------------------ | -------- | --------- |
+| `path`              | Path to analyze (file, directory, or glob) | No       | `.`       |
+| `config`            | Path to configuration file                 | No       | -         |
+| `format`            | Output format (stylish, json, sarif, html) | No       | `stylish` |
+| `fail-on-error`     | Fail if errors are found                   | No       | `true`    |
+| `fail-on-warning`   | Fail if warnings are found                 | No       | `false`   |
+| `comment-on-pr`     | Post results as PR comment                 | No       | `true`    |
+| `sarif-upload`      | Upload SARIF to Code Scanning              | No       | `false`   |
+| `working-directory` | Working directory                          | No       | `.`       |
+| `node-version`      | Node.js version                            | No       | `18`      |
 
 ## Outputs
 
-| Output | Description |
-|--------|-------------|
-| `total-issues` | Total number of issues found |
-| `errors` | Number of errors |
-| `warnings` | Number of warnings |
-| `info` | Number of info issues |
-| `sarif-file` | Path to SARIF file (if generated) |
+| Output         | Description                       |
+| -------------- | --------------------------------- |
+| `total-issues` | Total number of issues found      |
+| `errors`       | Number of errors                  |
+| `warnings`     | Number of warnings                |
+| `info`         | Number of info issues             |
+| `sarif-file`   | Path to SARIF file (if generated) |
 
 ## Examples
 
@@ -144,9 +144,9 @@ The comment is automatically updated on subsequent pushes to the same PR.
 
 ```yaml
 permissions:
-  contents: read          # To checkout code
-  pull-requests: write    # To post PR comments
-  security-events: write  # To upload SARIF results
+  contents: read # To checkout code
+  pull-requests: write # To post PR comments
+  security-events: write # To upload SARIF results
 ```
 
 ## Using with Monorepos
@@ -194,6 +194,7 @@ Make sure you have the `security-events: write` permission.
 ### No PR Comment
 
 Verify:
+
 1. `comment-on-pr: 'true'` is set
 2. `pull-requests: write` permission is granted
 3. The workflow is triggered by a pull request event

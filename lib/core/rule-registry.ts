@@ -73,7 +73,7 @@ export class RuleRegistry {
    * Get rules filtered by category
    */
   getRulesByCategory(category: Category): IRule[] {
-    return this.getAllRules().filter((rule) => rule.metadata.category === category);
+    return this.getAllRules().filter(rule => rule.metadata.category === category);
   }
 
   /**

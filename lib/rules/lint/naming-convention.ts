@@ -26,7 +26,8 @@ export class NamingConventionRule extends AbstractRule {
       category: Category.LINT,
       severity: Severity.WARNING,
       title: 'Naming Convention',
-      description: 'Enforces Solidity naming conventions for contracts, functions, variables, and constants',
+      description:
+        'Enforces Solidity naming conventions for contracts, functions, variables, and constants',
       recommendation:
         'Follow naming conventions: PascalCase for contracts, camelCase for functions, UPPER_SNAKE_CASE for constants, and _leadingUnderscore for private variables.',
     });

@@ -87,7 +87,7 @@ contract Test {
         value = _value;
     }
 }
-      `,
+      `
       );
 
       const exitCode = await cli.run(['node', 'solin', testFile]);
@@ -109,7 +109,7 @@ contract Vulnerable {
         require(tx.origin == msg.sender);
     }
 }
-      `,
+      `
       );
 
       const exitCode = await cli.run(['node', 'solin', testFile]);
@@ -134,7 +134,7 @@ contract Vulnerable {
 // SPDX-License-Identifier: MIT
 pragma solidity 0.8.19;
 contract Contract1 {}
-      `,
+      `
       );
 
       await fs.writeFile(
@@ -143,7 +143,7 @@ contract Contract1 {}
 // SPDX-License-Identifier: MIT
 pragma solidity 0.8.19;
 contract Contract2 {}
-      `,
+      `
       );
 
       const exitCode = await cli.run(['node', 'solin', file1, file2]);
@@ -162,7 +162,7 @@ contract Contract2 {}
 // SPDX-License-Identifier: MIT
 pragma solidity 0.8.19;
 contract Test {}
-      `,
+      `
       );
 
       const exitCode = await cli.run(['node', 'solin', contractsDir]);
@@ -178,7 +178,7 @@ contract Test {}
 // SPDX-License-Identifier: MIT
 pragma solidity 0.8.19;
 contract Test {}
-      `,
+      `
       );
 
       const configFile = path.join(tempDir, 'custom.json');
@@ -188,7 +188,7 @@ contract Test {}
           rules: {
             'security/tx-origin': 'error',
           },
-        }),
+        })
       );
 
       const exitCode = await cli.run(['node', 'solin', testFile, '--config', configFile]);
@@ -204,7 +204,7 @@ contract Test {}
 // SPDX-License-Identifier: MIT
 pragma solidity 0.8.19;
 contract Test {}
-      `,
+      `
       );
 
       const exitCode = await cli.run(['node', 'solin', testFile, '--quiet']);
@@ -226,7 +226,7 @@ pragma solidity 0.8.19;
 contract Contract${i} {
     uint256 public value${i};
 }
-          `,
+          `
         );
       }
 
@@ -248,7 +248,7 @@ contract Contract${i} {
 // SPDX-License-Identifier: MIT
 pragma solidity 0.8.19;
 contract Main {}
-        `,
+        `
       );
 
       // Create mock contract (should be ignored)
@@ -262,7 +262,7 @@ contract MockContract {
         require(tx.origin == msg.sender);
     }
 }
-        `,
+        `
       );
 
       // Create ignore file
@@ -287,7 +287,7 @@ contract Test {
         require(tx.origin == msg.sender);
     }
 }
-        `,
+        `
       );
 
       // Create .solinignore to ignore this file
@@ -309,7 +309,7 @@ pragma solidity 0.8.19;
 contract Test {
     uint256 public value;
 }
-        `,
+        `
       );
 
       // Run with cache
@@ -334,15 +334,18 @@ contract Test {
 // SPDX-License-Identifier: MIT
 pragma solidity 0.8.19;
 contract Test {}
-        `,
+        `
       );
 
       const customCachePath = path.join(tempDir, 'custom-cache');
 
       const exitCode = await cli.run([
-        'node', 'solin', testFile,
+        'node',
+        'solin',
+        testFile,
         '--cache',
-        '--cache-location', customCachePath
+        '--cache-location',
+        customCachePath,
       ]);
 
       expect(exitCode).toBeGreaterThanOrEqual(0);
@@ -364,7 +367,7 @@ contract Test {}
 // SPDX-License-Identifier: MIT
 pragma solidity 0.8.19;
 contract Test {}
-        `,
+        `
       );
 
       // With high max-warnings, should pass
@@ -385,7 +388,7 @@ contract Test {}
 // SPDX-License-Identifier: MIT
 pragma solidity 0.8.19;
 contract Test {}
-        `,
+        `
       );
 
       const exitCode = await cli.run(['node', 'solin', testFile, '--format', 'json']);
@@ -401,7 +404,7 @@ contract Test {}
 // SPDX-License-Identifier: MIT
 pragma solidity 0.8.19;
 contract Test {}
-        `,
+        `
       );
 
       const exitCode = await cli.run(['node', 'solin', testFile, '--format', 'sarif']);

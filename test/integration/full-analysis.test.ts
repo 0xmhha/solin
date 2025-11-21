@@ -105,7 +105,7 @@ describe('Full Analysis Integration', () => {
         `
         pragma solidity ^0.8.0;
         contract Empty {}
-      `,
+      `
       );
 
       await fs.writeFile(
@@ -118,7 +118,7 @@ describe('Full Analysis Integration', () => {
           function empty2() internal {}
           function empty3() private {}
         }
-      `,
+      `
       );
 
       // Analyze
@@ -138,10 +138,10 @@ describe('Full Analysis Integration', () => {
       expect(result.duration).toBeGreaterThanOrEqual(0);
 
       // All issues should be from no-empty-blocks rule
-      const allIssues = result.files.flatMap((f) => f.issues);
-      expect(allIssues.every((i) => i.ruleId === 'lint/no-empty-blocks')).toBe(true);
-      expect(allIssues.every((i) => i.category === Category.LINT)).toBe(true);
-      expect(allIssues.every((i) => i.severity === Severity.WARNING)).toBe(true);
+      const allIssues = result.files.flatMap(f => f.issues);
+      expect(allIssues.every(i => i.ruleId === 'lint/no-empty-blocks')).toBe(true);
+      expect(allIssues.every(i => i.category === Category.LINT)).toBe(true);
+      expect(allIssues.every(i => i.severity === Severity.WARNING)).toBe(true);
     });
 
     test('should handle mix of valid and invalid files', async () => {
@@ -157,14 +157,14 @@ describe('Full Analysis Integration', () => {
         contract Valid {
           uint256 value;
         }
-      `,
+      `
       );
 
       await fs.writeFile(
         invalidFile,
         `
         this is not valid solidity
-      `,
+      `
       );
 
       const result = await engine.analyze({
@@ -179,7 +179,7 @@ describe('Full Analysis Integration', () => {
       expect(result.hasParseErrors).toBe(true);
 
       // Find the invalid file result
-      const invalidResult = result.files.find((f) => f.filePath === invalidFile);
+      const invalidResult = result.files.find(f => f.filePath === invalidFile);
       expect(invalidResult?.parseErrors).toBeDefined();
       expect(invalidResult?.parseErrors!.length).toBeGreaterThan(0);
     });
@@ -198,7 +198,7 @@ describe('Full Analysis Integration', () => {
           contract Test${i} {
             uint256 value;
           }
-        `,
+        `
         );
       }
 
@@ -231,7 +231,7 @@ describe('Full Analysis Integration', () => {
         contract Test {
           function empty() public {}
         }
-      `,
+      `
       );
 
       const result = await engine.analyzeFile(filePath, {
@@ -261,7 +261,7 @@ describe('Full Analysis Integration', () => {
         `
         pragma solidity ^0.8.0;
         contract Empty {}
-      `,
+      `
       );
 
       const result = await engine.analyzeFile(filePath, {
@@ -282,7 +282,7 @@ describe('Full Analysis Integration', () => {
         `
         pragma solidity ^0.8.0;
         contract Test {}
-      `,
+      `
       );
 
       // Should not throw even if a rule has issues

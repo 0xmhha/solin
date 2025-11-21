@@ -36,9 +36,9 @@ export class JSONFormatter implements IFormatter {
     // Map Severity enum to string
     const mappedResult = {
       ...result,
-      files: result.files.map((file) => ({
+      files: result.files.map(file => ({
         ...file,
-        issues: file.issues.map((issue) => ({
+        issues: file.issues.map(issue => ({
           ...issue,
           severity: this.severityToString(issue.severity),
         })),

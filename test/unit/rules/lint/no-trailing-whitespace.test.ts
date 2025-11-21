@@ -30,7 +30,8 @@ describe('NoTrailingWhitespaceRule', () => {
   describe('trailing whitespace detection', () => {
     test('should detect single trailing space', async () => {
       // Using explicit concatenation to add trailing space
-      const source = 'pragma solidity ^0.8.0; \n' +
+      const source =
+        'pragma solidity ^0.8.0; \n' +
         'contract Test {\n' +
         '    function test() public {\n' +
         '        uint x = 1;\n' +
@@ -46,7 +47,8 @@ describe('NoTrailingWhitespaceRule', () => {
 
     test('should detect multiple trailing spaces', async () => {
       // Using explicit concatenation to add trailing spaces
-      const source = 'pragma solidity ^0.8.0;   \n' +
+      const source =
+        'pragma solidity ^0.8.0;   \n' +
         'contract Test {\n' +
         '    function test() public {\n' +
         '        uint x = 1;\n' +
@@ -90,7 +92,8 @@ contract Test {
     });
 
     test('should detect multiple lines with trailing whitespace', async () => {
-      const source = 'pragma solidity ^0.8.0; \n' +
+      const source =
+        'pragma solidity ^0.8.0; \n' +
         'contract Test { \n' +
         '    function test() public {\n' +
         '        uint x = 1; \n' +
@@ -136,7 +139,8 @@ contract Test {
 
   describe('blank lines with whitespace', () => {
     test('should detect blank lines with only whitespace by default', async () => {
-      const source = 'pragma solidity ^0.8.0;\n' +
+      const source =
+        'pragma solidity ^0.8.0;\n' +
         '   \n' + // Blank line with spaces
         'contract Test {\n' +
         '    function test() public {\n' +
@@ -151,7 +155,8 @@ contract Test {
     });
 
     test('should skip blank lines with whitespace when configured', async () => {
-      const source = 'pragma solidity ^0.8.0;\n' +
+      const source =
+        'pragma solidity ^0.8.0;\n' +
         '   \n' + // Blank line with spaces
         'contract Test {\n' +
         '    function test() public {\n' +
@@ -169,7 +174,8 @@ contract Test {
     });
 
     test('should still detect trailing whitespace on non-blank lines when skipBlankLines is true', async () => {
-      const source = 'pragma solidity ^0.8.0; \n' + // Trailing space on non-blank line
+      const source =
+        'pragma solidity ^0.8.0; \n' + // Trailing space on non-blank line
         '   \n' + // Blank line with spaces (should be skipped)
         'contract Test {\n' +
         '    function test() public {\n' +
@@ -191,7 +197,8 @@ contract Test {
 
   describe('location reporting', () => {
     test('should report correct column positions for trailing whitespace', async () => {
-      const source = 'pragma solidity ^0.8.0;  \n' + // Line length 25, 2 trailing spaces
+      const source =
+        'pragma solidity ^0.8.0;  \n' + // Line length 25, 2 trailing spaces
         'contract Test {\n' +
         '    function test() public {\n' +
         '        uint x = 1;\n' +

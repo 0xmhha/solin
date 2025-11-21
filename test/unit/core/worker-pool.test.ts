@@ -2,12 +2,7 @@
  * Worker Pool Tests
  */
 
-import {
-  WorkerPool,
-  createWorkerPool,
-  parallel,
-  type PoolTask,
-} from '@core/worker-pool';
+import { WorkerPool, createWorkerPool, parallel, type PoolTask } from '@core/worker-pool';
 
 describe('WorkerPool', () => {
   describe('Basic task execution', () => {
@@ -17,7 +12,7 @@ describe('WorkerPool', () => {
       pool.addTask({
         id: 'task-1',
         data: 5,
-        execute: async (n) => n * 2,
+        execute: async n => n * 2,
       });
 
       const results = await pool.execute();
@@ -31,9 +26,9 @@ describe('WorkerPool', () => {
       const pool = new WorkerPool<number, number>();
 
       pool.addTasks([
-        { id: 'task-1', data: 1, execute: async (n) => n * 2 },
-        { id: 'task-2', data: 2, execute: async (n) => n * 2 },
-        { id: 'task-3', data: 3, execute: async (n) => n * 2 },
+        { id: 'task-1', data: 1, execute: async n => n * 2 },
+        { id: 'task-2', data: 2, execute: async n => n * 2 },
+        { id: 'task-3', data: 3, execute: async n => n * 2 },
       ]);
 
       const results = await pool.execute();
@@ -57,8 +52,8 @@ describe('WorkerPool', () => {
       pool.addTask({
         id: 'task-1',
         data: 50,
-        execute: async (ms) => {
-          await new Promise((resolve) => setTimeout(resolve, ms));
+        execute: async ms => {
+          await new Promise(resolve => setTimeout(resolve, ms));
           return ms;
         },
       });
@@ -82,10 +77,10 @@ describe('WorkerPool', () => {
         tasks.push({
           id: `task-${i}`,
           data: i,
-          execute: async (n) => {
+          execute: async n => {
             currentConcurrent++;
             maxConcurrent = Math.max(maxConcurrent, currentConcurrent);
-            await new Promise((resolve) => setTimeout(resolve, 20));
+            await new Promise(resolve => setTimeout(resolve, 20));
             currentConcurrent--;
             return n;
           },
@@ -102,9 +97,9 @@ describe('WorkerPool', () => {
       const pool = new WorkerPool<number, number>({ maxConcurrency: 1 });
 
       pool.addTasks([
-        { id: 'task-1', data: 1, execute: async (n) => n },
-        { id: 'task-2', data: 2, execute: async (n) => n },
-        { id: 'task-3', data: 3, execute: async (n) => n },
+        { id: 'task-1', data: 1, execute: async n => n },
+        { id: 'task-2', data: 2, execute: async n => n },
+        { id: 'task-3', data: 3, execute: async n => n },
       ]);
 
       const results = await pool.execute();
@@ -143,7 +138,7 @@ describe('WorkerPool', () => {
             throw new Error('Error 1');
           },
         },
-        { id: 'task-2', data: 2, execute: async (n) => n * 2 },
+        { id: 'task-2', data: 2, execute: async n => n * 2 },
       ]);
 
       const results = await pool.execute();
@@ -167,7 +162,7 @@ describe('WorkerPool', () => {
             throw new Error('Error 1');
           },
         },
-        { id: 'task-2', data: 2, execute: async (n) => n * 2 },
+        { id: 'task-2', data: 2, execute: async n => n * 2 },
       ]);
 
       const results = await pool.execute();
@@ -184,7 +179,7 @@ describe('WorkerPool', () => {
         id: 'task-1',
         data: 0,
         execute: async () => {
-          await new Promise((resolve) => setTimeout(resolve, 200));
+          await new Promise(resolve => setTimeout(resolve, 200));
           return 1;
         },
       });
@@ -207,9 +202,9 @@ describe('WorkerPool', () => {
       });
 
       pool.addTasks([
-        { id: 'task-1', data: 1, execute: async (n) => n },
-        { id: 'task-2', data: 2, execute: async (n) => n },
-        { id: 'task-3', data: 3, execute: async (n) => n },
+        { id: 'task-1', data: 1, execute: async n => n },
+        { id: 'task-2', data: 2, execute: async n => n },
+        { id: 'task-3', data: 3, execute: async n => n },
       ]);
 
       await pool.execute();
@@ -227,8 +222,8 @@ describe('WorkerPool', () => {
       });
 
       pool.addTasks([
-        { id: 'task-1', data: 1, execute: async (n) => n },
-        { id: 'task-2', data: 2, execute: async (n) => n },
+        { id: 'task-1', data: 1, execute: async n => n },
+        { id: 'task-2', data: 2, execute: async n => n },
       ]);
 
       await pool.execute();
@@ -243,7 +238,7 @@ describe('WorkerPool', () => {
       const pool = new WorkerPool<number, number>();
 
       pool.addTasks([
-        { id: 'task-1', data: 1, execute: async (n) => n },
+        { id: 'task-1', data: 1, execute: async n => n },
         {
           id: 'task-2',
           data: 2,
@@ -251,7 +246,7 @@ describe('WorkerPool', () => {
             throw new Error('fail');
           },
         },
-        { id: 'task-3', data: 3, execute: async (n) => n },
+        { id: 'task-3', data: 3, execute: async n => n },
       ]);
 
       await pool.execute();
@@ -268,7 +263,7 @@ describe('WorkerPool', () => {
     test('should reset statistics', async () => {
       const pool = new WorkerPool<number, number>();
 
-      pool.addTask({ id: 'task-1', data: 1, execute: async (n) => n });
+      pool.addTask({ id: 'task-1', data: 1, execute: async n => n });
       await pool.execute();
 
       pool.reset();
@@ -288,8 +283,8 @@ describe('WorkerPool', () => {
         {
           id: 'task-1',
           data: 1,
-          execute: async (n) => {
-            await new Promise((resolve) => setTimeout(resolve, 50));
+          execute: async n => {
+            await new Promise(resolve => setTimeout(resolve, 50));
             executed.push(n);
             return n;
           },
@@ -297,7 +292,7 @@ describe('WorkerPool', () => {
         {
           id: 'task-2',
           data: 2,
-          execute: async (n) => {
+          execute: async n => {
             executed.push(n);
             return n;
           },
@@ -320,8 +315,8 @@ describe('WorkerPool', () => {
       pool.addTask({
         id: 'task-1',
         data: 1,
-        execute: async (n) => {
-          await new Promise((resolve) => setTimeout(resolve, 100));
+        execute: async n => {
+          await new Promise(resolve => setTimeout(resolve, 100));
           return n;
         },
       });
@@ -344,11 +339,7 @@ describe('WorkerPool', () => {
     test('parallel should execute items in parallel', async () => {
       const items = [1, 2, 3, 4, 5];
 
-      const results = await parallel(
-        items,
-        async (item) => item * 2,
-        { maxConcurrency: 2 },
-      );
+      const results = await parallel(items, async item => item * 2, { maxConcurrency: 2 });
 
       expect(results).toHaveLength(5);
       expect(results[0]?.result).toBe(2);

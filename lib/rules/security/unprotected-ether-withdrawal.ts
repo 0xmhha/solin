@@ -52,7 +52,7 @@ export class UnprotectedEtherWithdrawalRule extends AbstractRule {
       if (key === 'loc' || key === 'range') continue;
       const value = node[key];
       if (Array.isArray(value)) {
-        value.forEach((child) => this.walkAst(child, context));
+        value.forEach(child => this.walkAst(child, context));
       } else if (value && typeof value === 'object') {
         this.walkAst(value, context);
       }
@@ -98,7 +98,7 @@ export class UnprotectedEtherWithdrawalRule extends AbstractRule {
         const modifierName = modifier.name.toLowerCase();
         // Check for common protection modifiers
         if (
-          UnprotectedEtherWithdrawalRule.COMMON_PROTECTION_MODIFIERS.some((name) =>
+          UnprotectedEtherWithdrawalRule.COMMON_PROTECTION_MODIFIERS.some(name =>
             modifierName.includes(name.toLowerCase())
           )
         ) {
@@ -145,7 +145,7 @@ export class UnprotectedEtherWithdrawalRule extends AbstractRule {
       if (key === 'loc' || key === 'range') continue;
       const value = node[key];
       if (Array.isArray(value)) {
-        value.forEach((child) => this.findEtherTransfers(child, transfers));
+        value.forEach(child => this.findEtherTransfers(child, transfers));
       } else if (value && typeof value === 'object') {
         this.findEtherTransfers(value, transfers);
       }
@@ -178,7 +178,7 @@ export class UnprotectedEtherWithdrawalRule extends AbstractRule {
       if (key === 'loc' || key === 'range') continue;
       const value = node[key];
       if (Array.isArray(value)) {
-        value.forEach((child) => this.findRequireStatements(child, requires));
+        value.forEach(child => this.findRequireStatements(child, requires));
       } else if (value && typeof value === 'object') {
         this.findRequireStatements(value, requires);
       }

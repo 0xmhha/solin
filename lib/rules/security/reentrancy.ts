@@ -62,7 +62,7 @@ export class ReentrancyRule extends AbstractRule {
       if (key === 'loc' || key === 'range') continue;
       const value = node[key];
       if (Array.isArray(value)) {
-        value.forEach((child) => this.collectFunctionDefinitions(child));
+        value.forEach(child => this.collectFunctionDefinitions(child));
       } else if (value && typeof value === 'object') {
         this.collectFunctionDefinitions(value);
       }
@@ -82,7 +82,7 @@ export class ReentrancyRule extends AbstractRule {
       if (key === 'loc' || key === 'range') continue;
       const value = node[key];
       if (Array.isArray(value)) {
-        value.forEach((child) => this.walkAst(child, context));
+        value.forEach(child => this.walkAst(child, context));
       } else if (value && typeof value === 'object') {
         this.walkAst(value, context);
       }
@@ -132,11 +132,7 @@ export class ReentrancyRule extends AbstractRule {
     });
   }
 
-  private collectCallsAndChanges(
-    node: any,
-    calls: ExternalCall[],
-    changes: StateChange[]
-  ): void {
+  private collectCallsAndChanges(node: any, calls: ExternalCall[], changes: StateChange[]): void {
     if (!node || typeof node !== 'object') return;
 
     // Detect external calls
@@ -218,7 +214,7 @@ export class ReentrancyRule extends AbstractRule {
       if (key === 'loc' || key === 'range') continue;
       const value = node[key];
       if (Array.isArray(value)) {
-        value.forEach((child) => this.collectCallsAndChanges(child, calls, changes));
+        value.forEach(child => this.collectCallsAndChanges(child, calls, changes));
       } else if (value && typeof value === 'object') {
         this.collectCallsAndChanges(value, calls, changes);
       }
@@ -263,11 +259,7 @@ export class ReentrancyRule extends AbstractRule {
     return false;
   }
 
-  private reportIssue(
-    callNode: any,
-    affectedVariable: string,
-    context: AnalysisContext
-  ): void {
+  private reportIssue(callNode: any, affectedVariable: string, context: AnalysisContext): void {
     if (!callNode.loc) return;
 
     context.report({

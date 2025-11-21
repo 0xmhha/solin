@@ -44,7 +44,7 @@ export class ReturnBombRule extends AbstractRule {
       if (key === 'loc' || key === 'range') continue;
       const value = node[key];
       if (Array.isArray(value)) {
-        value.forEach((child) => this.walkAst(child, context));
+        value.forEach(child => this.walkAst(child, context));
       } else if (value && typeof value === 'object') {
         this.walkAst(value, context);
       }
@@ -71,7 +71,9 @@ export class ReturnBombRule extends AbstractRule {
       const innerExpr = node.expression.expression;
       if (innerExpr?.type === 'MemberAccess') {
         const memberName = innerExpr.memberName;
-        return memberName === 'call' || memberName === 'delegatecall' || memberName === 'staticcall';
+        return (
+          memberName === 'call' || memberName === 'delegatecall' || memberName === 'staticcall'
+        );
       }
     }
 

@@ -80,9 +80,9 @@ describe('UnusedStateVariablesRule', () => {
 
       const issues = context.getIssues();
       expect(issues).toHaveLength(3);
-      expect(issues.some((i) => i.message.includes('unused1'))).toBe(true);
-      expect(issues.some((i) => i.message.includes('unused2'))).toBe(true);
-      expect(issues.some((i) => i.message.includes('unused3'))).toBe(true);
+      expect(issues.some(i => i.message.includes('unused1'))).toBe(true);
+      expect(issues.some(i => i.message.includes('unused2'))).toBe(true);
+      expect(issues.some(i => i.message.includes('unused3'))).toBe(true);
     });
 
     test('should detect unused constant variable', async () => {

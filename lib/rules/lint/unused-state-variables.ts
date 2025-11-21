@@ -98,7 +98,7 @@ export class UnusedStateVariablesRule extends AbstractRule {
 
       const value = node[key];
       if (Array.isArray(value)) {
-        value.forEach((child) => this.collectStateVariables(child, stateVariables));
+        value.forEach(child => this.collectStateVariables(child, stateVariables));
       } else if (value && typeof value === 'object') {
         this.collectStateVariables(value, stateVariables);
       }
@@ -108,7 +108,10 @@ export class UnusedStateVariablesRule extends AbstractRule {
   /**
    * Process a state variable declaration
    */
-  private processStateVariableDeclaration(node: any, stateVariables: Map<string, StateVariableInfo>): void {
+  private processStateVariableDeclaration(
+    node: any,
+    stateVariables: Map<string, StateVariableInfo>
+  ): void {
     if (!node.variables || !Array.isArray(node.variables)) {
       return;
     }
@@ -170,7 +173,7 @@ export class UnusedStateVariablesRule extends AbstractRule {
 
       const value = node[key];
       if (Array.isArray(value)) {
-        value.forEach((child) => this.findVariableUsages(child, stateVariables));
+        value.forEach(child => this.findVariableUsages(child, stateVariables));
       } else if (value && typeof value === 'object') {
         this.findVariableUsages(value, stateVariables);
       }

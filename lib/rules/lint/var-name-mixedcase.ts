@@ -29,7 +29,7 @@ export class VarNameMixedcaseRule extends AbstractRule {
 
   analyze(context: AnalysisContext): void {
     // Traverse AST to find variable declarations
-    this.visitNode(context.ast, (node) => {
+    this.visitNode(context.ast, node => {
       if (node.type === 'VariableDeclaration') {
         this.checkNamingConvention(node, context);
       }
@@ -51,7 +51,7 @@ export class VarNameMixedcaseRule extends AbstractRule {
 
       const child = node[key];
       if (Array.isArray(child)) {
-        child.forEach((item) => this.visitNode(item, callback));
+        child.forEach(item => this.visitNode(item, callback));
       } else if (typeof child === 'object' && child !== null) {
         this.visitNode(child, callback);
       }
@@ -99,11 +99,7 @@ export class VarNameMixedcaseRule extends AbstractRule {
     return true;
   }
 
-  private reportInvalidName(
-    line: number,
-    name: string,
-    context: AnalysisContext
-  ): void {
+  private reportInvalidName(line: number, name: string, context: AnalysisContext): void {
     context.report({
       ruleId: this.metadata.id,
       severity: this.metadata.severity,

@@ -109,12 +109,9 @@ describe('ReentrancyDetector', () => {
 // lib/rules/security/reentrancy-detector.ts
 export class ReentrancyDetector extends AbstractRule {
   constructor() {
-    super(
-      'security/reentrancy',
-      RuleCategory.SECURITY,
-      RuleSeverity.HIGH,
-      { title: 'Reentrancy vulnerability' }
-    );
+    super('security/reentrancy', RuleCategory.SECURITY, RuleSeverity.HIGH, {
+      title: 'Reentrancy vulnerability',
+    });
   }
 
   detect(context: AnalysisContext): Issue[] {
@@ -132,16 +129,11 @@ export class ReentrancyDetector extends AbstractRule {
 
       // Check if state change comes after external call
       for (const call of externalCalls) {
-        const changesAfter = stateChanges.filter(
-          change => change.range[0] > call.range[1]
-        );
+        const changesAfter = stateChanges.filter(change => change.range[0] > call.range[1]);
 
         if (changesAfter.length > 0) {
           issues.push(
-            this.createIssue(
-              call,
-              'Potential reentrancy: state change after external call'
-            )
+            this.createIssue(call, 'Potential reentrancy: state change after external call')
           );
         }
       }
@@ -178,9 +170,7 @@ export class ReentrancyDetector extends AbstractRule {
   detect(context: AnalysisContext): Issue[] {
     const functions = context.ast.findAll('FunctionDefinition');
 
-    return functions.flatMap(func =>
-      this.analyzeFunctionForReentrancy(func)
-    );
+    return functions.flatMap(func => this.analyzeFunctionForReentrancy(func));
   }
 
   private analyzeFunctionForReentrancy(func: ASTNode): Issue[] {
@@ -200,26 +190,14 @@ export class ReentrancyDetector extends AbstractRule {
     return issues;
   }
 
-  private findStateChangesAfter(
-    call: ASTNode,
-    changes: ASTNode[]
-  ): ASTNode[] {
-    return changes.filter(change =>
-      this.isAfter(change, call)
-    );
+  private findStateChangesAfter(call: ASTNode, changes: ASTNode[]): ASTNode[] {
+    return changes.filter(change => this.isAfter(change, call));
   }
 
-  private createReentrancyIssue(
-    call: ASTNode,
-    changes: ASTNode[]
-  ): Issue {
-    return this.createIssue(
-      call,
-      'Potential reentrancy: state change after external call',
-      {
-        affectedVariables: changes.map(c => c.name)
-      }
-    );
+  private createReentrancyIssue(call: ASTNode, changes: ASTNode[]): Issue {
+    return this.createIssue(call, 'Potential reentrancy: state change after external call', {
+      affectedVariables: changes.map(c => c.name),
+    });
   }
 
   // ... helper methods
@@ -256,9 +234,9 @@ class ContractNameRule {
 ```typescript
 // ✅ DO: Focus on one behavior
 describe('ReentrancyDetector', () => {
-  test('detects reentrancy in simple case', () => { });
-  test('ignores view functions', () => { });
-  test('handles multiple state changes', () => { });
+  test('detects reentrancy in simple case', () => {});
+  test('ignores view functions', () => {});
+  test('handles multiple state changes', () => {});
 });
 
 // ❌ DON'T: Test everything at once
@@ -291,11 +269,11 @@ describe('Parser', () => {
 
   test('parses contract', () => {
     parser = new Parser();
-    ast = parser.parse('contract Foo {}');  // Stored for next test
+    ast = parser.parse('contract Foo {}'); // Stored for next test
   });
 
   test('can walk AST', () => {
-    walk(ast, visitor);  // Depends on previous test
+    walk(ast, visitor); // Depends on previous test
   });
 });
 ```
@@ -396,17 +374,17 @@ Solin's domain consists of several bounded contexts:
 
 Use consistent terminology throughout code, tests, and documentation:
 
-| Domain Term | Definition | Example |
-|-------------|------------|---------|
-| **Rule** | A check that can be applied to code | `ReentrancyDetector` |
-| **Detector** | A rule that finds security issues | `UninitialisedStateDetector` |
-| **Validator** | A rule that checks code style | `NamingConventionRule` |
-| **Issue** | A problem found by a rule | `Issue` class |
-| **Severity** | Importance level of an issue | `HIGH`, `MEDIUM`, `LOW` |
-| **Fix** | Automatic correction for an issue | `Fix` class |
-| **Context** | Information available during analysis | `AnalysisContext` |
-| **AST** | Abstract Syntax Tree | `AST` interface |
-| **Visitor** | Pattern for traversing AST | `Visitor` interface |
+| Domain Term   | Definition                            | Example                      |
+| ------------- | ------------------------------------- | ---------------------------- |
+| **Rule**      | A check that can be applied to code   | `ReentrancyDetector`         |
+| **Detector**  | A rule that finds security issues     | `UninitialisedStateDetector` |
+| **Validator** | A rule that checks code style         | `NamingConventionRule`       |
+| **Issue**     | A problem found by a rule             | `Issue` class                |
+| **Severity**  | Importance level of an issue          | `HIGH`, `MEDIUM`, `LOW`      |
+| **Fix**       | Automatic correction for an issue     | `Fix` class                  |
+| **Context**   | Information available during analysis | `AnalysisContext`            |
+| **AST**       | Abstract Syntax Tree                  | `AST` interface              |
+| **Visitor**   | Pattern for traversing AST            | `Visitor` interface          |
 
 ### Value Objects
 
@@ -434,13 +412,12 @@ class Location {
   ) {}
 
   contains(other: Location): boolean {
-    return this.start.isBefore(other.start) &&
-           this.end.isAfter(other.end);
+    return this.start.isBefore(other.start) && this.end.isAfter(other.end);
   }
 }
 
 // ❌ DON'T: Use primitives for domain concepts
-type Severity = string;  // 'high' | 'medium' | 'low'
+type Severity = string; // 'high' | 'medium' | 'low'
 type Location = [string, number, number, number, number];
 ```
 
@@ -537,10 +514,7 @@ class ReentrancyAnalysisService {
     return this.findReentrancyPatterns(cfg, dataFlow);
   }
 
-  private findReentrancyPatterns(
-    cfg: ControlFlowGraph,
-    dataFlow: DataFlowGraph
-  ): ReentrancyReport {
+  private findReentrancyPatterns(cfg: ControlFlowGraph, dataFlow: DataFlowGraph): ReentrancyReport {
     // Complex domain logic
   }
 }
@@ -727,25 +701,30 @@ function processData(data: any): any {
 
 ```markdown
 ## Description
+
 Brief description of changes
 
 ## Type of Change
+
 - [ ] Bug fix
 - [ ] New feature
 - [ ] Breaking change
 - [ ] Documentation update
 
 ## Changes Made
+
 - Added X
 - Modified Y
 - Removed Z
 
 ## Testing
+
 - Added unit tests for X
 - Added integration tests for Y
 - Manual testing performed: Z
 
 ## Checklist
+
 - [ ] Tests pass
 - [ ] Coverage > 80%
 - [ ] Documentation updated
@@ -779,6 +758,7 @@ Follow [Conventional Commits](https://www.conventionalcommits.org/):
 ```
 
 **Types**:
+
 - `feat`: New feature
 - `fix`: Bug fix
 - `docs`: Documentation
@@ -857,11 +837,7 @@ jobs:
     }
   },
   "lint-staged": {
-    "*.ts": [
-      "eslint --fix",
-      "prettier --write",
-      "npm test -- --findRelatedTests"
-    ]
+    "*.ts": ["eslint --fix", "prettier --write", "npm test -- --findRelatedTests"]
   }
 }
 ```
@@ -946,12 +922,14 @@ node --inspect-brk node_modules/.bin/jest --runInBand
 ## Resources
 
 ### Books
+
 - "Test Driven Development" by Kent Beck
 - "Domain-Driven Design" by Eric Evans
 - "Clean Code" by Robert C. Martin
 - "Refactoring" by Martin Fowler
 
 ### Tools
+
 - [Jest](https://jestjs.io/) - Testing framework
 - [TypeScript](https://www.typescriptlang.org/) - Type safety
 - [ESLint](https://eslint.org/) - Code linting

@@ -54,7 +54,7 @@ export class GasCustomErrors extends AbstractRule {
 
       const value = node[key];
       if (Array.isArray(value)) {
-        value.forEach((child) => this.walkAst(child, context));
+        value.forEach(child => this.walkAst(child, context));
       } else if (value && typeof value === 'object') {
         this.walkAst(value, context);
       }
@@ -164,9 +164,7 @@ export class GasCustomErrors extends AbstractRule {
     // Binary operation (e.g., "Error: " + variable)
     if (arg.type === 'BinaryOperation') {
       // Check if either operand is a string literal (concatenation)
-      return (
-        this.isStringArgument(arg.left) || this.isStringArgument(arg.right)
-      );
+      return this.isStringArgument(arg.left) || this.isStringArgument(arg.right);
     }
 
     return false;

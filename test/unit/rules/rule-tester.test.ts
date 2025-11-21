@@ -265,7 +265,7 @@ describe('RuleTester', () => {
       });
 
       expect(results).toHaveLength(3);
-      expect(results.filter((r) => r.passed)).toHaveLength(3);
+      expect(results.filter(r => r.passed)).toHaveLength(3);
     });
   });
 

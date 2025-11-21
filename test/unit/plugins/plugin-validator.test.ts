@@ -62,7 +62,7 @@ describe('PluginValidator', () => {
       };
 
       const errors = validator.validate(plugin);
-      expect(errors.some((e) => e.code === PluginErrorCode.MISSING_METADATA)).toBe(true);
+      expect(errors.some(e => e.code === PluginErrorCode.MISSING_METADATA)).toBe(true);
     });
   });
 
@@ -75,7 +75,7 @@ describe('PluginValidator', () => {
       };
 
       const errors = validator.validate(plugin);
-      expect(errors.some((e) => e.message.includes('name'))).toBe(true);
+      expect(errors.some(e => e.message.includes('name'))).toBe(true);
     });
 
     test('should require version in metadata', () => {
@@ -86,7 +86,7 @@ describe('PluginValidator', () => {
       };
 
       const errors = validator.validate(plugin);
-      expect(errors.some((e) => e.message.includes('version'))).toBe(true);
+      expect(errors.some(e => e.message.includes('version'))).toBe(true);
     });
 
     test('should validate version format', () => {
@@ -98,7 +98,7 @@ describe('PluginValidator', () => {
       };
 
       const errors = validator.validate(plugin);
-      expect(errors.some((e) => e.message.includes('semver'))).toBe(true);
+      expect(errors.some(e => e.message.includes('semver'))).toBe(true);
     });
 
     test('should accept valid semver version', () => {
@@ -159,7 +159,7 @@ describe('PluginValidator', () => {
       };
 
       const errors = validator.validate(plugin);
-      expect(errors.some((e) => e.code === PluginErrorCode.INVALID_RULE)).toBe(true);
+      expect(errors.some(e => e.code === PluginErrorCode.INVALID_RULE)).toBe(true);
     });
 
     test('should reject rule that does not implement IRule', () => {
@@ -178,7 +178,7 @@ describe('PluginValidator', () => {
       };
 
       const errors = validator.validate(plugin);
-      expect(errors.some((e) => e.code === PluginErrorCode.INVALID_RULE)).toBe(true);
+      expect(errors.some(e => e.code === PluginErrorCode.INVALID_RULE)).toBe(true);
     });
 
     test('should reject non-constructor rule', () => {
@@ -193,7 +193,7 @@ describe('PluginValidator', () => {
       };
 
       const errors = validator.validate(plugin);
-      expect(errors.some((e) => e.code === PluginErrorCode.INVALID_RULE)).toBe(true);
+      expect(errors.some(e => e.code === PluginErrorCode.INVALID_RULE)).toBe(true);
     });
   });
 
@@ -254,7 +254,7 @@ describe('PluginValidator', () => {
       };
 
       const errors = validator.validate(plugin);
-      expect(errors.some((e) => e.code === PluginErrorCode.INVALID_PRESET)).toBe(true);
+      expect(errors.some(e => e.code === PluginErrorCode.INVALID_PRESET)).toBe(true);
     });
 
     test('should reject non-object preset', () => {
@@ -269,7 +269,7 @@ describe('PluginValidator', () => {
       };
 
       const errors = validator.validate(plugin);
-      expect(errors.some((e) => e.code === PluginErrorCode.INVALID_PRESET)).toBe(true);
+      expect(errors.some(e => e.code === PluginErrorCode.INVALID_PRESET)).toBe(true);
     });
   });
 
@@ -299,7 +299,7 @@ describe('PluginValidator', () => {
       };
 
       const errors = validator.validate(plugin);
-      expect(errors.some((e) => e.message.includes('setup'))).toBe(true);
+      expect(errors.some(e => e.message.includes('setup'))).toBe(true);
     });
 
     test('should reject non-function teardown', () => {
@@ -312,7 +312,7 @@ describe('PluginValidator', () => {
       };
 
       const errors = validator.validate(plugin);
-      expect(errors.some((e) => e.message.includes('teardown'))).toBe(true);
+      expect(errors.some(e => e.message.includes('teardown'))).toBe(true);
     });
   });
 });

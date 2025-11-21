@@ -382,7 +382,9 @@ describe('AvoidTxOrigin', () => {
       const issues = context.getIssues();
 
       expect(issues.length).toBeGreaterThan(0);
-      expect(issues[0]!.message.toLowerCase()).toMatch(/tx\.origin|msg\.sender|phishing|authorization/);
+      expect(issues[0]!.message.toLowerCase()).toMatch(
+        /tx\.origin|msg\.sender|phishing|authorization/
+      );
     });
 
     test('should detect tx.origin in internal function', async () => {

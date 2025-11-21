@@ -79,11 +79,7 @@ export class SpaceAfterCommaRule extends AbstractRule {
     return inSingleQuote || inDoubleQuote;
   }
 
-  private reportMissingSpace(
-    line: number,
-    column: number,
-    context: AnalysisContext
-  ): void {
+  private reportMissingSpace(line: number, column: number, context: AnalysisContext): void {
     context.report({
       ruleId: this.metadata.id,
       severity: this.metadata.severity,

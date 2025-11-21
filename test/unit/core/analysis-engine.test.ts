@@ -154,7 +154,7 @@ describe('AnalysisEngine', () => {
         contract Good {
           uint256 value;
         }
-      `,
+      `
       );
 
       await fs.writeFile(
@@ -162,7 +162,7 @@ describe('AnalysisEngine', () => {
         `
         pragma solidity ^0.8.0;
         contract Empty {}
-      `,
+      `
       );
 
       const result = await engine.analyze({
@@ -185,7 +185,7 @@ describe('AnalysisEngine', () => {
         pragma solidity ^0.8.0;
         contract Empty1 {}
         contract Empty2 {}
-      `,
+      `
       );
 
       const result = await engine.analyze({
@@ -206,7 +206,7 @@ describe('AnalysisEngine', () => {
         filePath,
         `
         invalid solidity code here
-      `,
+      `
       );
 
       const result = await engine.analyze({
@@ -235,7 +235,7 @@ describe('AnalysisEngine', () => {
         `
         pragma solidity ^0.8.0;
         contract Test {}
-      `,
+      `
       );
 
       const progressCalls: Array<{ current: number; total: number }> = [];

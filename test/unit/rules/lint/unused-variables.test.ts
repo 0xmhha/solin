@@ -250,8 +250,8 @@ describe('UnusedVariablesRule', () => {
 
       const issues = context.getIssues();
       expect(issues).toHaveLength(1);
-      expect(issues[0]?.message).toMatch(/\bunused\b/);  // Match word boundary
-      expect(issues[0]?.message).not.toMatch(/\bused\b(?!.*never)/);  // 'used' not followed by 'never'
+      expect(issues[0]?.message).toMatch(/\bunused\b/); // Match word boundary
+      expect(issues[0]?.message).not.toMatch(/\bused\b(?!.*never)/); // 'used' not followed by 'never'
     });
   });
 

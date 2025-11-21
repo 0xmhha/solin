@@ -16,14 +16,15 @@ const path = require('path');
 
 // Parse command line arguments
 const args = process.argv.slice(2);
-const mode = args.includes('--prod') || args.includes('--production') ? 'production' : 'development';
+const mode =
+  args.includes('--prod') || args.includes('--production') ? 'production' : 'development';
 const watch = args.includes('--watch');
 
 // Common build options
 const commonOptions = {
   entryPoints: {
-    'cli': 'lib/cli/index.ts',
-    'index': 'lib/index.ts',
+    cli: 'lib/cli/index.ts',
+    index: 'lib/index.ts',
   },
   bundle: true,
   platform: 'node',
@@ -183,7 +184,7 @@ async function build() {
 }
 
 // Run build
-build().catch((error) => {
+build().catch(error => {
   console.error('Fatal error:', error);
   process.exit(1);
 });

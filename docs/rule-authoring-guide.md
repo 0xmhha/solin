@@ -87,16 +87,16 @@ export class MyCustomRule extends AbstractRule {
 
 ### Metadata Fields
 
-| Field | Type | Required | Description |
-|-------|------|----------|-------------|
-| `id` | string | Yes | Unique identifier (e.g., `security/reentrancy`) |
-| `category` | Category | Yes | `SECURITY`, `LINT`, `GAS_OPTIMIZATION`, `BEST_PRACTICES`, `CUSTOM` |
-| `severity` | Severity | Yes | `ERROR`, `WARNING`, `INFO` |
-| `title` | string | Yes | Short descriptive title |
-| `description` | string | Yes | Detailed description |
-| `recommendation` | string | Yes | How to fix the issue |
-| `documentationUrl` | string | No | Link to documentation |
-| `fixable` | boolean | No | Whether auto-fix is available |
+| Field              | Type     | Required | Description                                                        |
+| ------------------ | -------- | -------- | ------------------------------------------------------------------ |
+| `id`               | string   | Yes      | Unique identifier (e.g., `security/reentrancy`)                    |
+| `category`         | Category | Yes      | `SECURITY`, `LINT`, `GAS_OPTIMIZATION`, `BEST_PRACTICES`, `CUSTOM` |
+| `severity`         | Severity | Yes      | `ERROR`, `WARNING`, `INFO`                                         |
+| `title`            | string   | Yes      | Short descriptive title                                            |
+| `description`      | string   | Yes      | Detailed description                                               |
+| `recommendation`   | string   | Yes      | How to fix the issue                                               |
+| `documentationUrl` | string   | No       | Link to documentation                                              |
+| `fixable`          | boolean  | No       | Whether auto-fix is available                                      |
 
 ## Creating a Rule
 
@@ -152,7 +152,9 @@ context.report({
   severity: this.metadata.severity,
   category: this.metadata.category,
   message: 'Function has no visibility modifier',
-  location: { /* ... */ },
+  location: {
+    /* ... */
+  },
   fix: {
     description: 'Add public visibility',
     range: {
@@ -242,7 +244,7 @@ errors: [
 
   // Combine multiple
   { message: /visibility/, line: 4, ruleId: 'custom/my-rule' },
-]
+];
 ```
 
 ### Helper Methods
@@ -281,8 +283,8 @@ const result = generator.generate({
   nodeTypes: ['Literal'],
 });
 
-console.log(result.ruleCode);     // Rule implementation
-console.log(result.testCode);     // Test file
+console.log(result.ruleCode); // Rule implementation
+console.log(result.testCode); // Test file
 console.log(result.ruleFileName); // no-magic-addresses.ts
 console.log(result.testFileName); // no-magic-addresses.test.ts
 
@@ -317,52 +319,52 @@ The generator creates:
 
 Common node types to check:
 
-| Node Type | Description |
-|-----------|-------------|
-| `SourceUnit` | Root of the AST |
-| `ContractDefinition` | Contract/interface/library |
-| `FunctionDefinition` | Function declaration |
-| `ModifierDefinition` | Modifier declaration |
-| `VariableDeclaration` | Variable declaration |
-| `StateVariableDeclaration` | State variable |
-| `EventDefinition` | Event declaration |
-| `FunctionCall` | Function invocation |
-| `MemberAccess` | Property access (e.g., `msg.sender`) |
-| `BinaryOperation` | Binary operators (+, -, ==, etc.) |
-| `IfStatement` | If/else statements |
-| `ForStatement` | For loops |
-| `WhileStatement` | While loops |
-| `Return` | Return statements |
-| `Block` | Code block { } |
-| `Literal` | Literal values (numbers, strings) |
-| `Identifier` | Variable/function names |
+| Node Type                  | Description                          |
+| -------------------------- | ------------------------------------ |
+| `SourceUnit`               | Root of the AST                      |
+| `ContractDefinition`       | Contract/interface/library           |
+| `FunctionDefinition`       | Function declaration                 |
+| `ModifierDefinition`       | Modifier declaration                 |
+| `VariableDeclaration`      | Variable declaration                 |
+| `StateVariableDeclaration` | State variable                       |
+| `EventDefinition`          | Event declaration                    |
+| `FunctionCall`             | Function invocation                  |
+| `MemberAccess`             | Property access (e.g., `msg.sender`) |
+| `BinaryOperation`          | Binary operators (+, -, ==, etc.)    |
+| `IfStatement`              | If/else statements                   |
+| `ForStatement`             | For loops                            |
+| `WhileStatement`           | While loops                          |
+| `Return`                   | Return statements                    |
+| `Block`                    | Code block { }                       |
+| `Literal`                  | Literal values (numbers, strings)    |
+| `Identifier`               | Variable/function names              |
 
 ### Accessing Node Properties
 
 ```typescript
 // FunctionDefinition
-node.name           // Function name
-node.visibility     // public, private, internal, external
-node.stateMutability // pure, view, payable
-node.parameters     // Function parameters
-node.returnParameters // Return values
-node.body           // Function body (Block)
-node.modifiers      // Applied modifiers
+node.name; // Function name
+node.visibility; // public, private, internal, external
+node.stateMutability; // pure, view, payable
+node.parameters; // Function parameters
+node.returnParameters; // Return values
+node.body; // Function body (Block)
+node.modifiers; // Applied modifiers
 
 // ContractDefinition
-node.name           // Contract name
-node.kind           // contract, interface, library
-node.baseContracts  // Inherited contracts
-node.subNodes       // Contract members
+node.name; // Contract name
+node.kind; // contract, interface, library
+node.baseContracts; // Inherited contracts
+node.subNodes; // Contract members
 
 // FunctionCall
-node.expression     // Called function
-node.arguments      // Call arguments
+node.expression; // Called function
+node.arguments; // Call arguments
 
 // BinaryOperation
-node.operator       // +, -, *, /, ==, etc.
-node.left           // Left operand
-node.right          // Right operand
+node.operator; // +, -, *, /, ==, etc.
+node.left; // Left operand
+node.right; // Right operand
 ```
 
 ## Best Practices
@@ -371,24 +373,23 @@ node.right          // Right operand
 
 ```typescript
 // Good
-id: 'security/reentrancy-guard'
-id: 'lint/no-empty-blocks'
-id: 'gas/cache-array-length'
+id: 'security/reentrancy-guard';
+id: 'lint/no-empty-blocks';
+id: 'gas/cache-array-length';
 
 // Bad
-id: 'rule1'
-id: 'myRule'
+id: 'rule1';
+id: 'myRule';
 ```
 
 ### 2. Provide Actionable Messages
 
 ```typescript
 // Good
-message: `Function '${name}' lacks reentrancy protection. ` +
-         `Consider using a reentrancy guard.`
+message: `Function '${name}' lacks reentrancy protection. ` + `Consider using a reentrancy guard.`;
 
 // Bad
-message: 'Bad pattern detected'
+message: 'Bad pattern detected';
 ```
 
 ### 3. Include Location Information
@@ -481,7 +482,7 @@ export class NoConsoleRule extends AbstractRule {
     const walker = new ASTWalker();
 
     walker.walk(context.ast, {
-      enter: (node) => {
+      enter: node => {
         if (
           node.type === 'FunctionCall' &&
           node.expression?.type === 'MemberAccess' &&
@@ -526,7 +527,7 @@ export class RequireReasonRule extends AbstractRule {
     const walker = new ASTWalker();
 
     walker.walk(context.ast, {
-      enter: (node) => {
+      enter: node => {
         if (
           node.type === 'FunctionCall' &&
           node.expression?.type === 'Identifier' &&
@@ -574,19 +575,19 @@ export class MaxContractSizeRule extends AbstractRule {
     const walker = new ASTWalker();
 
     walker.walk(context.ast, {
-      enter: (node) => {
+      enter: node => {
         if (node.type === 'ContractDefinition') {
-          const functions = node.subNodes?.filter(
-            (n: any) => n.type === 'FunctionDefinition'
-          ) || [];
+          const functions =
+            node.subNodes?.filter((n: any) => n.type === 'FunctionDefinition') || [];
 
           if (functions.length > this.maxFunctions) {
             context.report({
               ruleId: this.metadata.id,
               severity: this.metadata.severity,
               category: this.metadata.category,
-              message: `Contract '${node.name}' has ${functions.length} functions ` +
-                       `(max: ${this.maxFunctions})`,
+              message:
+                `Contract '${node.name}' has ${functions.length} functions ` +
+                `(max: ${this.maxFunctions})`,
               location: {
                 start: { line: node.loc.start.line, column: node.loc.start.column },
                 end: { line: node.loc.end.line, column: node.loc.end.column },

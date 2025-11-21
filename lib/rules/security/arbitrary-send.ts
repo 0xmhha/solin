@@ -71,7 +71,7 @@ export class ArbitrarySendRule extends AbstractRule {
 
         const value = node[key];
         if (Array.isArray(value)) {
-          value.forEach((child) => this.walkAst(child, context));
+          value.forEach(child => this.walkAst(child, context));
         } else if (value && typeof value === 'object') {
           this.walkAst(value, context);
         }
@@ -94,7 +94,7 @@ export class ArbitrarySendRule extends AbstractRule {
 
       const value = node[key];
       if (Array.isArray(value)) {
-        value.forEach((child) => this.walkAst(child, context));
+        value.forEach(child => this.walkAst(child, context));
       } else if (value && typeof value === 'object') {
         this.walkAst(value, context);
       }
@@ -193,7 +193,7 @@ export class ArbitrarySendRule extends AbstractRule {
 
       const value = node[key];
       if (Array.isArray(value)) {
-        value.forEach((child) => this.findStateVarAssignments(child, assignments));
+        value.forEach(child => this.findStateVarAssignments(child, assignments));
       } else if (value && typeof value === 'object') {
         this.findStateVarAssignments(value, assignments);
       }
@@ -383,11 +383,7 @@ export class ArbitrarySendRule extends AbstractRule {
     }
 
     // Safe if constant, immutable, or constructor-only
-    return (
-      varInfo.isConstant ||
-      varInfo.isImmutable ||
-      this.constructorOnlyVars.has(node.name)
-    );
+    return varInfo.isConstant || varInfo.isImmutable || this.constructorOnlyVars.has(node.name);
   }
 
   /**

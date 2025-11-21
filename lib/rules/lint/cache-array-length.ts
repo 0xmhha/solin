@@ -56,7 +56,7 @@ export class CacheArrayLengthRule extends AbstractRule {
 
       const value = node[key];
       if (Array.isArray(value)) {
-        value.forEach((child) => this.walkAst(child, context));
+        value.forEach(child => this.walkAst(child, context));
       } else if (value && typeof value === 'object') {
         this.walkAst(value, context);
       }
@@ -143,7 +143,7 @@ export class CacheArrayLengthRule extends AbstractRule {
 
         const value = n[key];
         if (Array.isArray(value)) {
-          value.forEach((child) => walk(child));
+          value.forEach(child => walk(child));
         } else if (value && typeof value === 'object') {
           walk(value);
         }
@@ -207,7 +207,7 @@ export class CacheArrayLengthRule extends AbstractRule {
 
         const value = node[key];
         if (Array.isArray(value)) {
-          value.forEach((child) => walk(child));
+          value.forEach(child => walk(child));
         } else if (value && typeof value === 'object') {
           walk(value);
         }

@@ -296,7 +296,7 @@ describe('StateMutabilityRule', () => {
 
       const issues = context.getIssues();
       expect(issues.length).toBeGreaterThanOrEqual(2);
-      expect(issues.every((issue) => issue.ruleId === 'lint/state-mutability')).toBe(true);
+      expect(issues.every(issue => issue.ruleId === 'lint/state-mutability')).toBe(true);
     });
   });
 

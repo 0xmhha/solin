@@ -80,9 +80,7 @@ export class SolinDiagnosticsProvider {
         this.updateDiagnostics(document.uri, result);
       }
     } catch (error) {
-      this.outputChannel.appendLine(
-        `Error analyzing ${document.fileName}: ${error}`,
-      );
+      this.outputChannel.appendLine(`Error analyzing ${document.fileName}: ${error}`);
     } finally {
       this.isAnalyzing = false;
     }
@@ -130,13 +128,13 @@ export class SolinDiagnosticsProvider {
               // Show summary
               vscode.window.showInformationMessage(
                 `Solin: Found ${result.totalIssues} issues ` +
-                `(${result.summary.errors} errors, ` +
-                `${result.summary.warnings} warnings, ` +
-                `${result.summary.info} info)`,
+                  `(${result.summary.errors} errors, ` +
+                  `${result.summary.warnings} warnings, ` +
+                  `${result.summary.info} info)`
               );
             }
           }
-        },
+        }
       );
     } catch (error) {
       this.outputChannel.appendLine(`Error analyzing workspace: ${error}`);
@@ -223,7 +221,7 @@ export class SolinDiagnosticsProvider {
   private updateDiagnostics(uri: vscode.Uri, result: SolinResult): void {
     // Find issues for this file
     const fileResult = result.files.find(
-      (f) => path.resolve(f.filePath) === path.resolve(uri.fsPath),
+      f => path.resolve(f.filePath) === path.resolve(uri.fsPath)
     );
 
     if (fileResult) {
@@ -243,12 +241,12 @@ export class SolinDiagnosticsProvider {
 
     const diagnostics: vscode.Diagnostic[] = issues
       .slice(0, maxProblems)
-      .map((issue) => this.issueToDiagnostic(issue));
+      .map(issue => this.issueToDiagnostic(issue));
 
     this.diagnosticCollection.set(uri, diagnostics);
 
     this.outputChannel.appendLine(
-      `Updated diagnostics for ${uri.fsPath}: ${diagnostics.length} issues`,
+      `Updated diagnostics for ${uri.fsPath}: ${diagnostics.length} issues`
     );
   }
 
@@ -260,7 +258,7 @@ export class SolinDiagnosticsProvider {
       issue.location.start.line - 1, // VS Code is 0-indexed
       issue.location.start.column,
       issue.location.end.line - 1,
-      issue.location.end.column,
+      issue.location.end.column
     );
 
     const severity = this.getSeverity(issue.severity);

@@ -594,7 +594,7 @@ describe('SarifFormatter', () => {
 
       // Check that both files are referenced
       const uris = sarif.runs[0].results.map(
-        (r: any) => r.locations[0].physicalLocation.artifactLocation.uri,
+        (r: any) => r.locations[0].physicalLocation.artifactLocation.uri
       );
       expect(uris).toContain('contracts/Token.sol');
       expect(uris).toContain('contracts/Vault.sol');

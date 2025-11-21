@@ -82,7 +82,7 @@ export class ShadowingVariablesRule extends AbstractRule {
 
       const value = node[key];
       if (Array.isArray(value)) {
-        value.forEach((child) => this.collectContracts(child));
+        value.forEach(child => this.collectContracts(child));
       } else if (value && typeof value === 'object') {
         this.collectContracts(value);
       }
@@ -199,9 +199,7 @@ export class ShadowingVariablesRule extends AbstractRule {
 
     for (const contractVar of contractVars) {
       // Check if this variable shadows an inherited variable
-      const shadowedVar = inheritedVars.find(
-        (inherited) => inherited.name === contractVar.name
-      );
+      const shadowedVar = inheritedVars.find(inherited => inherited.name === contractVar.name);
 
       if (shadowedVar) {
         this.reportShadowing(
@@ -245,9 +243,7 @@ export class ShadowingVariablesRule extends AbstractRule {
     // Check function parameters
     if (functionNode.parameters) {
       for (const param of functionNode.parameters) {
-        const shadowedVar = inheritedVars.find(
-          (inherited) => inherited.name === param.name
-        );
+        const shadowedVar = inheritedVars.find(inherited => inherited.name === param.name);
 
         if (shadowedVar) {
           this.reportShadowing(
@@ -282,9 +278,7 @@ export class ShadowingVariablesRule extends AbstractRule {
     // Check variable declarations
     if (node.type === 'VariableDeclarationStatement' && node.variables) {
       for (const variable of node.variables) {
-        const shadowedVar = inheritedVars.find(
-          (inherited) => inherited.name === variable.name
-        );
+        const shadowedVar = inheritedVars.find(inherited => inherited.name === variable.name);
 
         if (shadowedVar) {
           this.reportShadowing(
@@ -306,7 +300,7 @@ export class ShadowingVariablesRule extends AbstractRule {
 
       const value = node[key];
       if (Array.isArray(value)) {
-        value.forEach((child) => this.checkLocalVariables(child, inheritedVars, context));
+        value.forEach(child => this.checkLocalVariables(child, inheritedVars, context));
       } else if (value && typeof value === 'object') {
         this.checkLocalVariables(value, inheritedVars, context);
       }

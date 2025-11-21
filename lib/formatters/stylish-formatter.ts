@@ -45,10 +45,9 @@ export class StylishFormatter implements IFormatter {
           lines.push(chalk.underline(fileResult.filePath));
 
           for (const parseError of fileResult.parseErrors) {
-            const location =
-              parseError.line > 0 ? `${parseError.line}:${parseError.column}` : '-';
+            const location = parseError.line > 0 ? `${parseError.line}:${parseError.column}` : '-';
             lines.push(
-              `  ${chalk.gray(location)}  ${chalk.red('Parse Error')}  ${parseError.message}`,
+              `  ${chalk.gray(location)}  ${chalk.red('Parse Error')}  ${parseError.message}`
             );
           }
 

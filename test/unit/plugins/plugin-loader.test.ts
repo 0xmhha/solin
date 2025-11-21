@@ -8,7 +8,6 @@ import * as path from 'path';
 import * as fs from 'fs';
 import * as os from 'os';
 
-
 describe('PluginLoader', () => {
   let loader: PluginLoader;
   let tempDir: string;
@@ -87,7 +86,7 @@ describe('PluginLoader', () => {
       const result = await loader.load(['/non/existent/plugin.js']);
 
       expect(result.success).toBe(false);
-      expect(result.errors.some((e) => e.code === PluginErrorCode.LOAD_FAILED)).toBe(true);
+      expect(result.errors.some(e => e.code === PluginErrorCode.LOAD_FAILED)).toBe(true);
     });
 
     test('should detect duplicate plugins', async () => {
@@ -128,7 +127,7 @@ describe('PluginLoader', () => {
 
       const result = await loader.load([pluginPath1, pluginPath2]);
 
-      expect(result.errors.some((e) => e.code === PluginErrorCode.DUPLICATE_RULE)).toBe(true);
+      expect(result.errors.some(e => e.code === PluginErrorCode.DUPLICATE_RULE)).toBe(true);
     });
   });
 

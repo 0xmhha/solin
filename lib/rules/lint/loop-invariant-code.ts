@@ -62,7 +62,7 @@ export class LoopInvariantCodeRule extends AbstractRule {
         if (key === 'loc' || key === 'range') continue;
         const value = n[key];
         if (Array.isArray(value)) {
-          value.forEach((child) => walk(child));
+          value.forEach(child => walk(child));
         } else if (value && typeof value === 'object') {
           walk(value);
         }
@@ -89,7 +89,7 @@ export class LoopInvariantCodeRule extends AbstractRule {
       if (key === 'loc' || key === 'range') continue;
       const value = node[key];
       if (Array.isArray(value)) {
-        value.forEach((child) => this.walkAst(child, context, stateVariables));
+        value.forEach(child => this.walkAst(child, context, stateVariables));
       } else if (value && typeof value === 'object') {
         this.walkAst(value, context, stateVariables);
       }
@@ -99,7 +99,11 @@ export class LoopInvariantCodeRule extends AbstractRule {
   /**
    * Analyze loops in a function
    */
-  private analyzeFunctionLoops(funcNode: any, context: AnalysisContext, stateVariables: Set<string>): void {
+  private analyzeFunctionLoops(
+    funcNode: any,
+    context: AnalysisContext,
+    stateVariables: Set<string>
+  ): void {
     // Collect function parameters
     const parameters = new Set<string>();
 
@@ -148,7 +152,7 @@ export class LoopInvariantCodeRule extends AbstractRule {
         if (key === 'loc' || key === 'range') continue;
         const value = n[key];
         if (Array.isArray(value)) {
-          value.forEach((child) => walk(child));
+          value.forEach(child => walk(child));
         } else if (value && typeof value === 'object') {
           walk(value);
         }
@@ -255,7 +259,7 @@ export class LoopInvariantCodeRule extends AbstractRule {
         if (key === 'loc' || key === 'range') continue;
         const value = n[key];
         if (Array.isArray(value)) {
-          value.forEach((child) => walk(child));
+          value.forEach(child => walk(child));
         } else if (value && typeof value === 'object') {
           walk(value);
         }
@@ -291,7 +295,7 @@ export class LoopInvariantCodeRule extends AbstractRule {
         if (key === 'loc' || key === 'range') continue;
         const value = n[key];
         if (Array.isArray(value)) {
-          value.forEach((child) => walk(child));
+          value.forEach(child => walk(child));
         } else if (value && typeof value === 'object') {
           walk(value);
         }
@@ -340,7 +344,7 @@ export class LoopInvariantCodeRule extends AbstractRule {
         if (key === 'loc' || key === 'range') continue;
         const value = n[key];
         if (Array.isArray(value)) {
-          value.forEach((child) => walk(child));
+          value.forEach(child => walk(child));
         } else if (value && typeof value === 'object') {
           walk(value);
         }
@@ -396,7 +400,7 @@ export class LoopInvariantCodeRule extends AbstractRule {
         if (key === 'loc' || key === 'range') continue;
         const value = n[key];
         if (Array.isArray(value)) {
-          value.forEach((child) => walk(child));
+          value.forEach(child => walk(child));
         } else if (value && typeof value === 'object') {
           walk(value);
         }

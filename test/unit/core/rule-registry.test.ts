@@ -167,7 +167,7 @@ describe('RuleRegistry', () => {
       const lintRules = registry.getRulesByCategory(Category.LINT);
 
       expect(lintRules).toHaveLength(2);
-      expect(lintRules.every((r) => r.metadata.category === Category.LINT)).toBe(true);
+      expect(lintRules.every(r => r.metadata.category === Category.LINT)).toBe(true);
     });
 
     test('should return empty array for category with no rules', () => {

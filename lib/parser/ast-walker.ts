@@ -62,7 +62,7 @@ export class ASTWalker {
     const results: ASTNode[] = [];
 
     this.walk(ast, {
-      enter: (node) => {
+      enter: node => {
         if (predicate(node)) {
           results.push(node);
         }
@@ -80,7 +80,7 @@ export class ASTWalker {
     let result: ASTNode | undefined;
 
     this.walk(ast, {
-      enter: (node) => {
+      enter: node => {
         if (predicate(node)) {
           result = node;
           return this.STOP;
@@ -124,11 +124,7 @@ export class ASTWalker {
   /**
    * Walk a single node and its children
    */
-  private walkNode(
-    node: ASTNode,
-    visitor: Visitor,
-    parent: ASTNode | undefined,
-  ): symbol | void {
+  private walkNode(node: ASTNode, visitor: Visitor, parent: ASTNode | undefined): symbol | void {
     // Call enter callback
     if (visitor.enter) {
       const result = visitor.enter(node, parent);
@@ -242,6 +238,6 @@ export class ASTWalker {
     }
 
     // Filter out null/undefined
-    return children.filter((child) => child != null);
+    return children.filter(child => child !== null && child !== undefined);
   }
 }

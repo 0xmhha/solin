@@ -92,7 +92,7 @@ export class ControlledDelegatecallRule extends AbstractRule {
 
       const value = node[key];
       if (Array.isArray(value)) {
-        value.forEach((child) => this.collectStateVariables(child));
+        value.forEach(child => this.collectStateVariables(child));
       } else if (value && typeof value === 'object') {
         this.collectStateVariables(value);
       }
@@ -125,7 +125,7 @@ export class ControlledDelegatecallRule extends AbstractRule {
 
       const value = node[key];
       if (Array.isArray(value)) {
-        value.forEach((child) => this.walkAst(child, context));
+        value.forEach(child => this.walkAst(child, context));
       } else if (value && typeof value === 'object') {
         this.walkAst(value, context);
       }
@@ -271,11 +271,7 @@ export class ControlledDelegatecallRule extends AbstractRule {
   /**
    * Report a controlled delegatecall issue
    */
-  private reportControlledDelegatecall(
-    node: any,
-    targetNode: any,
-    context: AnalysisContext
-  ): void {
+  private reportControlledDelegatecall(node: any, targetNode: any, context: AnalysisContext): void {
     if (!node.loc) {
       return;
     }

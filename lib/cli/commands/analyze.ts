@@ -16,6 +16,8 @@ import { StylishFormatter } from '@formatters/stylish-formatter';
 import { JSONFormatter } from '@formatters/json-formatter';
 import { SarifFormatter } from '@formatters/sarif-formatter';
 import { HtmlFormatter } from '@formatters/html-formatter';
+import { MarkdownFormatter } from '@formatters/markdown-formatter';
+import { JUnitFormatter } from '@formatters/junit-formatter';
 import type { IFormatter } from '@formatters/types';
 import { resolveFiles } from '../file-resolver';
 import type { ParsedArguments } from '../types';
@@ -122,10 +124,7 @@ export class AnalyzeCommand {
               }
             } else {
               // Actually apply fixes
-              const fixResult = await fixApplicator.applyToFile(
-                fileResult.filePath,
-                fixableIssues
-              );
+              const fixResult = await fixApplicator.applyToFile(fileResult.filePath, fixableIssues);
               totalApplied += fixResult.fixesApplied;
               totalSkipped += fixResult.fixesSkipped;
             }
@@ -179,7 +178,9 @@ export class AnalyzeCommand {
     const formatter = this.createFormatter(args.format);
 
     // Initial analysis
-    console.log(`\nWatching ${initialFiles.length} file${initialFiles.length === 1 ? '' : 's'} for changes...\n`);
+    console.log(
+      `\nWatching ${initialFiles.length} file${initialFiles.length === 1 ? '' : 's'} for changes...\n`
+    );
 
     const runAnalysis = async (files: string[]) => {
       const result = await engine.analyze({
@@ -218,9 +219,8 @@ export class AnalyzeCommand {
       }
 
       // Re-analyze just the changed file for speed
-      const filesToAnalyze = event.type === 'unlink'
-        ? initialFiles.filter(f => f !== event.filePath)
-        : [event.filePath];
+      const filesToAnalyze =
+        event.type === 'unlink' ? initialFiles.filter(f => f !== event.filePath) : [event.filePath];
 
       if (filesToAnalyze.length > 0) {
         void runAnalysis(filesToAnalyze);
@@ -246,11 +246,13 @@ export class AnalyzeCommand {
       // Handle graceful shutdown
       process.on('SIGINT', () => {
         console.log('\nStopping watch mode...');
-        void watcher.close().then(() => process.exit(0));
+        watcher.close();
+        process.exit(0);
       });
 
       process.on('SIGTERM', () => {
-        void watcher.close().then(() => process.exit(0));
+        watcher.close();
+        process.exit(0);
       });
     });
   }
@@ -317,7 +319,7 @@ export class AnalyzeCommand {
   private registerRules(registry: RuleRegistry): void {
     // Register all rules from the rules index
     const ruleClasses = [
-      // Security rules
+      // Security rules (existing)
       Rules.TxOriginRule,
       Rules.UncheckedCallsRule,
       Rules.TimestampDependenceRule,
@@ -351,7 +353,71 @@ export class AnalyzeCommand {
       Rules.ReturnBombRule,
       Rules.UnprotectedEtherWithdrawalRule,
       Rules.VoidConstructorRule,
-      // Lint rules
+      // Security rules (NEW)
+      Rules.ArrayLengthManipulationRule,
+      Rules.ArrayOutOfBoundsRule,
+      Rules.AssemblyUsage,
+      Rules.AvoidSuicide,
+      Rules.AvoidTxOrigin,
+      Rules.BlockTimestampRule,
+      Rules.BooleanConstantRule,
+      Rules.CallsInLoopRule,
+      Rules.CheckSendResult,
+      Rules.CodeInjectionRule,
+      Rules.ConstantFunctionStateRule,
+      Rules.ControlledArrayLengthRule,
+      Rules.CyclomaticComplexityRule,
+      Rules.DeadCode,
+      Rules.DelegatecallToUntrustedRule,
+      Rules.DenialOfServiceRule,
+      Rules.DoubleSpendRule,
+      Rules.ERC20Interface,
+      Rules.ERC721Interface,
+      Rules.EventsMathRule,
+      Rules.FrontRunningRule,
+      Rules.FunctionInitState,
+      Rules.IncorrectModifierRule,
+      Rules.IntegerOverflowRule,
+      Rules.LocalVariableShadowing,
+      Rules.LowLevelCallsRule,
+      Rules.MissingConstructorRule,
+      Rules.MissingInheritanceRule,
+      Rules.MissingInitializer,
+      Rules.MultipleConstructorsRule,
+      Rules.MultipleInheritance,
+      Rules.SecurityNamingConventionRule,
+      Rules.OracleManipulationRule,
+      Rules.PragmaVersion,
+      Rules.ProxyStorageCollisionRule,
+      Rules.RaceConditionRule,
+      Rules.RedundantStatements,
+      Rules.ReentrancyBenignRule,
+      Rules.ReentrancyNoEthRule,
+      Rules.RtloCharacterRule,
+      Rules.SignatureMalleabilityRule,
+      Rules.SimilarNames,
+      Rules.StateChangeExternalCallRule,
+      Rules.StateVariableDefaultRule,
+      Rules.StateVariableShadowing,
+      Rules.StorageArrayDeleteRule,
+      Rules.StorageCollisionRule,
+      Rules.TautologyRule,
+      Rules.TooManyDigitsRule,
+      Rules.TooManyFunctionsRule,
+      Rules.TypeConfusionRule,
+      Rules.UnaryExpressionRule,
+      Rules.UncheckedReturnRule,
+      Rules.UninitializedLocalRule,
+      Rules.UnprotectedSelfdestructRule,
+      Rules.UnsafeExternalCallRule,
+      Rules.UnusedReturnRule,
+      Rules.UnusedStateRule,
+      Rules.VariableMutationRule,
+      Rules.VariableScopeRule,
+      Rules.VoidConstructorCallRule,
+      Rules.WriteAfterWriteRule,
+      Rules.WrongEqualityRule,
+      // Lint rules (existing)
       Rules.NoEmptyBlocksRule,
       Rules.NamingConventionRule,
       Rules.VisibilityModifiersRule,
@@ -379,6 +445,35 @@ export class AnalyzeCommand {
       Rules.QuotesRule,
       Rules.SpaceAfterCommaRule,
       Rules.VarNameMixedcaseRule,
+      // Lint rules (NEW)
+      Rules.ArrayDeclarationRule,
+      Rules.AvoidCallValueRule,
+      Rules.AvoidLowLevelCallsRule,
+      Rules.BracketAlignRule,
+      Rules.CheckSendResultRule,
+      Rules.CompilerVersionRule,
+      Rules.ConstructorAboveModifiersRule,
+      Rules.CurlyOnSameLineRule,
+      Rules.ExplicitVisibilityRule,
+      Rules.GasMultitoken1155,
+      Rules.ImportOnTopRule,
+      Rules.ImportsOnTopRule,
+      Rules.NoComplexFallbackRule,
+      Rules.NoMixedDeclarationRule,
+      Rules.NoPublicVarsRule,
+      Rules.NoUnusedImportsRule,
+      Rules.OneContractPerFileRule,
+      Rules.OrderedImportsRule,
+      Rules.OrderingRule,
+      Rules.PackStorageVariables,
+      Rules.PayableFallbackRule,
+      Rules.PreferExternalOverPublicRule,
+      Rules.PrivateVarsLeadingUnderscoreRule,
+      Rules.ReasonStringRule,
+      Rules.SeparateByOneLineRule,
+      Rules.StatementIndentRule,
+      Rules.TwoLinesTopLevelRule,
+      Rules.UseCalldataOverMemory,
     ];
 
     // Register each rule
@@ -410,6 +505,14 @@ export class AnalyzeCommand {
         return new SarifFormatter({ pretty: false });
       case 'html':
         return new HtmlFormatter({ interactive: true });
+      case 'markdown':
+      case 'md':
+        return new MarkdownFormatter({ showTable: false });
+      case 'markdown-table':
+        return new MarkdownFormatter({ showTable: true });
+      case 'junit':
+      case 'xml':
+        return new JUnitFormatter();
       case 'stylish':
       default:
         return new StylishFormatter();
@@ -434,9 +537,7 @@ export class AnalyzeCommand {
 
     // Check max warnings
     if (args.maxWarnings !== undefined && summary.warnings > args.maxWarnings) {
-      console.error(
-        `Error: ${summary.warnings} warnings exceeded maximum of ${args.maxWarnings}`,
-      );
+      console.error(`Error: ${summary.warnings} warnings exceeded maximum of ${args.maxWarnings}`);
       return 1;
     }
 

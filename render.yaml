@@ -1,0 +1,17 @@
+services:
+  - type: web
+    name: solin
+    runtime: node
+    env: node
+    buildCommand: npm install && npm run build
+    startCommand: npm run server
+    envVars:
+      - key: REST_ENABLED
+        value: "true"
+      - key: REST_PORT
+        value: "10000"
+      - key: CORS_ENABLED
+        value: "true"
+      - key: NODE_ENV
+        value: production
+    healthCheckPath: /api/health

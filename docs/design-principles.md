@@ -47,10 +47,10 @@ class ReentrancyDetector {
 
 // ❌ BAD: Multiple responsibilities
 class AnalyzerGod {
-  parse(source: string): AST { }
-  enhance(ast: AST): EnhancedAST { }
-  detectReentrancy(ast: AST): Issue[] { }
-  formatOutput(issues: Issue[]): string { }
+  parse(source: string): AST {}
+  enhance(ast: AST): EnhancedAST {}
+  detectReentrancy(ast: AST): Issue[] {}
+  formatOutput(issues: Issue[]): string {}
 }
 ```
 
@@ -192,21 +192,21 @@ interface IDocumented {
 
 // Rules implement only what they need
 class SimpleDetector implements IDetector {
-  detect(context: AnalysisContext): Issue[] { }
+  detect(context: AnalysisContext): Issue[] {}
 }
 
 class FixableDetector implements IDetector, IFixable {
-  detect(context: AnalysisContext): Issue[] { }
-  fix(issue: Issue): Fix { }
+  detect(context: AnalysisContext): Issue[] {}
+  fix(issue: Issue): Fix {}
 }
 
 // ❌ BAD: Fat interface
 interface IDetectorFat {
   detect(context: AnalysisContext): Issue[];
-  fix(issue: Issue): Fix;  // Not all detectors can fix
-  configure(options: any): void;  // Not all need config
-  benchmark(): Metrics;  // Not all need benchmarking
-  visualize(): Graph;  // Not all need visualization
+  fix(issue: Issue): Fix; // Not all detectors can fix
+  configure(options: any): void; // Not all need config
+  benchmark(): Metrics; // Not all need benchmarking
+  visualize(): Graph; // Not all need visualization
 }
 ```
 
@@ -229,19 +229,15 @@ interface IDetectorFat {
 // ✅ GOOD: Depend on abstractions
 class AnalysisEngine {
   constructor(
-    private parser: IParser,  // Abstract interface
-    private detectors: IDetector[],  // Abstract interface
-    private formatter: IFormatter  // Abstract interface
+    private parser: IParser, // Abstract interface
+    private detectors: IDetector[], // Abstract interface
+    private formatter: IFormatter // Abstract interface
   ) {}
 
   async analyze(files: string[]): Promise<Report> {
-    const asts = await Promise.all(
-      files.map(f => this.parser.parse(f))
-    );
+    const asts = await Promise.all(files.map(f => this.parser.parse(f)));
 
-    const issues = asts.flatMap(ast =>
-      this.detectors.flatMap(d => d.detect(ast))
-    );
+    const issues = asts.flatMap(ast => this.detectors.flatMap(d => d.detect(ast)));
 
     return this.formatter.format(issues);
   }
@@ -249,14 +245,14 @@ class AnalysisEngine {
 
 // Concrete implementations
 class SolidityParser implements IParser {
-  parse(source: string): AST { }
+  parse(source: string): AST {}
 }
 
 // ❌ BAD: Depend on concrete classes
 class AnalysisEngineBad {
-  private parser = new SolidityParser();  // Tight coupling
-  private detector = new ReentrancyDetector();  // Can't swap
-  private formatter = new JSONFormatter();  // Hard to test
+  private parser = new SolidityParser(); // Tight coupling
+  private detector = new ReentrancyDetector(); // Can't swap
+  private formatter = new JSONFormatter(); // Hard to test
 }
 ```
 
@@ -276,7 +272,7 @@ class AnalysisEngineBad {
 ```typescript
 // ✅ GOOD: Clear, descriptive names
 class UserAuthenticationService {
-  authenticateUser(credentials: UserCredentials): AuthenticationResult { }
+  authenticateUser(credentials: UserCredentials): AuthenticationResult {}
 }
 
 function calculateMonthlyInterestRate(annualRate: number): number {
@@ -287,7 +283,7 @@ const MAX_RETRY_ATTEMPTS = 3;
 
 // ❌ BAD: Unclear names
 class UAS {
-  auth(c: any): any { }
+  auth(c: any): any {}
 }
 
 function calc(r: number): number {
@@ -362,8 +358,8 @@ function detectIssues(ast: AST): Issue[] {
 
 // ❌ BAD: Mixed abstraction levels
 function analyzeContractBad(filePath: string): AnalysisResult {
-  const source = fs.readFileSync(filePath, 'utf-8');  // Low level
-  const ast = parseSource(source);  // High level
+  const source = fs.readFileSync(filePath, 'utf-8'); // Low level
+  const ast = parseSource(source); // High level
 
   // Very low level
   for (let i = 0; i < ast.body.length; i++) {
@@ -373,7 +369,7 @@ function analyzeContractBad(filePath: string): AnalysisResult {
     }
   }
 
-  const issues = detectIssues(ast);  // High level
+  const issues = detectIssues(ast); // High level
   return formatResult(issues);
 }
 ```
@@ -411,11 +407,9 @@ function createUserBad(
 ```typescript
 // ✅ GOOD: Code is self-explanatory
 function isEligibleForDiscount(user: User): boolean {
-  const hasBeenMemberForOverYear =
-    user.memberSince < Date.now() - YEAR_IN_MS;
+  const hasBeenMemberForOverYear = user.memberSince < Date.now() - YEAR_IN_MS;
 
-  const hasMadeMultiplePurchases =
-    user.purchaseCount > 5;
+  const hasMadeMultiplePurchases = user.purchaseCount > 5;
 
   return hasBeenMemberForOverYear && hasMadeMultiplePurchases;
 }
@@ -423,14 +417,14 @@ function isEligibleForDiscount(user: User): boolean {
 // ✅ GOOD: Explains WHY, not WHAT
 function calculateTax(amount: number): number {
   // Tax rate set to match federal guidelines as of 2025
-  const TAX_RATE = 0.20;
+  const TAX_RATE = 0.2;
   return amount * TAX_RATE;
 }
 
 // ❌ BAD: Redundant comments
 function addNumbers(a: number, b: number): number {
   // Add a and b
-  return a + b;  // Return the sum
+  return a + b; // Return the sum
 }
 
 // ❌ BAD: Commented-out code
@@ -694,21 +688,21 @@ function walk(ast: AST, visitor: Visitor): void {
 ```typescript
 // ❌ AVOID: God object that does everything
 class ApplicationGod {
-  parseFiles() { }
-  analyzeCode() { }
-  detectVulnerabilities() { }
-  formatOutput() { }
-  saveToDatabase() { }
-  sendNotifications() { }
+  parseFiles() {}
+  analyzeCode() {}
+  detectVulnerabilities() {}
+  formatOutput() {}
+  saveToDatabase() {}
+  sendNotifications() {}
 }
 
 // ✅ DO: Separate concerns
-class Parser { }
-class Analyzer { }
-class Detector { }
-class Formatter { }
-class Repository { }
-class Notifier { }
+class Parser {}
+class Analyzer {}
+class Detector {}
+class Formatter {}
+class Repository {}
+class Notifier {}
 ```
 
 ### Spaghetti Code

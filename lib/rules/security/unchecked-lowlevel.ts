@@ -52,7 +52,7 @@ export class UncheckedLowlevelRule extends AbstractRule {
       if (key === 'loc' || key === 'range') continue;
       const value = node[key];
       if (Array.isArray(value)) {
-        value.forEach((child) => this.analyzeFunctions(child, context));
+        value.forEach(child => this.analyzeFunctions(child, context));
       } else if (value && typeof value === 'object') {
         this.analyzeFunctions(value, context);
       }
@@ -104,7 +104,7 @@ export class UncheckedLowlevelRule extends AbstractRule {
       if (key === 'loc' || key === 'range') continue;
       const value = node[key];
       if (Array.isArray(value)) {
-        value.forEach((child) => this.findCheckedCalls(child));
+        value.forEach(child => this.findCheckedCalls(child));
       } else if (value && typeof value === 'object') {
         this.findCheckedCalls(value);
       }
@@ -174,7 +174,7 @@ export class UncheckedLowlevelRule extends AbstractRule {
           if (key === 'loc' || key === 'range' || key === 'initialValue') continue;
           const value = node[key];
           if (Array.isArray(value)) {
-            value.forEach((child) => this.walkAst(child, context));
+            value.forEach(child => this.walkAst(child, context));
           } else if (value && typeof value === 'object') {
             this.walkAst(value, context);
           }
@@ -196,7 +196,7 @@ export class UncheckedLowlevelRule extends AbstractRule {
       if (key === 'loc' || key === 'range') continue;
       const value = node[key];
       if (Array.isArray(value)) {
-        value.forEach((child) => this.walkAst(child, context));
+        value.forEach(child => this.walkAst(child, context));
       } else if (value && typeof value === 'object') {
         this.walkAst(value, context);
       }
@@ -209,11 +209,7 @@ export class UncheckedLowlevelRule extends AbstractRule {
     if (expr?.type !== 'MemberAccess') return false;
 
     const memberName = expr.memberName;
-    return (
-      memberName === 'call' ||
-      memberName === 'delegatecall' ||
-      memberName === 'staticcall'
-    );
+    return memberName === 'call' || memberName === 'delegatecall' || memberName === 'staticcall';
   }
 
   private getLocationKey(node: any): string | null {

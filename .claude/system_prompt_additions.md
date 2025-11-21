@@ -21,6 +21,7 @@ ALWAYS:
 ## Development Process Guards
 
 ### TESTING REQUIREMENTS:
+
 - Write failing tests first (RED), then implement to make them pass (GREEN), then refactor
 - Never commit code with test.skip() or test.todo() for bugs - fix the bugs
 - Include property-based testing for data structures where applicable
@@ -29,6 +30,7 @@ ALWAYS:
 - Test async operations with proper timeout handling
 
 ### ARCHITECTURE REQUIREMENTS:
+
 - Explicit error handling - no hidden throws or unhandled promise rejections
 - Memory safety - cleanup all subscriptions, listeners, and intervals
 - Performance conscious - avoid unnecessary object creation and deep clones
@@ -52,6 +54,7 @@ Before marking any code complete, verify:
 ## TypeScript-Specific Quality Standards
 
 ### ERROR HANDLING:
+
 - Use async/await with try/catch for asynchronous operations
 - Define comprehensive error classes with context
 - Never ignore errors silently (empty catch blocks)
@@ -59,6 +62,7 @@ Before marking any code complete, verify:
 - Use custom Error classes for domain-specific errors
 
 ### MEMORY MANAGEMENT:
+
 - Remove event listeners when no longer needed
 - Clear timers and intervals properly
 - Avoid circular references in closures
@@ -67,6 +71,7 @@ Before marking any code complete, verify:
 - Properly cleanup resources in finally blocks
 
 ### DATA STRUCTURE INVARIANTS:
+
 - Document all invariants in JSDoc comments
 - Implement runtime validation for critical invariants
 - Test invariant preservation across all operations
@@ -74,6 +79,7 @@ Before marking any code complete, verify:
 - Validate state consistency at module boundaries
 
 ### MODULE ORGANIZATION:
+
 - Single responsibility per module
 - Clear public/private API boundaries (export only what's necessary)
 - Comprehensive JSDoc documentation
@@ -83,6 +89,7 @@ Before marking any code complete, verify:
 ## Critical Patterns to Avoid
 
 ### DANGEROUS PATTERNS:
+
 ```typescript
 // NEVER DO THIS - production throw without context
 throw new Error('This should never happen');
@@ -111,12 +118,14 @@ function updateState(state: State, newValue: unknown) {
 }
 
 // NEVER DO THIS - any type abuse
-function process(data: any) { // Defeats type safety
+function process(data: any) {
+  // Defeats type safety
   return data.someProperty;
 }
 ```
 
 ### PREFERRED PATTERNS:
+
 ```typescript
 // DO THIS - proper error handling with context
 async function operation(): Promise<Result<T, MyError>> {
@@ -126,7 +135,7 @@ async function operation(): Promise<Result<T, MyError>> {
   } catch (error) {
     return {
       success: false,
-      error: new MyError('Operation failed', { cause: error })
+      error: new MyError('Operation failed', { cause: error }),
     };
   }
 }
@@ -194,6 +203,7 @@ function process(data: ProcessableData): string {
 ## Testing Standards
 
 ### COMPREHENSIVE TEST COVERAGE:
+
 - Unit tests for all public functions
 - Integration tests for complex interactions
 - Edge case and boundary condition tests
@@ -202,6 +212,7 @@ function process(data: ProcessableData): string {
 - Error condition tests
 
 ### TEST ORGANIZATION:
+
 ```typescript
 describe('DataStructure', () => {
   let structure: DataStructure;
@@ -235,13 +246,11 @@ describe('DataStructure', () => {
 
   describe('error conditions', () => {
     test('should throw meaningful error for invalid input', () => {
-      expect(() => structure.operation(invalidInput))
-        .toThrow('Expected valid input');
+      expect(() => structure.operation(invalidInput)).toThrow('Expected valid input');
     });
 
     test('should handle async errors properly', async () => {
-      await expect(structure.asyncOperation())
-        .rejects.toThrow(OperationError);
+      await expect(structure.asyncOperation()).rejects.toThrow(OperationError);
     });
   });
 
@@ -255,6 +264,7 @@ describe('DataStructure', () => {
 ```
 
 ### ASYNC TESTING:
+
 ```typescript
 describe('async operations', () => {
   test('should handle successful async operation', async () => {
@@ -263,14 +273,12 @@ describe('async operations', () => {
   });
 
   test('should handle async errors', async () => {
-    await expect(failingAsyncOperation())
-      .rejects.toThrow(ExpectedError);
+    await expect(failingAsyncOperation()).rejects.toThrow(ExpectedError);
   });
 
   test('should timeout long operations', async () => {
     jest.setTimeout(5000);
-    await expect(longRunningOperation())
-      .resolves.toBeDefined();
+    await expect(longRunningOperation()).resolves.toBeDefined();
   });
 
   test('should cleanup resources on error', async () => {
@@ -286,6 +294,7 @@ describe('async operations', () => {
 ```
 
 ### MEMORY TESTING:
+
 ```typescript
 describe('memory management', () => {
   test('should not leak memory with many operations', () => {
@@ -339,6 +348,7 @@ describe('memory management', () => {
 ## Documentation Standards
 
 ### CODE DOCUMENTATION:
+
 - Document all public APIs with JSDoc
 - Explain complex algorithms and data structures
 - Document invariants and preconditions
@@ -347,7 +357,8 @@ describe('memory management', () => {
 - Document thrown errors
 
 ### ERROR DOCUMENTATION:
-```typescript
+
+````typescript
 /**
  * Inserts a key-value pair into the tree.
  *
@@ -378,9 +389,10 @@ public insert(key: K, value: V): V | undefined {
 
   // Implementation
 }
-```
+````
 
 ### TYPE DOCUMENTATION:
+
 ```typescript
 /**
  * Configuration options for the analysis engine
@@ -434,6 +446,7 @@ export interface AnalysisResult<T = Issue> {
 ## Error Handling Patterns
 
 ### CUSTOM ERROR CLASSES:
+
 ```typescript
 /**
  * Base error class for all application errors
@@ -443,7 +456,7 @@ export class AppError extends Error {
     message: string,
     public readonly code: string,
     public readonly context?: Record<string, unknown>,
-    public readonly cause?: Error,
+    public readonly cause?: Error
   ) {
     super(message);
     this.name = this.constructor.name;
@@ -459,7 +472,7 @@ export class ParseError extends AppError {
     message: string,
     public readonly line: number,
     public readonly column: number,
-    cause?: Error,
+    cause?: Error
   ) {
     super(message, 'PARSE_ERROR', { line, column }, cause);
   }
@@ -472,7 +485,7 @@ export class ValidationError extends AppError {
   constructor(
     message: string,
     public readonly field: string,
-    public readonly value: unknown,
+    public readonly value: unknown
   ) {
     super(message, 'VALIDATION_ERROR', { field, value });
   }
@@ -480,13 +493,12 @@ export class ValidationError extends AppError {
 ```
 
 ### RESULT PATTERN:
+
 ```typescript
 /**
  * Result type for operations that can fail
  */
-export type Result<T, E = Error> =
-  | { success: true; value: T }
-  | { success: false; error: E };
+export type Result<T, E = Error> = { success: true; value: T } | { success: false; error: E };
 
 /**
  * Helper to create success result
@@ -511,12 +523,14 @@ async function parseFile(filePath: string): Promise<Result<AST, ParseError>> {
     const ast = parse(content);
     return ok(ast);
   } catch (error) {
-    return err(new ParseError(
-      `Failed to parse file: ${filePath}`,
-      0,
-      0,
-      error instanceof Error ? error : undefined,
-    ));
+    return err(
+      new ParseError(
+        `Failed to parse file: ${filePath}`,
+        0,
+        0,
+        error instanceof Error ? error : undefined
+      )
+    );
   }
 }
 ```
@@ -524,6 +538,7 @@ async function parseFile(filePath: string): Promise<Result<AST, ParseError>> {
 ## Performance Considerations
 
 ### AVOID PERFORMANCE PITFALLS:
+
 ```typescript
 // BAD - Creates new array on every iteration
 for (let i = 0; i < items.length; i++) {
@@ -553,6 +568,7 @@ const data = await fs.promises.readFile(path);
 ```
 
 ### CACHING AND MEMOIZATION:
+
 ```typescript
 /**
  * Memoize expensive computations

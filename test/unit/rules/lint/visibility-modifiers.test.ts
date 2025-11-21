@@ -97,7 +97,7 @@ describe('VisibilityModifiersRule', () => {
 
       const issues = context.getIssues();
       expect(issues.length).toBeGreaterThanOrEqual(3);
-      expect(issues.every((issue) => issue.ruleId === 'lint/visibility-modifiers')).toBe(true);
+      expect(issues.every(issue => issue.ruleId === 'lint/visibility-modifiers')).toBe(true);
     });
 
     test('should not report issue for constructor', async () => {
@@ -198,7 +198,7 @@ describe('VisibilityModifiersRule', () => {
 
       const issues = context.getIssues();
       expect(issues.length).toBeGreaterThanOrEqual(3);
-      expect(issues.every((issue) => issue.ruleId === 'lint/visibility-modifiers')).toBe(true);
+      expect(issues.every(issue => issue.ruleId === 'lint/visibility-modifiers')).toBe(true);
     });
 
     test('should not report issue for constants (visibility is implicit)', async () => {
@@ -243,7 +243,7 @@ describe('VisibilityModifiersRule', () => {
 
       const issues = context.getIssues();
       expect(issues.length).toBeGreaterThanOrEqual(2);
-      expect(issues.every((issue) => issue.ruleId === 'lint/visibility-modifiers')).toBe(true);
+      expect(issues.every(issue => issue.ruleId === 'lint/visibility-modifiers')).toBe(true);
     });
   });
 

@@ -121,13 +121,13 @@ export class FileWatcher extends EventEmitter {
 
     // Watch each file
     for (const file of files) {
-      await this.watchFile(file);
+      this.watchFile(file);
     }
 
     // Watch directories for new files
     const directories = this.getUniqueDirectories(files);
     for (const dir of directories) {
-      await this.watchDirectory(dir);
+      this.watchDirectory(dir);
     }
 
     this.emit('ready', { filesWatched: this.stats.filesWatched });
@@ -136,7 +136,7 @@ export class FileWatcher extends EventEmitter {
   /**
    * Stop watching all files
    */
-  async close(): Promise<void> {
+  close(): void {
     // Clear all debounce timers
     for (const timer of this.debounceTimers.values()) {
       clearTimeout(timer);
@@ -172,12 +172,12 @@ export class FileWatcher extends EventEmitter {
   /**
    * Add a file to watch
    */
-  async addFile(filePath: string): Promise<void> {
+  addFile(filePath: string): void {
     if (!this.isRunning) {
       throw new Error('Watcher is not running');
     }
 
-    await this.watchFile(filePath);
+    this.watchFile(filePath);
   }
 
   /**
@@ -195,7 +195,7 @@ export class FileWatcher extends EventEmitter {
   /**
    * Watch a single file
    */
-  private async watchFile(filePath: string): Promise<void> {
+  private watchFile(filePath: string): void {
     // Skip if already watching
     if (this.watchers.has(filePath)) {
       return;
@@ -207,11 +207,11 @@ export class FileWatcher extends EventEmitter {
     }
 
     try {
-      const watcher = fs.watch(filePath, (eventType) => {
+      const watcher = fs.watch(filePath, eventType => {
         this.handleFileChange(filePath, eventType === 'rename' ? 'unlink' : 'change');
       });
 
-      watcher.on('error', (error) => {
+      watcher.on('error', error => {
         this.emit('error', error);
         this.removeFile(filePath);
       });
@@ -227,7 +227,7 @@ export class FileWatcher extends EventEmitter {
   /**
    * Watch a directory for new files
    */
-  private async watchDirectory(dirPath: string): Promise<void> {
+  private watchDirectory(dirPath: string): void {
     // Skip if already watching
     if (this.watchers.has(dirPath)) {
       return;
@@ -244,7 +244,7 @@ export class FileWatcher extends EventEmitter {
           const filePath = path.join(dirPath, filename);
 
           // Check if file was added or removed
-          fs.access(filePath, fs.constants.F_OK, (err) => {
+          fs.access(filePath, fs.constants.F_OK, err => {
             if (err) {
               // File was removed
               this.handleFileChange(filePath, 'unlink');
@@ -252,13 +252,13 @@ export class FileWatcher extends EventEmitter {
               // File was added
               this.handleFileChange(filePath, 'add');
               // Start watching the new file
-              this.watchFile(filePath).catch(() => {});
+              this.watchFile(filePath);
             }
           });
         }
       });
 
-      watcher.on('error', (error) => {
+      watcher.on('error', error => {
         this.emit('error', error);
       });
 
@@ -464,7 +464,7 @@ export async function watchMode(options: WatchModeOptions): Promise<FileWatcher>
   let pendingEvents: FileChangeEvent[] = [];
   let aggregationTimer: NodeJS.Timeout | null = null;
 
-  const processEvents = async () => {
+  const processEvents = async (): Promise<void> => {
     if (pendingEvents.length === 0) return;
 
     const events = [...pendingEvents];
@@ -489,10 +489,10 @@ export async function watchMode(options: WatchModeOptions): Promise<FileWatcher>
 
       aggregationTimer = setTimeout(() => {
         aggregationTimer = null;
-        processEvents();
+        void processEvents();
       }, aggregationWindow);
     } else {
-      options.onChange([event]);
+      void options.onChange([event]);
     }
   });
 

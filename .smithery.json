@@ -1,0 +1,167 @@
+{
+  "name": "solin",
+  "displayName": "Solin - Solidity Security Analyzer",
+  "description": "Comprehensive Solidity static analyzer with 155+ rules for security vulnerabilities, gas optimization, and code quality. Detects reentrancy, access control issues, unchecked calls, timestamp dependence, and provides actionable fix suggestions.",
+  "category": "development",
+  "tags": [
+    "solidity",
+    "ethereum",
+    "security",
+    "smart-contracts",
+    "static-analysis",
+    "linter",
+    "vulnerability-detection",
+    "gas-optimization",
+    "code-quality"
+  ],
+  "icon": "🔒",
+  "homepage": "https://github.com/0xmhha/solin",
+  "repository": "https://github.com/0xmhha/solin",
+  "license": "MIT",
+  "author": {
+    "name": "Solin Contributors",
+    "url": "https://github.com/0xmhha/solin"
+  },
+  "mcp": {
+    "version": "1.0",
+    "serverType": "stdio",
+    "capabilities": {
+      "tools": true,
+      "resources": false,
+      "prompts": false
+    }
+  },
+  "installation": {
+    "npm": "npm install -g solin",
+    "requirements": {
+      "node": ">=18.0.0"
+    }
+  },
+  "tools": [
+    {
+      "name": "analyze_solidity",
+      "description": "Analyze Solidity smart contract code for security vulnerabilities, gas optimization opportunities, and code quality issues. Returns detailed findings with severity levels, line numbers, and fix recommendations.",
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "code": {
+            "type": "string",
+            "description": "The Solidity source code to analyze"
+          },
+          "format": {
+            "type": "string",
+            "enum": ["stylish", "json"],
+            "description": "Output format (default: stylish)",
+            "default": "stylish"
+          },
+          "rules": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            },
+            "description": "Specific rules to enable (optional, all rules by default)"
+          }
+        },
+        "required": ["code"]
+      }
+    },
+    {
+      "name": "list_rules",
+      "description": "List all available analysis rules with descriptions. Can filter by category (lint, security) or severity (error, warning, info).",
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "category": {
+            "type": "string",
+            "enum": ["lint", "security", "all"],
+            "description": "Filter by rule category (default: all)",
+            "default": "all"
+          },
+          "severity": {
+            "type": "string",
+            "enum": ["error", "warning", "info", "all"],
+            "description": "Filter by severity level (default: all)",
+            "default": "all"
+          }
+        }
+      }
+    },
+    {
+      "name": "explain_rule",
+      "description": "Get detailed explanation of a specific rule including what it checks, why it matters, and how to fix violations.",
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "ruleId": {
+            "type": "string",
+            "description": "Rule ID (e.g., 'security/reentrancy', 'lint/naming-convention')"
+          }
+        },
+        "required": ["ruleId"]
+      }
+    },
+    {
+      "name": "suggest_fixes",
+      "description": "Analyze code and provide specific, actionable fix suggestions for all detected issues.",
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "code": {
+            "type": "string",
+            "description": "The Solidity source code with issues"
+          },
+          "issueIndex": {
+            "type": "number",
+            "description": "Index of specific issue to fix (optional, fixes all by default)"
+          }
+        },
+        "required": ["code"]
+      }
+    }
+  ],
+  "examples": [
+    {
+      "title": "Analyze Contract for Vulnerabilities",
+      "description": "Scan a Solidity contract for security issues including reentrancy",
+      "conversation": [
+        {
+          "role": "user",
+          "content": "Analyze this contract for security issues:\n\ncontract Bank {\n    mapping(address => uint) public balances;\n    \n    function withdraw() public {\n        uint amount = balances[msg.sender];\n        msg.sender.call.value(amount)(\"\");\n        balances[msg.sender] = 0;\n    }\n}"
+        }
+      ]
+    },
+    {
+      "title": "List Security Rules",
+      "description": "Get all security-related analysis rules",
+      "conversation": [
+        {
+          "role": "user",
+          "content": "Show me all security rules that Solin checks"
+        }
+      ]
+    },
+    {
+      "title": "Explain Specific Rule",
+      "description": "Get detailed information about a specific security rule",
+      "conversation": [
+        {
+          "role": "user",
+          "content": "Explain what the security/reentrancy rule checks for"
+        }
+      ]
+    },
+    {
+      "title": "Get Fix Suggestions",
+      "description": "Analyze code and get specific suggestions to fix issues",
+      "conversation": [
+        {
+          "role": "user",
+          "content": "What's wrong with this code and how do I fix it?\n\ncontract Test {\n    function transfer() public {\n        msg.sender.call.value(1 ether)(\"\");\n    }\n}"
+        }
+      ]
+    }
+  ],
+  "screenshots": [],
+  "video": "",
+  "documentation": "https://github.com/0xmhha/solin/blob/main/docs/ai-integration.md"
+}

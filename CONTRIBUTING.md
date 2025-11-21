@@ -106,20 +106,24 @@ Use this template:
 
 ```markdown
 ## Description
+
 Brief description of changes
 
 ## Type of Change
+
 - [ ] Bug fix
 - [ ] New feature
 - [ ] Breaking change
 - [ ] Documentation update
 
 ## Testing
+
 - [ ] Unit tests added
 - [ ] Integration tests added
 - [ ] Manual testing performed
 
 ## Checklist
+
 - [ ] Tests pass
 - [ ] Coverage >= 80%
 - [ ] Documentation updated
@@ -201,7 +205,7 @@ test('description', () => {
 
 Use JSDoc for public APIs:
 
-```typescript
+````typescript
 /**
  * Detects reentrancy vulnerabilities in Solidity contracts.
  *
@@ -219,11 +223,12 @@ export class ReentrancyDetector {
     // Implementation
   }
 }
-```
+````
 
 ### README Updates
 
 Update README.md if adding:
+
 - New features
 - New CLI options
 - Breaking changes
@@ -231,6 +236,7 @@ Update README.md if adding:
 ### Documentation Files
 
 Update relevant docs in `docs/`:
+
 - `features.md`: New features
 - `todolist.md`: Mark completed tasks
 - `architecture.md`: Architectural changes

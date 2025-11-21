@@ -27,6 +27,12 @@
     "typecheck": "tsc --noEmit",
     "clean": "rm -rf dist coverage .solin-cache",
     "benchmark": "npx ts-node scripts/benchmark.ts",
+    "server": "node dist/api/server.js",
+    "server:rest": "REST_ENABLED=true node dist/api/server.js",
+    "server:ws": "WS_ENABLED=true node dist/api/server.js",
+    "server:all": "REST_ENABLED=true WS_ENABLED=true GRPC_ENABLED=true node dist/api/server.js",
+    "mcp-server": "node dist/mcp/server.js",
+    "grpc-server": "node dist/grpc/server.js",
     "prepare": "husky install",
     "prepublishOnly": "npm run clean && npm run build && npm test"
   },
@@ -39,8 +45,22 @@
     "smart-contracts",
     "analyzer",
     "detector",
-    "vulnerability"
+    "vulnerability",
+    "mcp",
+    "model-context-protocol",
+    "claude",
+    "ai-tools",
+    "chatgpt",
+    "rest-api"
   ],
+  "mcp": {
+    "server": {
+      "command": "node",
+      "args": [
+        "dist/mcp/server.js"
+      ]
+    }
+  },
   "author": "Solin Contributors",
   "license": "MIT",
   "repository": {
@@ -56,11 +76,15 @@
     "npm": ">=8.0.0"
   },
   "dependencies": {
+    "@grpc/grpc-js": "^1.14.1",
+    "@grpc/proto-loader": "^0.8.0",
+    "@modelcontextprotocol/sdk": "^1.22.0",
     "@solidity-parser/parser": "^0.20.2",
     "ajv": "^8.12.0",
     "chalk": "^5.3.0",
     "commander": "^12.0.0",
     "cosmiconfig": "^9.0.0",
+    "crypto-js": "^4.2.0",
     "glob": "^10.3.10",
     "ignore": "^5.3.0"
   },

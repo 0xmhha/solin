@@ -81,19 +81,34 @@
         },
         "solin.severity.error": {
           "type": "string",
-          "enum": ["Error", "Warning", "Information", "Hint"],
+          "enum": [
+            "Error",
+            "Warning",
+            "Information",
+            "Hint"
+          ],
           "default": "Error",
           "description": "VS Code severity for Solin errors"
         },
         "solin.severity.warning": {
           "type": "string",
-          "enum": ["Error", "Warning", "Information", "Hint"],
+          "enum": [
+            "Error",
+            "Warning",
+            "Information",
+            "Hint"
+          ],
           "default": "Warning",
           "description": "VS Code severity for Solin warnings"
         },
         "solin.severity.info": {
           "type": "string",
-          "enum": ["Error", "Warning", "Information", "Hint"],
+          "enum": [
+            "Error",
+            "Warning",
+            "Information",
+            "Hint"
+          ],
           "default": "Information",
           "description": "VS Code severity for Solin info"
         },
@@ -107,7 +122,10 @@
           "items": {
             "type": "string"
           },
-          "default": ["**/node_modules/**", "**/lib/**"],
+          "default": [
+            "**/node_modules/**",
+            "**/lib/**"
+          ],
           "description": "Glob patterns to exclude from analysis"
         }
       }
@@ -115,7 +133,9 @@
     "languages": [
       {
         "id": "solidity",
-        "extensions": [".sol"]
+        "extensions": [
+          ".sol"
+        ]
       }
     ]
   },

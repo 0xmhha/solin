@@ -7,6 +7,7 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 Solin is a comprehensive Solidity static analysis tool that combines linting and security detection. It's built with TypeScript, follows strict TDD practices, and emphasizes SOLID principles throughout its architecture.
 
 **Key Technologies:**
+
 - TypeScript (ES2022 target, strict mode)
 - Jest for testing with ts-jest preset
 - @solidity-parser/parser for AST parsing
@@ -15,6 +16,7 @@ Solin is a comprehensive Solidity static analysis tool that combines linting and
 ## Development Commands
 
 ### Build & Development
+
 ```bash
 # Build the project (TypeScript compilation + ESBuild bundling)
 npm run build
@@ -27,6 +29,7 @@ npm run clean
 ```
 
 ### Testing
+
 ```bash
 # Run all tests
 npm test
@@ -45,12 +48,14 @@ npm test -- --testNamePattern="pattern"
 ```
 
 **Coverage Requirements:**
+
 - Branches: 80%
 - Functions: 90%
 - Lines: 90%
 - Statements: 90%
 
 ### Code Quality
+
 ```bash
 # Lint TypeScript files
 npm run lint
@@ -69,7 +74,9 @@ npm run typecheck
 ```
 
 ### Git Hooks
+
 The project uses Husky for git hooks with lint-staged:
+
 - Pre-commit: Runs ESLint, Prettier, and related tests on staged files
 - Use `npm run prepare` to install hooks after cloning
 
@@ -106,6 +113,7 @@ test/
 ### Import Path Aliases
 
 The project uses TypeScript path aliases for clean imports:
+
 - `@/*` → `lib/*`
 - `@core/*` → `lib/core/*`
 - `@parser/*` → `lib/parser/*`
@@ -118,7 +126,9 @@ These aliases work in both source code and tests.
 ## Architecture Principles
 
 ### Layered Architecture
+
 The system follows a strict layered approach:
+
 1. **CLI Layer** - User interaction, argument parsing, configuration loading
 2. **Orchestration Layer** - Engine, WorkerPool, CacheManager coordination
 3. **Analysis Layer** - RuleRegistry, DetectorRegistry, AnalysisContext
@@ -128,35 +138,42 @@ The system follows a strict layered approach:
 ### SOLID Principles Implementation
 
 **Single Responsibility:**
+
 - Each rule/detector focuses on ONE specific pattern
 - Engine orchestrates but doesn't implement analysis logic
 - Formatters only handle output formatting
 
 **Open/Closed:**
+
 - Rules are extensible via inheritance from AbstractRule
 - Engine is closed for modification but extensible via plugins
 - New formatters can be added without modifying core
 
 **Liskov Substitution:**
+
 - All detectors implement the same IDetector interface
 - Any detector can replace another without breaking the engine
 
 **Interface Segregation:**
+
 - Small, focused interfaces (IDetector, IFixable, IConfigurable)
 - Rules implement only what they need
 
 **Dependency Inversion:**
+
 - High-level modules depend on abstractions (interfaces)
 - Parser, detectors, and formatters are injected as dependencies
 
 ## Test-Driven Development (TDD)
 
 **Mandatory TDD Cycle:**
+
 1. **RED** - Write a failing test first
 2. **GREEN** - Write minimal code to pass the test
 3. **REFACTOR** - Improve code while keeping tests green
 
 ### Test Structure (AAA Pattern)
+
 ```typescript
 test('description', () => {
   // ARRANGE - Set up test data and dependencies
@@ -173,6 +190,7 @@ test('description', () => {
 ```
 
 ### Test Organization
+
 - Unit tests: Test individual classes/functions in isolation
 - Integration tests: Test component interactions (e.g., Engine + Rules)
 - E2E tests: Test complete workflows (CLI → Analysis → Output)
@@ -197,6 +215,7 @@ test('description', () => {
 ## Configuration System
 
 Configuration is loaded via cosmiconfig from:
+
 - `.solinrc.json`
 - `.solinrc.js`
 - `solin` field in `package.json`
@@ -206,6 +225,7 @@ The config schema is validated using AJV.
 ## Rule Development
 
 When adding new rules:
+
 1. Write tests first in `test/unit/rules/`
 2. Extend `AbstractRule` class
 3. Implement the `detect(context: AnalysisContext): Issue[]` method
@@ -214,6 +234,7 @@ When adding new rules:
 6. Register the rule in the appropriate registry
 
 ### Rule Metadata Required
+
 - `id`: Unique identifier (e.g., "security/reentrancy")
 - `category`: LINT, SECURITY, or CUSTOM
 - `severity`: HIGH, MEDIUM, LOW, INFO
@@ -222,6 +243,7 @@ When adding new rules:
 ## AST Parsing
 
 The parser uses `@solidity-parser/parser` which generates an AST with:
+
 - Location information (`loc`)
 - Range information (`range`)
 - Tolerance for malformed input (optional)
@@ -231,6 +253,7 @@ Parse options are configured in `lib/parser/solidity-parser.ts`.
 ## Common Development Workflows
 
 ### Adding a New Lint Rule
+
 1. Create test file: `test/unit/rules/lint/my-rule.test.ts`
 2. Write failing tests
 3. Create rule: `lib/rules/lint/my-rule.ts` extending AbstractRule
@@ -239,13 +262,16 @@ Parse options are configured in `lib/parser/solidity-parser.ts`.
 6. Register rule in rule registry
 
 ### Adding a Security Detector
+
 Similar to lint rules but:
+
 - Place in `lib/rules/security/`
 - Typically higher severity
 - May require control-flow or data-flow analysis
 - Should minimize false positives
 
 ### Debugging Tests
+
 ```bash
 # Run single test file in watch mode
 npm test -- --watch path/to/test.test.ts
@@ -268,6 +294,7 @@ node --inspect-brk node_modules/.bin/jest --runInBand
 ## Documentation
 
 Comprehensive documentation is in the `docs/` directory:
+
 - `architecture.md` - Detailed system design
 - `features.md` - Feature specifications
 - `development-guide.md` - TDD/DDD practices

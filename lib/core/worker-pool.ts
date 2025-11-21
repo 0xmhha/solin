@@ -80,11 +80,7 @@ export interface WorkerPoolOptions {
 /**
  * Progress callback
  */
-export type ProgressCallback = (
-  completed: number,
-  total: number,
-  taskId: string,
-) => void;
+export type ProgressCallback = (completed: number, total: number, taskId: string) => void;
 
 /**
  * Pool statistics
@@ -195,8 +191,7 @@ export class WorkerPool<T, R> {
       failedTasks: this.failedTasks,
       runningTasks: this.running.size,
       queuedTasks: this.queue.length,
-      averageDuration:
-        this.completedTasks > 0 ? this.totalDuration / this.completedTasks : 0,
+      averageDuration: this.completedTasks > 0 ? this.totalDuration / this.completedTasks : 0,
     };
   }
 
@@ -221,30 +216,19 @@ export class WorkerPool<T, R> {
    */
   private async processQueue(): Promise<void> {
     // Start initial batch of tasks
-    while (
-      this.running.size < this.maxConcurrency &&
-      this.queue.length > 0 &&
-      !this.shouldStop
-    ) {
+    while (this.running.size < this.maxConcurrency && this.queue.length > 0 && !this.shouldStop) {
       this.startNextTask();
     }
 
     // Continue until queue is empty and all tasks complete
-    while (
-      (this.queue.length > 0 || this.running.size > 0) &&
-      !this.shouldStop
-    ) {
+    while ((this.queue.length > 0 || this.running.size > 0) && !this.shouldStop) {
       // Wait for any task to complete
       if (this.running.size > 0) {
         await Promise.race(this.running.values());
       }
 
       // Start more tasks if possible
-      while (
-        this.running.size < this.maxConcurrency &&
-        this.queue.length > 0 &&
-        !this.shouldStop
-      ) {
+      while (this.running.size < this.maxConcurrency && this.queue.length > 0 && !this.shouldStop) {
         this.startNextTask();
       }
     }
@@ -262,7 +246,7 @@ export class WorkerPool<T, R> {
 
     // Handle task completion
     taskPromise
-      .then((result) => {
+      .then(result => {
         this.running.delete(task.id);
         this.results.set(task.id, result);
         this.completedTasks++;
@@ -301,10 +285,7 @@ export class WorkerPool<T, R> {
       });
 
       // Race between task and timeout
-      const result = await Promise.race([
-        task.execute(task.data),
-        timeoutPromise,
-      ]);
+      const result = await Promise.race([task.execute(task.data), timeoutPromise]);
 
       return {
         id: task.id,
@@ -326,9 +307,7 @@ export class WorkerPool<T, R> {
 /**
  * Create a worker pool with default options
  */
-export function createWorkerPool<T, R>(
-  options?: WorkerPoolOptions,
-): WorkerPool<T, R> {
+export function createWorkerPool<T, R>(options?: WorkerPoolOptions): WorkerPool<T, R> {
   return new WorkerPool<T, R>(options);
 }
 
@@ -338,7 +317,7 @@ export function createWorkerPool<T, R>(
 export async function parallel<T, R>(
   items: T[],
   executor: (item: T, index: number) => Promise<R>,
-  options?: WorkerPoolOptions,
+  options?: WorkerPoolOptions
 ): Promise<Array<TaskResult<R>>> {
   const pool = new WorkerPool<T, R>(options);
 
@@ -353,5 +332,5 @@ export async function parallel<T, R>(
   const results = await pool.execute();
 
   // Return results in order
-  return tasks.map((task) => results.get(task.id)!);
+  return tasks.map(task => results.get(task.id)!);
 }

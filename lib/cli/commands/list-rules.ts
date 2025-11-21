@@ -127,7 +127,7 @@ export class ListRulesCommand {
    * Extract rule information
    */
   private extractRuleInfos(rules: AbstractRule[]): RuleInfo[] {
-    return rules.map((rule) => ({
+    return rules.map(rule => ({
       id: rule.metadata.id,
       category: rule.metadata.category,
       severity: rule.metadata.severity,
@@ -180,7 +180,9 @@ export class ListRulesCommand {
       }
     }
 
-    console.log(`\n\nTotal: ${Array.from(grouped.values()).reduce((sum, rules) => sum + rules.length, 0)} rules\n`);
+    console.log(
+      `\n\nTotal: ${Array.from(grouped.values()).reduce((sum, rules) => sum + rules.length, 0)} rules\n`
+    );
   }
 
   /**

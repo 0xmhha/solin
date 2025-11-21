@@ -28,6 +28,7 @@ Static analysis for Solidity smart contracts directly in Visual Studio Code.
 ### Automatic Analysis
 
 By default, Solin analyzes files when you:
+
 - Open a Solidity file
 - Save a Solidity file
 
@@ -54,26 +55,23 @@ Configure Solin in VS Code settings:
   "solin.severity.error": "Error",
   "solin.severity.warning": "Warning",
   "solin.severity.info": "Information",
-  "solin.exclude": [
-    "**/node_modules/**",
-    "**/lib/**"
-  ]
+  "solin.exclude": ["**/node_modules/**", "**/lib/**"]
 }
 ```
 
 ### Settings
 
-| Setting | Description | Default |
-|---------|-------------|---------|
-| `solin.enable` | Enable Solin analysis | `true` |
-| `solin.analyzeOnSave` | Analyze when file is saved | `true` |
-| `solin.analyzeOnOpen` | Analyze when file is opened | `true` |
-| `solin.configFile` | Path to configuration file | `""` |
-| `solin.maxProblems` | Maximum problems to show | `100` |
-| `solin.severity.error` | VS Code severity for errors | `"Error"` |
-| `solin.severity.warning` | VS Code severity for warnings | `"Warning"` |
-| `solin.severity.info` | VS Code severity for info | `"Information"` |
-| `solin.exclude` | Glob patterns to exclude | `["**/node_modules/**"]` |
+| Setting                  | Description                   | Default                  |
+| ------------------------ | ----------------------------- | ------------------------ |
+| `solin.enable`           | Enable Solin analysis         | `true`                   |
+| `solin.analyzeOnSave`    | Analyze when file is saved    | `true`                   |
+| `solin.analyzeOnOpen`    | Analyze when file is opened   | `true`                   |
+| `solin.configFile`       | Path to configuration file    | `""`                     |
+| `solin.maxProblems`      | Maximum problems to show      | `100`                    |
+| `solin.severity.error`   | VS Code severity for errors   | `"Error"`                |
+| `solin.severity.warning` | VS Code severity for warnings | `"Warning"`              |
+| `solin.severity.info`    | VS Code severity for info     | `"Information"`          |
+| `solin.exclude`          | Glob patterns to exclude      | `["**/node_modules/**"]` |
 
 ## Requirements
 

@@ -169,7 +169,7 @@ export class RuleTester {
     tests: {
       valid?: (ValidTestCase | string)[];
       invalid?: InvalidTestCase[];
-    },
+    }
   ): Promise<TestResult[]> {
     this.results = [];
 
@@ -179,9 +179,7 @@ export class RuleTester {
         const testCase = tests.valid[i];
         if (!testCase) continue;
 
-        const normalizedTest = typeof testCase === 'string'
-          ? { code: testCase }
-          : testCase;
+        const normalizedTest = typeof testCase === 'string' ? { code: testCase } : testCase;
 
         const name = normalizedTest.name || `valid case ${i + 1}`;
         const result = await this.runValidTest(RuleClass, normalizedTest, name);
@@ -215,14 +213,14 @@ export class RuleTester {
    * Check if all tests passed
    */
   allPassed(): boolean {
-    return this.results.every((r) => r.passed);
+    return this.results.every(r => r.passed);
   }
 
   /**
    * Get failed tests
    */
   getFailedTests(): TestResult[] {
-    return this.results.filter((r) => !r.passed);
+    return this.results.filter(r => !r.passed);
   }
 
   /**
@@ -231,7 +229,7 @@ export class RuleTester {
   private async runValidTest(
     RuleClass: new () => IRule,
     testCase: ValidTestCase,
-    name: string,
+    name: string
   ): Promise<TestResult> {
     try {
       const issues = await this.analyzeCode(RuleClass, testCase.code, testCase.options);
@@ -240,7 +238,7 @@ export class RuleTester {
         return {
           passed: false,
           name,
-          error: `Expected no errors but got ${issues.length}: ${issues.map((i) => i.message).join(', ')}`,
+          error: `Expected no errors but got ${issues.length}: ${issues.map(i => i.message).join(', ')}`,
           issues,
         };
       }
@@ -261,7 +259,7 @@ export class RuleTester {
   private async runInvalidTest(
     RuleClass: new () => IRule,
     testCase: InvalidTestCase,
-    name: string,
+    name: string
   ): Promise<TestResult> {
     try {
       const issues = await this.analyzeCode(RuleClass, testCase.code, testCase.options);
@@ -295,13 +293,13 @@ export class RuleTester {
           if (expected.message instanceof RegExp) {
             if (!expected.message.test(actual.message)) {
               errors.push(
-                `Error ${i + 1}: Message "${actual.message}" does not match pattern ${expected.message}`,
+                `Error ${i + 1}: Message "${actual.message}" does not match pattern ${expected.message}`
               );
             }
           } else {
             if (actual.message !== expected.message) {
               errors.push(
-                `Error ${i + 1}: Expected message "${expected.message}" but got "${actual.message}"`,
+                `Error ${i + 1}: Expected message "${expected.message}" but got "${actual.message}"`
               );
             }
           }
@@ -310,30 +308,28 @@ export class RuleTester {
         // Check line
         if (expected.line !== undefined && actual.location.start.line !== expected.line) {
           errors.push(
-            `Error ${i + 1}: Expected line ${expected.line} but got ${actual.location.start.line}`,
+            `Error ${i + 1}: Expected line ${expected.line} but got ${actual.location.start.line}`
           );
         }
 
         // Check column
         if (expected.column !== undefined && actual.location.start.column !== expected.column) {
           errors.push(
-            `Error ${i + 1}: Expected column ${expected.column} but got ${actual.location.start.column}`,
+            `Error ${i + 1}: Expected column ${expected.column} but got ${actual.location.start.column}`
           );
         }
 
         // Check rule ID
         if (expected.ruleId && actual.ruleId !== expected.ruleId) {
           errors.push(
-            `Error ${i + 1}: Expected ruleId "${expected.ruleId}" but got "${actual.ruleId}"`,
+            `Error ${i + 1}: Expected ruleId "${expected.ruleId}" but got "${actual.ruleId}"`
           );
         }
       }
 
       // Check for extra errors
       if (issues.length > testCase.errors.length) {
-        errors.push(
-          `Expected ${testCase.errors.length} error(s) but got ${issues.length}`,
-        );
+        errors.push(`Expected ${testCase.errors.length} error(s) but got ${issues.length}`);
       }
 
       if (errors.length > 0) {
@@ -362,7 +358,7 @@ export class RuleTester {
   private async analyzeCode(
     RuleClass: new () => IRule,
     code: string,
-    _options?: unknown,
+    _options?: unknown
   ): Promise<Issue[]> {
     // Parse code
     const parseResult = await this.parser.parse(code);
@@ -382,7 +378,7 @@ export class RuleTester {
 
     // Run rule
     const rule = new RuleClass();
-    rule.analyze(context);
+    await rule.analyze(context);
 
     return context.getIssues();
   }

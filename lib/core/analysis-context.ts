@@ -22,7 +22,7 @@ export class AnalysisContext {
     public readonly filePath: string,
     public readonly sourceCode: string,
     public readonly ast: ASTNode,
-    public readonly config: ResolvedConfig,
+    public readonly config: ResolvedConfig
   ) {
     // Pre-split source into lines for efficient line access
     this.lines = sourceCode.split('\n');

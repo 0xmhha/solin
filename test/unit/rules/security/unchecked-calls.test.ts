@@ -235,7 +235,7 @@ describe('UncheckedCallsRule', () => {
 
       const issues = context.getIssues();
       expect(issues.length).toBeGreaterThanOrEqual(3);
-      expect(issues.every((issue) => issue.ruleId === 'security/unchecked-calls')).toBe(true);
+      expect(issues.every(issue => issue.ruleId === 'security/unchecked-calls')).toBe(true);
     });
   });
 

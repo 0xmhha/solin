@@ -69,7 +69,7 @@ export class TimestampDependenceRule extends AbstractRule {
 
       const value = node[key];
       if (Array.isArray(value)) {
-        value.forEach((child) => this.walkAst(child, context));
+        value.forEach(child => this.walkAst(child, context));
       } else if (value && typeof value === 'object') {
         this.walkAst(value, context);
       }
@@ -85,8 +85,7 @@ export class TimestampDependenceRule extends AbstractRule {
     const right = node.right;
 
     // Check if either operand is a timestamp
-    const hasTimestamp =
-      this.isTimestampExpression(left) || this.isTimestampExpression(right);
+    const hasTimestamp = this.isTimestampExpression(left) || this.isTimestampExpression(right);
 
     if (!hasTimestamp) {
       return;
@@ -146,18 +145,13 @@ export class TimestampDependenceRule extends AbstractRule {
     // Handle TupleExpression (parentheses in Solidity)
     if (node.type === 'TupleExpression') {
       if (node.components && Array.isArray(node.components)) {
-        return node.components.some((component: any) =>
-          this.isTimestampExpression(component)
-        );
+        return node.components.some((component: any) => this.isTimestampExpression(component));
       }
     }
 
     // Recursively check nested expressions (for cases like (block.timestamp + seed) % 100)
     if (node.type === 'BinaryOperation') {
-      return (
-        this.isTimestampExpression(node.left) ||
-        this.isTimestampExpression(node.right)
-      );
+      return this.isTimestampExpression(node.left) || this.isTimestampExpression(node.right);
     }
 
     return false;
@@ -166,11 +160,7 @@ export class TimestampDependenceRule extends AbstractRule {
   /**
    * Report a timestamp-related issue
    */
-  private reportTimestampIssue(
-    node: any,
-    context: AnalysisContext,
-    message: string
-  ): void {
+  private reportTimestampIssue(node: any, context: AnalysisContext, message: string): void {
     if (!node.loc) {
       return;
     }

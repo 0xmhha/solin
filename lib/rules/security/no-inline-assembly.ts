@@ -24,9 +24,9 @@ export class NoInlineAssembly extends AbstractRule {
       severity: Severity.WARNING,
       title: 'Avoid inline assembly',
       description:
-        'Detects usage of inline assembly blocks. Inline assembly bypasses Solidity\'s type safety and security checks, making code harder to audit and more prone to vulnerabilities.',
+        "Detects usage of inline assembly blocks. Inline assembly bypasses Solidity's type safety and security checks, making code harder to audit and more prone to vulnerabilities.",
       recommendation:
-        'Avoid inline assembly unless absolutely necessary. If assembly is required, ensure thorough security audits and extensive documentation explaining why it\'s needed and how it works.',
+        "Avoid inline assembly unless absolutely necessary. If assembly is required, ensure thorough security audits and extensive documentation explaining why it's needed and how it works.",
     });
   }
 
@@ -55,7 +55,7 @@ export class NoInlineAssembly extends AbstractRule {
 
       const value = node[key];
       if (Array.isArray(value)) {
-        value.forEach((child) => this.walkAst(child, context));
+        value.forEach(child => this.walkAst(child, context));
       } else if (value && typeof value === 'object') {
         this.walkAst(value, context);
       }
@@ -75,7 +75,7 @@ export class NoInlineAssembly extends AbstractRule {
       severity: this.metadata.severity,
       category: this.metadata.category,
       message:
-        'Inline assembly detected. Assembly bypasses Solidity\'s type safety and security checks. Avoid unless absolutely necessary and ensure thorough security audit.',
+        "Inline assembly detected. Assembly bypasses Solidity's type safety and security checks. Avoid unless absolutely necessary and ensure thorough security audit.",
       location: {
         start: {
           line: node.loc.start.line,

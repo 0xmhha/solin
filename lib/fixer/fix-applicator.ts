@@ -125,10 +125,7 @@ export class FixApplicator {
   /**
    * Apply fixes to a single file
    */
-  async applyToFile(
-    filePath: string,
-    issues: Issue[],
-  ): Promise<FileFixResult> {
+  async applyToFile(filePath: string, issues: Issue[]): Promise<FileFixResult> {
     // Read file content
     const originalSource = await fs.promises.readFile(filePath, 'utf-8');
 
@@ -142,7 +139,7 @@ export class FixApplicator {
         await fs.promises.writeFile(
           filePath + this.options.backupExtension,
           originalSource,
-          'utf-8',
+          'utf-8'
         );
       }
 
@@ -159,16 +156,13 @@ export class FixApplicator {
   /**
    * Apply fixes to source code string
    */
-  applyToSource(
-    source: string,
-    issues: Issue[],
-  ): Omit<FileFixResult, 'filePath'> {
+  applyToSource(source: string, issues: Issue[]): Omit<FileFixResult, 'filePath'> {
     const results: FixResult[] = [];
     let fixesApplied = 0;
     let fixesSkipped = 0;
 
     // Filter issues that have fixes
-    const fixableIssues = issues.filter((issue) => issue.fix);
+    const fixableIssues = issues.filter(issue => issue.fix);
 
     if (fixableIssues.length === 0) {
       return {
@@ -243,7 +237,7 @@ export class FixApplicator {
    */
   preview(
     source: string,
-    issues: Issue[],
+    issues: Issue[]
   ): Array<{
     ruleId: string;
     description: string;
@@ -251,11 +245,11 @@ export class FixApplicator {
     replacement: string;
     location: SourceRange;
   }> {
-    const fixableIssues = issues.filter((issue) => issue.fix);
+    const fixableIssues = issues.filter(issue => issue.fix);
     const computedFixes = this.computeFixOffsets(source, fixableIssues);
     const { validFixes } = this.filterOverlappingFixes(computedFixes);
 
-    return validFixes.map((computed) => ({
+    return validFixes.map(computed => ({
       ruleId: computed.issue.ruleId,
       description: computed.fix.description,
       original: source.substring(computed.startOffset, computed.endOffset),
@@ -276,7 +270,7 @@ export class FixApplicator {
       lines.push(`+++ ${fix.description}`);
       lines.push(
         `@@ -${fix.location.start.line},${fix.location.start.column} ` +
-          `+${fix.location.end.line},${fix.location.end.column} @@`,
+          `+${fix.location.end.line},${fix.location.end.column} @@`
       );
       lines.push(`-${fix.original}`);
       lines.push(`+${fix.replacement}`);
@@ -289,10 +283,7 @@ export class FixApplicator {
   /**
    * Compute character offsets for fixes based on line/column positions
    */
-  private computeFixOffsets(
-    source: string,
-    issues: Issue[],
-  ): ComputedFix[] {
+  private computeFixOffsets(source: string, issues: Issue[]): ComputedFix[] {
     const lineOffsets = this.getLineOffsets(source);
     const results: ComputedFix[] = [];
 
@@ -302,13 +293,13 @@ export class FixApplicator {
       const startOffset = this.locationToOffset(
         lineOffsets,
         issue.fix.range.start.line,
-        issue.fix.range.start.column,
+        issue.fix.range.start.column
       );
 
       const endOffset = this.locationToOffset(
         lineOffsets,
         issue.fix.range.end.line,
-        issue.fix.range.end.column,
+        issue.fix.range.end.column
       );
 
       if (startOffset !== -1 && endOffset !== -1 && startOffset <= endOffset) {
@@ -340,10 +331,10 @@ export class FixApplicator {
     for (const fix of fixes) {
       // Check if this fix overlaps with any occupied range
       const overlaps = occupiedRanges.some(
-        (range) =>
+        range =>
           (fix.startOffset >= range.start && fix.startOffset < range.end) ||
           (fix.endOffset > range.start && fix.endOffset <= range.end) ||
-          (fix.startOffset <= range.start && fix.endOffset >= range.end),
+          (fix.startOffset <= range.start && fix.endOffset >= range.end)
       );
 
       if (overlaps) {
@@ -378,11 +369,7 @@ export class FixApplicator {
   /**
    * Convert line/column to character offset
    */
-  private locationToOffset(
-    lineOffsets: number[],
-    line: number,
-    column: number,
-  ): number {
+  private locationToOffset(lineOffsets: number[], line: number, column: number): number {
     // Lines are 1-indexed
     if (line < 1 || line > lineOffsets.length) {
       return -1;
@@ -400,9 +387,7 @@ export class FixApplicator {
 /**
  * Create a fix applicator with default options
  */
-export function createFixApplicator(
-  options?: FixApplicatorOptions,
-): FixApplicator {
+export function createFixApplicator(options?: FixApplicatorOptions): FixApplicator {
   return new FixApplicator(options);
 }
 
@@ -411,7 +396,7 @@ export function createFixApplicator(
  */
 export async function applyFixes(
   fileIssues: Map<string, Issue[]>,
-  options?: FixApplicatorOptions,
+  options?: FixApplicatorOptions
 ): Promise<Map<string, FileFixResult>> {
   const applicator = new FixApplicator(options);
   const results = new Map<string, FileFixResult>();

@@ -82,7 +82,7 @@ describe('SolidityParser', () => {
 
       // Check that contract was parsed
       const contracts = result.ast.children.filter(
-        (node: any) => node.type === 'ContractDefinition',
+        (node: any) => node.type === 'ContractDefinition'
       );
       expect(contracts.length).toBeGreaterThan(0);
     });
@@ -309,12 +309,7 @@ describe('SolidityParser', () => {
         }
       `;
 
-      try {
-        await parser.parse(source, { tolerant: false });
-        fail('Should have thrown error');
-      } catch (error) {
-        expect(error).toBeDefined();
-      }
+      await expect(parser.parse(source, { tolerant: false })).rejects.toThrow();
     });
 
     test('should handle empty source', async () => {

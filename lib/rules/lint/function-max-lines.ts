@@ -41,7 +41,7 @@ export class FunctionMaxLinesRule extends AbstractRule {
     }
 
     // Traverse AST to find function definitions
-    this.visitNode(context.ast, (node) => {
+    this.visitNode(context.ast, node => {
       if (
         node.type === 'FunctionDefinition' ||
         node.type === 'ModifierDefinition' ||
@@ -67,18 +67,14 @@ export class FunctionMaxLinesRule extends AbstractRule {
 
       const child = node[key];
       if (Array.isArray(child)) {
-        child.forEach((item) => this.visitNode(item, callback));
+        child.forEach(item => this.visitNode(item, callback));
       } else if (typeof child === 'object' && child !== null) {
         this.visitNode(child, callback);
       }
     }
   }
 
-  private checkFunctionLength(
-    node: any,
-    maxLines: number,
-    context: AnalysisContext
-  ): void {
+  private checkFunctionLength(node: any, maxLines: number, context: AnalysisContext): void {
     if (!node.loc) {
       return;
     }
@@ -89,17 +85,9 @@ export class FunctionMaxLinesRule extends AbstractRule {
 
     if (lineCount > maxLines) {
       const functionName =
-        node.type === 'ConstructorDefinition'
-          ? 'constructor'
-          : node.name || 'anonymous';
+        node.type === 'ConstructorDefinition' ? 'constructor' : node.name || 'anonymous';
 
-      this.reportLongFunction(
-        startLine,
-        functionName,
-        lineCount,
-        maxLines,
-        context
-      );
+      this.reportLongFunction(startLine, functionName, lineCount, maxLines, context);
     }
   }
 

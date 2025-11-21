@@ -90,7 +90,7 @@ export class DeprecatedFunctionsRule extends AbstractRule {
       if (key === 'loc' || key === 'range') continue;
       const value = node[key];
       if (Array.isArray(value)) {
-        value.forEach((child) => this.walkAst(child, context));
+        value.forEach(child => this.walkAst(child, context));
       } else if (value && typeof value === 'object') {
         this.walkAst(value, context);
       }
@@ -104,7 +104,7 @@ export class DeprecatedFunctionsRule extends AbstractRule {
     if (node.expression.type === 'Identifier') {
       const functionName = node.expression.name;
       const deprecated = DeprecatedFunctionsRule.DEPRECATED_FUNCTIONS.find(
-        (item) => item.name === functionName
+        item => item.name === functionName
       );
       if (deprecated) {
         this.reportDeprecated(
@@ -121,7 +121,7 @@ export class DeprecatedFunctionsRule extends AbstractRule {
     if (node.expression.type === 'MemberAccess') {
       const memberName = node.expression.memberName;
       const deprecated = DeprecatedFunctionsRule.DEPRECATED_FUNCTIONS.find(
-        (item) => item.name === memberName
+        item => item.name === memberName
       );
       if (deprecated) {
         this.reportDeprecated(
@@ -141,7 +141,7 @@ export class DeprecatedFunctionsRule extends AbstractRule {
     for (const modifier of node.modifiers) {
       if (modifier.name) {
         const deprecated = DeprecatedFunctionsRule.DEPRECATED_MODIFIERS.find(
-          (item) => item.name === modifier.name
+          item => item.name === modifier.name
         );
         if (deprecated) {
           this.reportDeprecated(
@@ -159,7 +159,7 @@ export class DeprecatedFunctionsRule extends AbstractRule {
   private checkStateMutability(node: any, context: AnalysisContext): void {
     if (node.stateMutability === 'constant') {
       const deprecated = DeprecatedFunctionsRule.DEPRECATED_MODIFIERS.find(
-        (item) => item.name === 'constant'
+        item => item.name === 'constant'
       );
       if (deprecated) {
         this.reportDeprecated(

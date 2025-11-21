@@ -133,12 +133,7 @@ export class QuotesRule extends AbstractRule {
             }
 
             // Report the issue
-            this.reportInconsistentQuotes(
-              i + 1,
-              stringStart,
-              preferredStyle,
-              context
-            );
+            this.reportInconsistentQuotes(i + 1, stringStart, preferredStyle, context);
           }
 
           col = stringEnd + 1;

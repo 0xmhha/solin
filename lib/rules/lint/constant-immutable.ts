@@ -66,10 +66,7 @@ export class ConstantImmutableRule extends AbstractRule {
   /**
    * Collect all state variable declarations
    */
-  private collectStateVariables(
-    node: any,
-    stateVariables: Map<string, StateVariableInfo>
-  ): void {
+  private collectStateVariables(node: any, stateVariables: Map<string, StateVariableInfo>): void {
     if (!node || typeof node !== 'object') {
       return;
     }
@@ -94,7 +91,7 @@ export class ConstantImmutableRule extends AbstractRule {
 
       const value = node[key];
       if (Array.isArray(value)) {
-        value.forEach((child) => this.collectStateVariables(child, stateVariables));
+        value.forEach(child => this.collectStateVariables(child, stateVariables));
       } else if (value && typeof value === 'object') {
         this.collectStateVariables(value, stateVariables);
       }
@@ -190,7 +187,7 @@ export class ConstantImmutableRule extends AbstractRule {
 
       const value = node[key];
       if (Array.isArray(value)) {
-        value.forEach((child) => this.walkAst(child, stateVariables, isConstructor));
+        value.forEach(child => this.walkAst(child, stateVariables, isConstructor));
       } else if (value && typeof value === 'object') {
         this.walkAst(value, stateVariables, isConstructor);
       }

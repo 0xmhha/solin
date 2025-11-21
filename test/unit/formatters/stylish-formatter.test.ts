@@ -260,9 +260,9 @@ describe('StylishFormatter', () => {
       const lines = output.split('\n');
 
       // Error should appear before warning, warning before info
-      const errorIndex = lines.findIndex((line) => line.includes('Error message'));
-      const warningIndex = lines.findIndex((line) => line.includes('Warning message'));
-      const infoIndex = lines.findIndex((line) => line.includes('Info message'));
+      const errorIndex = lines.findIndex(line => line.includes('Error message'));
+      const warningIndex = lines.findIndex(line => line.includes('Warning message'));
+      const infoIndex = lines.findIndex(line => line.includes('Info message'));
 
       expect(errorIndex).toBeLessThan(warningIndex);
       expect(warningIndex).toBeLessThan(infoIndex);
@@ -300,6 +300,7 @@ describe('StylishFormatter', () => {
       const output = formatter.format(result);
 
       // Check that output contains ANSI color codes for red (error)
+      // eslint-disable-next-line no-control-regex
       expect(output).toMatch(/\x1b\[31m.*error.*\x1b\[39m/i);
     });
 
@@ -333,6 +334,7 @@ describe('StylishFormatter', () => {
       const output = formatter.format(result);
 
       // Check that output contains ANSI color codes for yellow (warning)
+      // eslint-disable-next-line no-control-regex
       expect(output).toMatch(/\x1b\[33m.*warning.*\x1b\[39m/i);
     });
   });
