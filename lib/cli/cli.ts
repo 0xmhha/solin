@@ -17,6 +17,7 @@ export class CLI {
 
   constructor() {
     this.program = new Command();
+    this.program.exitOverride(); // Throw errors instead of calling process.exit()
     this.setupCommands();
   }
 
@@ -30,7 +31,6 @@ export class CLI {
         'Advanced Solidity static analysis tool\n\nCommands:\n  init          Generate default .solinrc.json configuration file\n  list-rules    List all available rules\n  generate-rule Generate a custom rule template\n  <files>       Analyze Solidity files (default)'
       )
       .version(packageJson.version)
-      .argument('[files...]', 'Solidity files or glob patterns to analyze')
       .option('-c, --config <path>', 'Configuration file path')
       .option('-f, --format <type>', 'Output format (stylish, json, sarif)', 'stylish')
       .option('--fix', 'Automatically fix issues')
@@ -41,8 +41,7 @@ export class CLI {
       .option('--ignore-path <path>', 'Path to ignore file')
       .option('--max-warnings <n>', 'Maximum number of warnings', parseInt)
       .option('-q, --quiet', 'Report errors only')
-      .option('-w, --watch', 'Watch files for changes and re-analyze')
-      .allowUnknownOption(false);
+      .option('-w, --watch', 'Watch files for changes and re-analyze');
 
     // Register subcommands
     registerGenerateRuleCommand(this.program);
@@ -52,10 +51,62 @@ export class CLI {
    * Parse command line arguments
    */
   parseArguments(args: string[]): ParsedArguments {
-    this.program.parse(args);
+    // Options that take a value
+    const optionsWithValues = new Set([
+      '-c',
+      '--config',
+      '-f',
+      '--format',
+      '--cache-location',
+      '--parallel',
+      '--ignore-path',
+      '--max-warnings',
+    ]);
+
+    // Extract files and options manually to avoid Commander's strict command checking
+    const files: string[] = [];
+    const processedArgs: string[] = [];
+
+    // Skip first two args (node and script name)
+    for (let i = 2; i < args.length; i++) {
+      const arg = args[i];
+      if (!arg) continue; // Skip if undefined
+
+      // If it's an option or its value, add to processedArgs
+      if (arg.startsWith('-')) {
+        processedArgs.push(arg);
+        // If this option takes a value, include the next arg too
+        if (optionsWithValues.has(arg)) {
+          const nextArg = args[i + 1];
+          if (nextArg && !nextArg.startsWith('-')) {
+            processedArgs.push(nextArg);
+            i++; // Skip the value in next iteration
+          }
+        }
+      } else {
+        // It's a file
+        files.push(arg);
+      }
+    }
+
+    // Parse options only - add a dummy file to prevent help from showing
+    const argsForParse = [
+      args[0] || 'node',
+      args[1] || 'solin',
+      ...processedArgs,
+      ...(processedArgs.length === 0 && files.length > 0 ? ['--'] : []),
+    ];
+
+    try {
+      this.program.parse(argsForParse);
+    } catch (error) {
+      // Ignore help/version exits when we have files to process
+      if (files.length === 0) {
+        throw error;
+      }
+    }
 
     const options = this.program.opts<CLIOptions>();
-    const files = this.program.args;
 
     const result: ParsedArguments = { files };
 
