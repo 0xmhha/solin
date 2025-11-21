@@ -2,19 +2,19 @@
 
 Complete guide to integrate Solin with ChatGPT, Claude, and Gemini AI assistants.
 
-## 📋 Overview
+## Overview
 
 Solin can be integrated with major AI platforms in different ways:
 
 | Platform           | Method                | Difficulty  | Best For                          |
 | ------------------ | --------------------- | ----------- | --------------------------------- |
-| **Claude Desktop** | MCP (Native)          | ⭐ Easy     | Best experience, full MCP support |
-| **ChatGPT**        | Custom GPT + REST API | ⭐⭐ Medium | Web-based, no installation        |
-| **Gemini**         | REST API              | ⭐⭐ Medium | API integration                   |
+| **Claude Desktop** | MCP (Native)          | Easy     | Best experience, full MCP support |
+| **ChatGPT**        | Custom GPT + REST API | EasyMedium | Web-based, no installation        |
+| **Gemini**         | REST API              | EasyMedium | API integration                   |
 
 ---
 
-## 🤖 Claude Desktop (Recommended)
+## Claude Desktop (Recommended)
 
 Claude Desktop has **native MCP support**, making it the easiest and best integration.
 
@@ -106,12 +106,12 @@ Now you can ask Claude to analyze Solidity code:
 
 In Claude Desktop, you should see:
 
-- 🔧 Tools icon with "Solin" listed
+- Tools icon with "Solin" listed
 - 4 available tools: analyze_solidity, list_rules, explain_rule, suggest_fixes
 
 ---
 
-## 💬 ChatGPT (Custom GPT + REST API)
+## ChatGPT (Custom GPT + REST API)
 
 ChatGPT doesn't support MCP natively, but we can use **Custom GPTs with Actions** to call Solin's REST API.
 
@@ -148,7 +148,7 @@ npx ngrok http 3000
 
 ```
 Expert Solidity security analyzer and linter. Analyzes smart contracts for vulnerabilities,
-gas optimization, and code quality issues. Powered by 155+ rules covering security,
+gas optimization, and code quality issues. Powered by 150+ rules covering security,
 best practices, and gas optimization.
 ```
 
@@ -363,7 +363,7 @@ contract Test {
 
 ---
 
-## 🔷 Google Gemini (REST API Integration)
+## Google Gemini (REST API Integration)
 
 Gemini doesn't have MCP support yet, but you can use **Function Calling** with Solin's REST API.
 
@@ -446,7 +446,7 @@ Google is working on Extensions for Gemini. When available, Solin can be integra
 
 ---
 
-## 🌐 Smithery.ai Registration
+## Smithery.ai Registration
 
 [Smithery](https://smithery.ai) is the official MCP server registry. Here's how to register Solin:
 
@@ -485,7 +485,7 @@ Create a Smithery configuration file in your project root:
 {
   "name": "solin",
   "displayName": "Solin - Solidity Security Analyzer",
-  "description": "Comprehensive Solidity static analyzer with 155+ rules for security vulnerabilities, gas optimization, and code quality. Detects reentrancy, access control issues, and provides actionable fix suggestions.",
+  "description": "Comprehensive Solidity static analyzer with 150+ rules for security vulnerabilities, gas optimization, and code quality. Detects reentrancy, access control issues, and provides actionable fix suggestions.",
   "category": "development",
   "tags": [
     "solidity",
@@ -496,7 +496,7 @@ Create a Smithery configuration file in your project root:
     "linter",
     "vulnerability-detection"
   ],
-  "icon": "🔒",
+  "icon": "",
   "homepage": "https://github.com/0xmhha/solin",
   "repository": "https://github.com/0xmhha/solin",
   "license": "MIT",
@@ -635,7 +635,7 @@ Check that Solin appears at: `https://smithery.ai/server/solin`
 
 ---
 
-## 🚀 Cloud Deployment Options
+## Cloud Deployment Options
 
 For ChatGPT and Gemini integrations, you need a publicly accessible Solin instance.
 
@@ -722,21 +722,21 @@ docker run -p 3000:3000 solin
 
 ---
 
-## 📊 Comparison Table
+## Comparison Table
 
 | Feature              | Claude Desktop | ChatGPT Custom GPT | Gemini Function Calling |
 | -------------------- | -------------- | ------------------ | ----------------------- |
-| **Setup Difficulty** | ⭐ Easy        | ⭐⭐ Medium        | ⭐⭐⭐ Advanced         |
+| **Setup Difficulty** | Easy        | EasyMedium        | MediumAdvanced         |
 | **Integration Type** | Native MCP     | REST API           | REST API                |
 | **Deployment**       | Local          | Cloud required     | Cloud required          |
 | **Cost**             | Free           | Free (+ cloud)     | Free (+ cloud)          |
 | **Best Use Case**    | Development    | Public sharing     | Custom apps             |
-| **Real-time**        | ✅ Yes         | ✅ Yes             | ✅ Yes                  |
-| **Privacy**          | ✅ Local       | ⚠️ Cloud           | ⚠️ Cloud                |
+| **Real-time**        | Yes         | Yes             | Yes                  |
+| **Privacy**          | Local       | Cloud           | Cloud                |
 
 ---
 
-## 🔧 Troubleshooting
+## Troubleshooting
 
 ### Claude Desktop
 
@@ -776,7 +776,7 @@ docker run -p 3000:3000 solin
 
 ---
 
-## 📚 Additional Resources
+## Additional Resources
 
 - **MCP Documentation**: https://modelcontextprotocol.io
 - **Smithery**: https://smithery.ai
@@ -786,12 +786,9 @@ docker run -p 3000:3000 solin
 
 ---
 
-## 🤝 Support
+## Support
 
 - **GitHub Issues**: https://github.com/0xmhha/solin/issues
-- **Discussions**: https://github.com/0xmhha/solin/discussions
-- **Email**: (Add your contact)
 
 ---
 
-**Last Updated:** 2025-01-20

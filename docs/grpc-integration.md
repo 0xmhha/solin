@@ -19,6 +19,8 @@ Solin provides a gRPC API for remote analysis of Solidity code. This is ideal fo
 - **Streaming**: Analyze large files efficiently
 - **Language Agnostic**: Use from any language with gRPC support
 
+**Note:** The gRPC server currently supports a basic subset of 6 core rules for demonstration purposes. For production use with all 151 rules, the server code needs to be updated to register all available rules. See the REST API for full rule support.
+
 ## Quick Start
 
 ### 1. Start the gRPC Server

@@ -13,6 +13,8 @@ Model Context Protocol (MCP) is a standard that allows AI assistants to securely
 - **Explain Rules**: Get detailed explanations of specific rules
 - **Suggest Fixes**: Receive fix suggestions for detected issues
 
+**Note:** The MCP server currently supports a curated subset of 20 core rules (12 lint + 8 security) out of the full 151 available rules. This subset covers the most critical security vulnerabilities and code quality issues. For comprehensive analysis with all rules, use the CLI or REST API.
+
 ## Setup
 
 ### 1. Build Solin

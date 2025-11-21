@@ -1,8 +1,5 @@
 # Development Guide - TDD & DDD Practices
 
-> **Version**: 1.0.0
-> **Last Updated**: 2025-01-07
-> **For**: All Solin contributors
 
 ## Table of Contents
 
@@ -212,7 +209,7 @@ export class ReentrancyDetector extends AbstractRule {
 #### 1. Write Tests First
 
 ```typescript
-// ✅ DO: Write test before implementation
+// DO: Write test before implementation
 test('should validate contract name is PascalCase', () => {
   const rule = new ContractNameRule();
   const issues = rule.detect(context('contract myContract {}'));
@@ -232,7 +229,7 @@ class ContractNameRule {
 #### 2. One Test at a Time
 
 ```typescript
-// ✅ DO: Focus on one behavior
+// DO: Focus on one behavior
 describe('ReentrancyDetector', () => {
   test('detects reentrancy in simple case', () => {});
   test('ignores view functions', () => {});
@@ -248,7 +245,7 @@ test('tests all reentrancy scenarios', () => {
 #### 3. Keep Tests Independent
 
 ```typescript
-// ✅ DO: Each test can run alone
+// DO: Each test can run alone
 describe('Parser', () => {
   test('parses contract', () => {
     const parser = new Parser();
@@ -281,7 +278,7 @@ describe('Parser', () => {
 #### 4. Test Behavior, Not Implementation
 
 ```typescript
-// ✅ DO: Test behavior
+// DO: Test behavior
 test('should detect unused variables', () => {
   const detector = new UnusedVariableDetector();
   const issues = detector.detect(context);
@@ -391,7 +388,7 @@ Use consistent terminology throughout code, tests, and documentation:
 ```typescript
 // Value objects are immutable and defined by their attributes
 
-// ✅ DO: Use value objects for domain concepts
+// DO: Use value objects for domain concepts
 class Severity {
   private constructor(private readonly level: number) {}
 
@@ -426,7 +423,7 @@ type Location = [string, number, number, number, number];
 ```typescript
 // Entities have identity and lifecycle
 
-// ✅ DO: Use entities for things with identity
+// DO: Use entities for things with identity
 class AnalysisSession {
   constructor(
     public readonly id: string,
@@ -453,7 +450,7 @@ class AnalysisSession {
 ```typescript
 // Aggregates enforce invariants and manage consistency
 
-// ✅ DO: Use aggregates for complex domain objects
+// DO: Use aggregates for complex domain objects
 class AnalysisResult {
   private constructor(
     private readonly issues: Issue[],
@@ -496,7 +493,7 @@ class AnalysisResult {
 ```typescript
 // Domain services for operations that don't belong to any entity
 
-// ✅ DO: Use domain services for complex operations
+// DO: Use domain services for complex operations
 class ReentrancyAnalysisService {
   constructor(
     private readonly cfgBuilder: ControlFlowGraphBuilder,
@@ -525,7 +522,7 @@ class ReentrancyAnalysisService {
 ```typescript
 // Repositories manage persistence of aggregates
 
-// ✅ DO: Use repositories for data access
+// DO: Use repositories for data access
 interface IAnalysisResultRepository {
   save(result: AnalysisResult): Promise<void>;
   findById(id: string): Promise<AnalysisResult | null>;
@@ -675,7 +672,7 @@ git push origin feature/no-console-rule
 #### Review Comments
 
 ```typescript
-// ✅ GOOD: Constructive feedback
+// GOOD: Constructive feedback
 // Consider extracting this logic into a separate method
 // for better testability and reusability.
 function processData(data: any): any {
@@ -898,14 +895,14 @@ node --inspect-brk node_modules/.bin/jest --runInBand
 
 ### DO's
 
-✅ Write tests first (TDD)
-✅ Keep tests independent
-✅ Use domain language consistently
-✅ Follow SOLID principles
-✅ Refactor continuously
-✅ Review code thoroughly
-✅ Document complex logic
-✅ Commit often with clear messages
+Write tests first (TDD)
+Keep tests independent
+Use domain language consistently
+Follow SOLID principles
+Refactor continuously
+Review code thoroughly
+Document complex logic
+Commit often with clear messages
 
 ### DON'Ts
 

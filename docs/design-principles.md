@@ -1,7 +1,5 @@
 # Design Principles & Best Practices
 
-> **Version**: 1.0.0
-> **Last Updated**: 2025-01-07
 > **Applies To**: All Solin contributors and maintainers
 
 ## Table of Contents
@@ -26,7 +24,7 @@
 #### Application in Solin
 
 ```typescript
-// ✅ GOOD: Each class has single responsibility
+// GOOD: Each class has single responsibility
 class SolidityParser {
   parse(source: string): AST {
     // Only responsible for parsing
@@ -70,7 +68,7 @@ class AnalyzerGod {
 #### Application in Solin
 
 ```typescript
-// ✅ GOOD: Open for extension via inheritance
+// GOOD: Open for extension via inheritance
 abstract class AbstractDetector {
   abstract detect(context: AnalysisContext): Issue[];
 
@@ -114,7 +112,7 @@ class DetectorEngine {
 #### Application in Solin
 
 ```typescript
-// ✅ GOOD: All detectors can be used interchangeably
+// GOOD: All detectors can be used interchangeably
 interface IDetector {
   detect(context: AnalysisContext): Issue[];
   getSeverity(): Severity;
@@ -173,7 +171,7 @@ class BrokenDetector implements IDetector {
 #### Application in Solin
 
 ```typescript
-// ✅ GOOD: Segregated interfaces
+// GOOD: Segregated interfaces
 interface IDetector {
   detect(context: AnalysisContext): Issue[];
 }
@@ -226,7 +224,7 @@ interface IDetectorFat {
 #### Application in Solin
 
 ```typescript
-// ✅ GOOD: Depend on abstractions
+// GOOD: Depend on abstractions
 class AnalysisEngine {
   constructor(
     private parser: IParser, // Abstract interface
@@ -270,7 +268,7 @@ class AnalysisEngineBad {
 ### Meaningful Names
 
 ```typescript
-// ✅ GOOD: Clear, descriptive names
+// GOOD: Clear, descriptive names
 class UserAuthenticationService {
   authenticateUser(credentials: UserCredentials): AuthenticationResult {}
 }
@@ -308,7 +306,7 @@ const m = 3;
 #### Small Functions
 
 ```typescript
-// ✅ GOOD: Small, focused function
+// GOOD: Small, focused function
 function validateUserAge(user: User): ValidationResult {
   if (user.age < 18) {
     return ValidationResult.invalid('User must be 18 or older');
@@ -342,7 +340,7 @@ function processUser(user: User): void {
 #### Single Level of Abstraction
 
 ```typescript
-// ✅ GOOD: Consistent abstraction level
+// GOOD: Consistent abstraction level
 function analyzeContract(filePath: string): AnalysisResult {
   const source = readFile(filePath);
   const ast = parseSource(source);
@@ -377,7 +375,7 @@ function analyzeContractBad(filePath: string): AnalysisResult {
 #### Function Arguments
 
 ```typescript
-// ✅ GOOD: 0-2 arguments
+// GOOD: 0-2 arguments
 function createUser(name: string, email: string): User {
   return new User(name, email);
 }
@@ -405,7 +403,7 @@ function createUserBad(
 ### Comments
 
 ```typescript
-// ✅ GOOD: Code is self-explanatory
+// GOOD: Code is self-explanatory
 function isEligibleForDiscount(user: User): boolean {
   const hasBeenMemberForOverYear = user.memberSince < Date.now() - YEAR_IN_MS;
 
@@ -414,7 +412,7 @@ function isEligibleForDiscount(user: User): boolean {
   return hasBeenMemberForOverYear && hasMadeMultiplePurchases;
 }
 
-// ✅ GOOD: Explains WHY, not WHAT
+// GOOD: Explains WHY, not WHAT
 function calculateTax(amount: number): number {
   // Tax rate set to match federal guidelines as of 2025
   const TAX_RATE = 0.2;
@@ -460,7 +458,7 @@ function process(data: any): void {
 ### Error Handling
 
 ```typescript
-// ✅ GOOD: Use exceptions, not error codes
+// GOOD: Use exceptions, not error codes
 function parseFile(path: string): AST {
   if (!fs.existsSync(path)) {
     throw new FileNotFoundError(`File not found: ${path}`);
@@ -474,7 +472,7 @@ function parseFile(path: string): AST {
   }
 }
 
-// ✅ GOOD: Provide context with exceptions
+// GOOD: Provide context with exceptions
 class ParseError extends Error {
   constructor(
     message: string,
@@ -696,7 +694,7 @@ class ApplicationGod {
   sendNotifications() {}
 }
 
-// ✅ DO: Separate concerns
+// DO: Separate concerns
 class Parser {}
 class Analyzer {}
 class Detector {}
@@ -722,7 +720,7 @@ function process(data: any): any {
   return z;
 }
 
-// ✅ DO: Clear flow
+// DO: Clear flow
 function process(data: Data): Result {
   const transformed = transform(data);
   const saved = save(transformed);
@@ -756,7 +754,7 @@ class Detector2 {
   }
 }
 
-// ✅ DO: Extract common logic
+// DO: Extract common logic
 abstract class FunctionDetector {
   detect(ast: AST): Issue[] {
     const functions = this.getFunctions(ast);
@@ -778,7 +776,7 @@ class DetectorComplex {
   }
 }
 
-// ✅ DO: Simple first, optimize if needed
+// DO: Simple first, optimize if needed
 class DetectorSimple {
   detect(ast: AST): Issue[] {
     // Clear, simple logic
@@ -861,7 +859,7 @@ import { Config } from './config';
 ### Input Validation
 
 ```typescript
-// ✅ Validate all inputs
+// Validate all inputs
 function loadConfig(path: string): Config {
   // Sanitize path
   const safePath = path.replace(/\.\./g, '');
@@ -883,7 +881,7 @@ function loadConfig(path: string): Config {
 // ❌ Don't log sensitive data
 logger.debug(`User credentials: ${JSON.stringify(credentials)}`);
 
-// ✅ Log safely
+// Log safely
 logger.debug(`User ${credentials.username} authenticated`);
 ```
 
@@ -900,10 +898,10 @@ logger.debug(`User ${credentials.username} authenticated`);
 
 These design principles and practices ensure that Solin:
 
-✅ **Maintainable**: Easy to understand and modify
-✅ **Testable**: Easy to write unit and integration tests
-✅ **Extensible**: Easy to add new features
-✅ **Reliable**: Robust error handling and validation
-✅ **Performant**: Optimized where it matters
+**Maintainable**: Easy to understand and modify
+**Testable**: Easy to write unit and integration tests
+**Extensible**: Easy to add new features
+**Reliable**: Robust error handling and validation
+**Performant**: Optimized where it matters
 
 **Remember**: Follow these principles, but use judgment. Sometimes breaking a rule is the right choice, but it should be a conscious decision with good reason.

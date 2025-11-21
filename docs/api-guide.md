@@ -2,7 +2,7 @@
 
 Solin provides multiple API interfaces for Solidity static analysis. Choose the interface that best fits your use case.
 
-## 🚀 Quick Start
+## Quick Start
 
 ```bash
 # Start REST API server (default, easiest)
@@ -21,11 +21,11 @@ That's it! No configuration needed. The REST API is ready to use.
 
 **Features:**
 
-- ✅ Enabled by default
-- ✅ No setup required
-- ✅ CORS enabled
-- ✅ JSON responses
-- ✅ Optional encryption
+- Enabled by default
+- No setup required
+- CORS enabled
+- JSON responses
+- Optional encryption
 
 **Start server:**
 
@@ -74,10 +74,10 @@ curl http://localhost:3000/api/health
 
 **Features:**
 
-- 🔄 Real-time bidirectional communication
+- Real-time bidirectional communication
 - 📡 Progressive results streaming
-- ⚡ Low latency
-- 🔒 Optional encryption
+- Low latency
+-  Optional encryption
 
 **Enable:**
 
@@ -144,8 +144,8 @@ ws.send(JSON.stringify({ type: 'ping' }));
 
 **Features:**
 
-- ⚡ High performance binary protocol
-- 🔒 TLS/SSL support
+- High performance binary protocol
+-  TLS/SSL support
 - 📡 Bidirectional streaming
 - 🔐 Built-in encryption
 
@@ -163,9 +163,9 @@ GRPC_ENABLED=true npm run server
 
 **Features:**
 
-- 🤖 Direct AI assistant integration
-- 💬 Conversational interface
-- 📝 Natural language queries
+- Direct AI assistant integration
+- Conversational interface
+- Natural language queries
 
 **Enable:**
 
@@ -240,7 +240,7 @@ ENCRYPTION_ENABLED=true npm run server
 REST_PORT=8080 WS_PORT=8081 GRPC_PORT=50052 npm run server
 ```
 
-## 📚 API Reference
+## API Reference
 
 ### REST API Endpoints
 
@@ -296,7 +296,7 @@ List all available analysis rules.
       "fixable": false
     }
   ],
-  "count": 155
+  "count": 151
 }
 ```
 
@@ -432,7 +432,7 @@ docker run -p 3000:3000 -e REST_ENABLED=true solin
 
 See [grpc-integration.md](./grpc-integration.md) for complete Kubernetes deployment manifests.
 
-## 🔧 Integration Examples
+## Integration Examples
 
 ### Node.js
 
@@ -504,7 +504,7 @@ async function analyzeContract(code) {
 }
 ```
 
-## 🎯 Use Cases
+## Use Cases
 
 ### 1. Web Application Integration
 
@@ -536,7 +536,7 @@ async function analyzeContract(code) {
 - High performance binary protocol
 - Built-in load balancing
 
-## 📊 Performance
+## Performance
 
 **Benchmark results (average):**
 
@@ -581,10 +581,8 @@ CORS_ENABLED=true npm run server
 
 ## 🆘 Support
 
-- **Documentation**: [GitHub Wiki](https://github.com/0xmhha/solin/wiki)
 - **Issues**: [GitHub Issues](https://github.com/0xmhha/solin/issues)
-- **Discussions**: [GitHub Discussions](https://github.com/0xmhha/solin/discussions)
 
-## 📝 License
+## License
 
 MIT License - see [LICENSE](../LICENSE) file for details.

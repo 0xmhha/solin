@@ -233,7 +233,6 @@ npm install -g solin
 
 - **GitHub**: https://github.com/0xmhha/solin
 - **Issues**: https://github.com/0xmhha/solin/issues
-- **Discussions**: https://github.com/0xmhha/solin/discussions
 
 ## 📝 License
 

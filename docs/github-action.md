@@ -1,14 +1,14 @@
-# Solin GitHub Action
+# Solin GitHub Actions Integration
 
 Run Solin static analysis on your Solidity smart contracts directly in your GitHub CI/CD pipeline.
 
 ## Features
 
 - Automatic analysis on push and pull requests
-- PR comments with analysis results
 - SARIF upload for GitHub Code Scanning
 - Configurable severity thresholds
 - Multiple output formats
+- Fail on errors or warnings
 
 ## Quick Start
 
@@ -28,68 +28,67 @@ jobs:
     runs-on: ubuntu-latest
     permissions:
       contents: read
-      pull-requests: write
       security-events: write
 
     steps:
       - uses: actions/checkout@v4
-      - uses: solin/solin-action@v1
+
+      - uses: actions/setup-node@v4
         with:
-          path: 'contracts'
-          fail-on-error: 'true'
-          comment-on-pr: 'true'
+          node-version: '18'
+
+      - name: Install Solin
+        run: npm install -g solin
+
+      - name: Run Solin Analysis
+        run: solin contracts --format sarif --output solin-results.sarif
+
+      - name: Upload SARIF results
+        uses: github/codeql-action/upload-sarif@v2
+        if: always()
+        with:
+          sarif_file: solin-results.sarif
 ```
 
-## Inputs
+## CLI Options
 
-| Input               | Description                                | Required | Default   |
-| ------------------- | ------------------------------------------ | -------- | --------- |
-| `path`              | Path to analyze (file, directory, or glob) | No       | `.`       |
-| `config`            | Path to configuration file                 | No       | -         |
-| `format`            | Output format (stylish, json, sarif, html) | No       | `stylish` |
-| `fail-on-error`     | Fail if errors are found                   | No       | `true`    |
-| `fail-on-warning`   | Fail if warnings are found                 | No       | `false`   |
-| `comment-on-pr`     | Post results as PR comment                 | No       | `true`    |
-| `sarif-upload`      | Upload SARIF to Code Scanning              | No       | `false`   |
-| `working-directory` | Working directory                          | No       | `.`       |
-| `node-version`      | Node.js version                            | No       | `18`      |
+Solin provides several command-line options for CI/CD integration:
 
-## Outputs
-
-| Output         | Description                       |
-| -------------- | --------------------------------- |
-| `total-issues` | Total number of issues found      |
-| `errors`       | Number of errors                  |
-| `warnings`     | Number of warnings                |
-| `info`         | Number of info issues             |
-| `sarif-file`   | Path to SARIF file (if generated) |
+| Option            | Description                               | Example                        |
+| ----------------- | ----------------------------------------- | ------------------------------ |
+| `--format`        | Output format                             | `--format sarif`               |
+| `--output`        | Output file path                          | `--output results.sarif`       |
+| `--config`        | Configuration file                        | `--config .solinrc.json`       |
+| `--max-warnings`  | Maximum warnings allowed before exit(1)   | `--max-warnings 0`             |
+| `--fix`           | Auto-fix issues                           | `--fix`                        |
+| `--parallel`      | Number of parallel workers                | `--parallel 4`                 |
 
 ## Examples
 
 ### Basic Usage
 
 ```yaml
-- uses: solin/solin-action@v1
-  with:
-    path: 'contracts/**/*.sol'
+- name: Run Solin
+  run: solin contracts
 ```
 
 ### With Configuration File
 
 ```yaml
-- uses: solin/solin-action@v1
-  with:
-    path: 'src'
-    config: '.solinrc.json'
+- name: Run Solin
+  run: solin contracts --config .solinrc.json
 ```
 
 ### GitHub Code Scanning Integration
 
 ```yaml
-- uses: solin/solin-action@v1
+- name: Analyze with Solin
+  run: solin contracts --format sarif --output solin-results.sarif
+
+- name: Upload to Code Scanning
+  uses: github/codeql-action/upload-sarif@v2
   with:
-    path: 'contracts'
-    sarif-upload: 'true'
+    sarif_file: solin-results.sarif
 ```
 
 This will upload results to GitHub's Security tab under "Code scanning alerts".
@@ -97,55 +96,29 @@ This will upload results to GitHub's Security tab under "Code scanning alerts".
 ### Strict Mode (Fail on Warnings)
 
 ```yaml
-- uses: solin/solin-action@v1
-  with:
-    path: 'contracts'
-    fail-on-error: 'true'
-    fail-on-warning: 'true'
+- name: Run Solin (strict)
+  run: solin contracts --max-warnings 0
 ```
 
 ### Custom Output Format
 
 ```yaml
-- uses: solin/solin-action@v1
-  with:
-    path: 'contracts'
-    format: 'json'
+- name: Run Solin
+  run: solin contracts --format json --output results.json
 ```
 
 ### Multiple Paths
 
 ```yaml
-- uses: solin/solin-action@v1
-  with:
-    path: 'contracts src/solidity lib'
+- name: Run Solin
+  run: solin contracts src/solidity lib
 ```
-
-## PR Comment
-
-When `comment-on-pr` is enabled (default), the action will post a comment on pull requests with analysis results:
-
-```
-## ✅ Solin Analysis Results
-
-| Severity | Count |
-|----------|-------|
-| 🔴 Errors | 0 |
-| 🟡 Warnings | 3 |
-| 🔵 Info | 5 |
-| **Total** | **8** |
-
-Please review the issues above and fix them before merging.
-```
-
-The comment is automatically updated on subsequent pushes to the same PR.
 
 ## Required Permissions
 
 ```yaml
 permissions:
   contents: read # To checkout code
-  pull-requests: write # To post PR comments
   security-events: write # To upload SARIF results
 ```
 
@@ -160,44 +133,70 @@ jobs:
         package: [contracts-a, contracts-b]
     steps:
       - uses: actions/checkout@v4
-      - uses: solin/solin-action@v1
+
+      - uses: actions/setup-node@v4
         with:
-          working-directory: packages/${{ matrix.package }}
-          path: 'contracts'
+          node-version: '18'
+
+      - name: Install Solin
+        run: npm install -g solin
+
+      - name: Analyze ${{ matrix.package }}
+        working-directory: packages/${{ matrix.package }}
+        run: solin contracts --format sarif --output ../../solin-${{ matrix.package }}.sarif
+
+      - name: Upload SARIF
+        uses: github/codeql-action/upload-sarif@v2
+        with:
+          sarif_file: solin-${{ matrix.package }}.sarif
 ```
 
 ## Caching
 
-The action uses npm to install Solin. To cache dependencies:
+Speed up your workflow by caching npm packages:
 
 ```yaml
 - uses: actions/setup-node@v4
   with:
     node-version: '18'
     cache: 'npm'
+    cache-dependency-path: 'package-lock.json'
 
-- uses: solin/solin-action@v1
-  with:
-    path: 'contracts'
+- name: Install Solin
+  run: npm install -g solin
 ```
 
 ## Troubleshooting
 
-### Action Fails with "Command not found"
+### Command Not Found
 
-Ensure you're using a compatible Node.js version (16+).
+Ensure you have installed Solin before running it:
+
+```yaml
+- name: Install Solin
+  run: npm install -g solin
+```
 
 ### SARIF Upload Fails
 
-Make sure you have the `security-events: write` permission.
+Make sure you have the `security-events: write` permission:
 
-### No PR Comment
+```yaml
+permissions:
+  security-events: write
+```
 
-Verify:
+### Analysis Fails
 
-1. `comment-on-pr: 'true'` is set
-2. `pull-requests: write` permission is granted
-3. The workflow is triggered by a pull request event
+Check that your Solidity files are valid and the path is correct:
+
+```yaml
+- name: List contracts
+  run: ls -la contracts
+
+- name: Run Solin
+  run: solin contracts
+```
 
 ## License
 

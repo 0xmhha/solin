@@ -1,8 +1,5 @@
 # Solin Architecture Documentation
 
-> **Version**: 1.0.0
-> **Last Updated**: 2025-01-07
-> **Status**: Design Phase
 
 ## Table of Contents
 
@@ -37,7 +34,7 @@ Solin is a **unified Solidity static analysis platform** that combines comprehen
 
 - **Target**: Analyze 1000+ Solidity files in < 30 seconds
 - **Accuracy**: < 5% false positive rate for security detectors
-- **Coverage**: 80+ lint rules, 99+ security detectors
+- **Coverage**: 55 lint rules, 96 security detectors (151 total)
 - **Extensibility**: Plugin API with < 100 LOC for custom rules
 
 ---
@@ -58,7 +55,7 @@ Solin is a **unified Solidity static analysis platform** that combines comprehen
 **Example**:
 
 ```javascript
-// ✅ GOOD: Single responsibility
+// GOOD: Single responsibility
 class ReentrancyDetector {
   detect(ast) {
     // Only detects reentrancy
@@ -1023,10 +1020,10 @@ module.exports = {
 
 This architecture provides:
 
-✅ **Maintainability** through SOLID principles and clean separation of concerns
-✅ **Extensibility** via plugin system and well-defined interfaces
-✅ **Performance** through parallel processing and intelligent caching
-✅ **Reliability** through comprehensive testing and type safety
-✅ **Developer Experience** through clear APIs and excellent documentation
+**Maintainability** through SOLID principles and clean separation of concerns
+**Extensibility** via plugin system and well-defined interfaces
+**Performance** through parallel processing and intelligent caching
+**Reliability** through comprehensive testing and type safety
+**Developer Experience** through clear APIs and excellent documentation
 
 The architecture is designed to evolve with the project while maintaining backward compatibility and supporting the growing ecosystem of plugins and integrations.

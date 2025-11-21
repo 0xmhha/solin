@@ -19,7 +19,7 @@
 
 ---
 
-## 🎯 Project Vision
+## Project Vision
 
 Solin is designed to be a **unified Solidity analysis platform** that combines:
 
@@ -29,42 +29,83 @@ Solin is designed to be a **unified Solidity analysis platform** that combines:
 - **Extensibility**: Plugin system for custom rules and company-specific policies
 - **Developer Experience**: Clear diagnostics, auto-fix capabilities, and seamless CI/CD integration
 
-## 🚀 Features
+## Features
 
 ### Core Capabilities
 
-- ✅ **59 Rules Total**: 33 security detectors + 26 lint rules
-- ✅ **Security Analysis**: Reentrancy, tx.origin, unchecked calls, weak randomness, and more
-- ✅ **Code Quality**: Naming conventions, complexity limits, gas optimization, code style
-- ✅ **Fast Analysis**: Analyze contracts in ~170ms
-- ✅ **Multiple Output Formats**: Stylish (human-readable) and JSON (machine-readable)
-- ✅ **Configurable Rules**: Enable/disable rules via .solinrc.json
-- ✅ **CLI Commands**: `init`, `list-rules`, and analyze commands
-- ✅ **CI/CD Ready**: Exit codes and max-warnings for pipeline integration
+- **151 Rules Total**: 55 lint rules + 96 security detectors
+- **Multi-Protocol API**: REST, WebSocket, gRPC, and MCP servers
+- **AI Platform Integration**: Claude Desktop, ChatGPT, Gemini support
+- **Security Analysis**: Comprehensive vulnerability detection (reentrancy, overflow, access control, etc.)
+- **Code Quality**: Naming conventions, complexity limits, gas optimization, code style
+- **Fast Analysis**: Analyze contracts in ~170ms with parallel processing
+- **Multiple Output Formats**: JSON, SARIF, Stylish, Markdown, JUnit, HTML, Checkstyle
+- **Configurable Rules**: Enable/disable rules via .solinrc.json
+- **Auto-Fix Capabilities**: Automatic code fixes for common issues
+- **CI/CD Ready**: GitHub Actions, GitLab CI, Jenkins integration
+
+### API Servers
+
+#### REST API (Default)
+- Standard HTTP JSON API on port 3000
+- CORS-enabled for web integration
+- Multiple output formats
+- Health check endpoint
+
+#### WebSocket Server
+- Real-time analysis with live feedback
+- Bidirectional communication
+- Progressive results for large files
+- Low latency (< 50ms)
+
+#### gRPC Server
+- High-performance RPC protocol
+- TLS/SSL support
+- Streaming analysis for large codebases
+- Production-ready with monitoring
+
+#### MCP Server
+- Native Claude Desktop integration
+- ChatGPT Custom GPT support
+- AI assistant compatibility
+- Smithery.ai registry ready
 
 ### Analysis Categories
 
-#### Lint Analysis
+#### Lint Analysis (55 rules)
 
-- Code style and formatting
-- Best practices enforcement
-- Naming convention validation
-- Gas consumption optimization
-- Documentation completeness
+- **Code Style**: Indentation, line length, bracket alignment, quotes
+- **Best Practices**: Visibility modifiers, state mutability, magic numbers
+- **Naming Conventions**: Contract, function, and variable naming
+- **Gas Optimization**: Array length caching, storage packing, custom errors
+- **Code Organization**: Import ordering, one contract per file, function ordering
 
-#### Security Analysis (33 rules)
+#### Security Analysis (96 rules)
 
-- Reentrancy vulnerabilities
-- tx.origin authentication bypass
+**High Severity:**
+- Reentrancy vulnerabilities (classic, read-only, cross-function)
+- Integer overflow/underflow
 - Unchecked external calls
-- Weak randomness (PRNG)
-- Unprotected ether withdrawal
-- Missing zero-address checks
-- Floating pragma versions
-- Deprecated functions
-- And 25+ more security patterns
+- Unprotected selfdestruct
+- Storage collision
+- Access control issues
 
-## 📦 Installation
+**Medium Severity:**
+- Timestamp dependence
+- Weak randomness
+- Locked ether
+- Missing events
+- Incorrect equality checks
+- Delegatecall risks
+
+**Low/Info:**
+- Assembly usage
+- Deprecated functions
+- Floating pragma
+- Code complexity
+- Dead code detection
+
+## Installation
 
 ### Via npm (Recommended)
 
@@ -87,9 +128,11 @@ npm install
 npm link
 ```
 
-## 🔧 Usage
+## Usage
 
 ### Quick Start
+
+See [QUICK_START.md](QUICK_START.md) for a comprehensive 5-minute getting started guide.
 
 ```bash
 # 1. Initialize configuration file
@@ -100,6 +143,9 @@ solin contracts/MyToken.sol
 
 # 3. List available rules
 solin list-rules
+
+# 4. Start API server (optional)
+npm run server
 ```
 
 ### Basic Usage
@@ -194,44 +240,63 @@ The file supports:
 
 See [examples/.solinignore](examples/.solinignore) for a complete example.
 
-## 📚 Documentation
+## Documentation
 
 Comprehensive documentation is available in the `docs/` directory:
 
+### Getting Started
+- [Quick Start Guide](QUICK_START.md) - 5-minute setup and usage guide
 - [Architecture Overview](docs/architecture.md) - System design and component overview
+
+### Development
 - [Development Guide](docs/development-guide.md) - TDD/DDD practices and contribution guidelines
 - [Design Principles](docs/design-principles.md) - SOLID principles and design patterns
 - [Rule Authoring Guide](docs/rule-authoring-guide.md) - How to create custom rules
+- [Testing Guide](docs/testing-guide.md) - Comprehensive testing documentation
+
+### Integration
+- [API Guide](docs/api-guide.md) - REST API and WebSocket server documentation
+- [gRPC Integration](docs/grpc-integration.md) - Production deployment with gRPC
+- [MCP Integration](docs/mcp-integration.md) - AI assistant integration guide
+- [AI Platform Integration](docs/ai-integration.md) - Claude, ChatGPT, Gemini setup
 - [CI/CD Integration](docs/ci-cd-integration.md) - Pipeline integration examples
 - [GitHub Action](docs/github-action.md) - GitHub Actions integration
 
-## 🏗️ Project Structure
+## Project Structure
 
 ```
 solin/
 ├── docs/               # Comprehensive documentation
 │   ├── architecture.md
-│   ├── design-principles.md
-│   ├── development-guide.md
-│   └── rule-authoring-guide.md
+│   ├── api-guide.md
+│   ├── ai-integration.md
+│   ├── grpc-integration.md
+│   ├── mcp-integration.md
+│   ├── testing-guide.md
+│   └── ...
 ├── lib/                # Source code
+│   ├── api/           # API servers (REST, WebSocket)
+│   ├── grpc/          # gRPC server and encryption
+│   ├── mcp/           # MCP server for AI assistants
 │   ├── core/          # Core engine and orchestration
 │   ├── parser/        # Solidity parsing
 │   ├── rules/         # Rule implementations
-│   │   ├── lint/      # Lint rules
-│   │   └── security/  # Security detectors
+│   │   ├── lint/      # 55 lint rules
+│   │   └── security/  # 96 security detectors
 │   ├── plugins/       # Plugin system
-│   ├── formatters/    # Output formatters
+│   ├── formatters/    # Output formatters (7 formats)
+│   ├── fixer/         # Auto-fix system
 │   └── cli/           # Command-line interface
-├── test/              # Test suites
+├── test/              # Test suites (2,100+ tests)
 │   ├── unit/
 │   ├── integration/
 │   └── e2e/
 ├── examples/          # Example configurations and plugins
+├── .github/           # CI/CD workflows
 └── package.json
 ```
 
-## 🧪 Development
+## Development
 
 ### Prerequisites
 
@@ -272,7 +337,7 @@ Solin follows a **Test-Driven Development (TDD)** approach:
 
 See [Development Guide](docs/development-guide.md) for detailed practices.
 
-## 🤝 Contributing
+## Contributing
 
 We welcome contributions! Please see our [Contributing Guide](CONTRIBUTING.md) for details.
 
@@ -287,28 +352,27 @@ We welcome contributions! Please see our [Contributing Guide](CONTRIBUTING.md) f
 7. Push to the branch (`git push origin feature/amazing-feature`)
 8. Open a Pull Request
 
-## 🔗 Related Projects
+## Related Projects
 
 - [solhint](https://github.com/protofire/solhint) - Solidity linter (inspiration for lint rules)
 - [slither](https://github.com/crytic/slither) - Security analysis tool (inspiration for detectors)
 - [tlin](https://github.com/gnolang/tlin) - Gno linter (inspiration for architecture)
 
-## 📜 License
+## License
 
 This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
 
 **Note**: If you plan to port security detectors directly from Slither, please review Slither's AGPLv3 license requirements. The current implementation focuses on original implementations inspired by industry best practices.
 
-## 🙏 Acknowledgments
+## Acknowledgments
 
 - Solhint team for establishing Solidity linting patterns
 - Slither/Trail of Bits for pioneering Solidity security analysis
 - Tlin team for demonstrating efficient linter architecture
 - The Ethereum and Solidity communities
 
-## 📞 Contact & Support
+## Contact & Support
 
 - **Issues**: [GitHub Issues](https://github.com/0xmhha/solin/issues)
-- **Discussions**: [GitHub Discussions](https://github.com/0xmhha/solin/discussions)
 
 ---
