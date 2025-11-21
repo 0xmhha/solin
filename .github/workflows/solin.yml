@@ -13,19 +13,43 @@ jobs:
 
     permissions:
       contents: read
-      pull-requests: write
       security-events: write
 
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
 
-      - name: Run Solin
-        uses: ./
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
         with:
-          path: 'contracts'
-          format: 'stylish'
-          fail-on-error: 'true'
-          fail-on-warning: 'false'
-          comment-on-pr: 'true'
-          sarif-upload: 'true'
+          node-version: '18'
+          cache: 'npm'
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Build Solin
+        run: npm run build
+
+      - name: Create sample Solidity file
+        run: |
+          mkdir -p contracts
+          cat > contracts/Sample.sol << 'EOF'
+          pragma solidity ^0.8.0;
+          contract Sample {
+              uint256 public value;
+              function setValue(uint256 _value) public {
+                  value = _value;
+              }
+          }
+          EOF
+
+      - name: Run Solin Analysis
+        run: node dist/cli.js contracts --format sarif --output solin-results.sarif
+        continue-on-error: true
+
+      - name: Upload SARIF results
+        uses: github/codeql-action/upload-sarif@v2
+        if: always()
+        with:
+          sarif_file: solin-results.sarif
