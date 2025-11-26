@@ -107,6 +107,8 @@ export class ListRulesCommand {
       Rules.QuotesRule,
       Rules.SpaceAfterCommaRule,
       Rules.VarNameMixedcaseRule,
+      // Custom rules
+      Rules.ProjectNamingConventionRule,
     ];
 
     const rules: AbstractRule[] = [];

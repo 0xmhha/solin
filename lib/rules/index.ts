@@ -161,6 +161,9 @@ export { VoidConstructorCallRule } from './security/void-constructor-call';
 export { WriteAfterWriteRule } from './security/write-after-write';
 export { WrongEqualityRule } from './security/wrong-equality';
 
+// CUSTOM RULES
+export { ProjectNamingConventionRule } from './custom/project-naming-convention';
+
 // Developer tools
 export {
   RuleTester,

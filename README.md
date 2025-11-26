@@ -12,28 +12,17 @@
   <a href="#features">Features</a> •
   <a href="#installation">Installation</a> •
   <a href="#usage">Usage</a> •
-  <a href="#documentation">Documentation</a> •
-  <a href="#contributing">Contributing</a> •
-  <a href="#license">License</a>
+  <a href="#custom-rules">Custom Rules</a> •
+  <a href="#configuration">Configuration</a>
 </p>
 
 ---
-
-## Project Vision
-
-Solin is designed to be a **unified Solidity analysis platform** that combines:
-
-- **Comprehensive Linting**: Style guide enforcement and best practices validation
-- **Advanced Security Analysis**: Deep vulnerability detection inspired by industry-leading tools
-- **High Performance**: Parallel processing and intelligent caching for fast analysis
-- **Extensibility**: Plugin system for custom rules and company-specific policies
-- **Developer Experience**: Clear diagnostics, auto-fix capabilities, and seamless CI/CD integration
 
 ## Features
 
 ### Core Capabilities
 
-- **151 Rules Total**: 55 lint rules + 96 security detectors
+- **152 Rules Total**: 55 lint rules + 96 security detectors + 1 custom project naming rule
 - **Multi-Protocol API**: REST, WebSocket, gRPC, and MCP servers
 - **AI Platform Integration**: Claude Desktop, ChatGPT, Gemini support
 - **Security Analysis**: Comprehensive vulnerability detection (reentrancy, overflow, access control, etc.)
@@ -44,41 +33,7 @@ Solin is designed to be a **unified Solidity analysis platform** that combines:
 - **Auto-Fix Capabilities**: Automatic code fixes for common issues
 - **CI/CD Ready**: GitHub Actions, GitLab CI, Jenkins integration
 
-### API Servers
-
-#### REST API (Default)
-- Standard HTTP JSON API on port 3000
-- CORS-enabled for web integration
-- Multiple output formats
-- Health check endpoint
-
-#### WebSocket Server
-- Real-time analysis with live feedback
-- Bidirectional communication
-- Progressive results for large files
-- Low latency (< 50ms)
-
-#### gRPC Server
-- High-performance RPC protocol
-- TLS/SSL support
-- Streaming analysis for large codebases
-- Production-ready with monitoring
-
-#### MCP Server
-- Native Claude Desktop integration
-- ChatGPT Custom GPT support
-- AI assistant compatibility
-- Smithery.ai registry ready
-
 ### Analysis Categories
-
-#### Lint Analysis (55 rules)
-
-- **Code Style**: Indentation, line length, bracket alignment, quotes
-- **Best Practices**: Visibility modifiers, state mutability, magic numbers
-- **Naming Conventions**: Contract, function, and variable naming
-- **Gas Optimization**: Array length caching, storage packing, custom errors
-- **Code Organization**: Import ordering, one contract per file, function ordering
 
 #### Security Analysis (96 rules)
 
@@ -98,126 +53,194 @@ Solin is designed to be a **unified Solidity analysis platform** that combines:
 - Incorrect equality checks
 - Delegatecall risks
 
-**Low/Info:**
-- Assembly usage
-- Deprecated functions
-- Floating pragma
-- Code complexity
-- Dead code detection
+#### Lint Analysis (55 rules)
+
+- **Code Style**: Indentation, line length, bracket alignment, quotes
+- **Best Practices**: Visibility modifiers, state mutability, magic numbers
+- **Naming Conventions**: Contract, function, and variable naming
+- **Gas Optimization**: Array length caching, storage packing, custom errors
+
+#### Custom Project Rules (1 rule)
+
+- **Project Naming Convention**: Enforces project-specific naming standards
 
 ## Installation
-
-### Via npm (Recommended)
-
-```bash
-npm install -g solin
-```
-
-### Via yarn
-
-```bash
-yarn global add solin
-```
 
 ### From source
 
 ```bash
-git clone https://github.com/0xmhha/solin.git
+git clone https://github.com/aspect-labs/solin.git
 cd solin
 npm install
-npm link
+npm run build
 ```
 
 ## Usage
 
 ### Quick Start
 
-See [QUICK_START.md](QUICK_START.md) for a comprehensive 5-minute getting started guide.
-
 ```bash
-# 1. Initialize configuration file
-solin init
+# Build the project
+npm run build
 
-# 2. Analyze your contracts
-solin contracts/MyToken.sol
+# Analyze your contracts
+node dist/cli.js contracts/MyToken.sol
 
-# 3. List available rules
-solin list-rules
+# Analyze with configuration file
+node dist/cli.js -c .solinrc.json contracts/*.sol
 
-# 4. Start API server (optional)
-npm run server
+# List available rules
+node dist/cli.js list-rules
 ```
 
 ### Basic Usage
 
 ```bash
-# Analyze current directory
-solin .
-
 # Analyze specific files
-solin contracts/MyToken.sol contracts/NFT.sol
+node dist/cli.js contracts/MyToken.sol contracts/NFT.sol
 
 # Analyze with glob pattern
-solin 'contracts/**/*.sol'
-```
+node dist/cli.js 'contracts/**/*.sol'
 
-### Configuration
-
-Initialize a configuration file:
-
-```bash
-solin --init
-```
-
-This creates a `.solinrc.json` file:
-
-```json
-{
-  "extends": "solin:recommended",
-  "rules": {
-    "security/reentrancy": "error",
-    "lint/naming-convention": "warning",
-    "custom/my-rule": "error"
-  },
-  "plugins": ["@company/solin-plugin"],
-  "excludedFiles": ["node_modules/**", "test/**"]
-}
+# Analyze directory
+node dist/cli.js contracts/
 ```
 
 ### Advanced Options
 
 ```bash
 # Parallel analysis with 4 workers
-solin . --parallel 4
+node dist/cli.js --parallel 4 contracts/
 
 # Enable auto-fix
-solin . --fix
+node dist/cli.js --fix contracts/
 
 # Dry run (show what would be fixed)
-solin . --fix --dry-run
+node dist/cli.js --fix --dry-run contracts/
 
 # Output to JSON
-solin . --format json --output report.json
+node dist/cli.js -f json contracts/
 
 # Generate SARIF for GitHub Code Scanning
-solin . --format sarif --output results.sarif
+node dist/cli.js -f sarif contracts/
 
 # Cache results for faster subsequent runs
-solin . --cache
-
-# Specify cache location
-solin . --cache --cache-location .cache/solin
+node dist/cli.js --cache contracts/
 
 # Watch mode for continuous analysis
-solin . --watch
+node dist/cli.js -w contracts/
 
-# Custom ignore file
-solin . --ignore-path .customignore
+# Errors only (quiet mode)
+node dist/cli.js -q contracts/
 ```
+
+## Custom Rules
+
+### Project Naming Convention (`custom/project-naming-convention`)
+
+This rule enforces project-specific naming conventions for Solidity code:
+
+| Target | Convention | Example |
+|--------|------------|---------|
+| Stack variables (params, locals) | `_` prefix | `_amount`, `_from`, `_to` |
+| Private/internal state variables | `__` prefix | `__owner`, `__balances` |
+| Constant/immutable variables | UPPER_SNAKE_CASE | `DOMAIN_SEPARATOR`, `MAX_SUPPLY` |
+| Private/internal functions | `_` prefix | `_validateOwner()`, `_transfer()` |
+| Public/external functions | No prefix | `transfer()`, `balanceOf()` |
+| Naming conflicts | `_` suffix | `_balance_` (when conflicts with state) |
+
+#### Example
+
+```solidity
+// SPDX-License-Identifier: MIT
+pragma solidity ^0.8.20;
+
+contract MyContract {
+    // Constants: UPPER_SNAKE_CASE
+    uint256 public constant MAX_SUPPLY = 1000000;
+
+    // Private state: double underscore prefix
+    address private __owner;
+    mapping(address => uint256) private __balances;
+
+    // Public state: no prefix
+    uint256 public totalSupply;
+
+    // Private function: single underscore prefix
+    function _validateOwner(address _caller) internal view returns (bool) {
+        return _caller == __owner;
+    }
+
+    // Public function: no prefix, params with underscore
+    function transfer(address _to, uint256 _amount) public returns (bool) {
+        require(_validateOwner(msg.sender), "Not owner");
+        __balances[_to] += _amount;
+        return true;
+    }
+
+    // Handling naming conflicts: use suffix
+    function _updateBalance(address _account, uint256 _balance_) internal {
+        __balances[_account] = _balance_;
+    }
+}
+```
+
+#### Inherited Libraries (e.g., OpenZeppelin)
+
+- Keep original names when inheriting from external libraries
+- Do not rename parent contract variables or functions to maintain override compatibility
+- Apply these naming rules only to project-owned contracts
+
+## Configuration
+
+### Initialize Configuration
+
+```bash
+node dist/cli.js init
+```
+
+This creates a `.solinrc.json` file.
+
+### Configuration File Example
+
+```json
+{
+  "rules": {
+    "security/tx-origin": "error",
+    "security/reentrancy": "error",
+    "security/unchecked-calls": "error",
+    "security/unchecked-send": "warning",
+    "security/timestamp-dependence": "warning",
+    "security/missing-zero-check": "warning",
+    "security/floating-pragma": "warning",
+    "security/unprotected-ether-withdrawal": "warning",
+    "security/uninitialized-state": "warning",
+
+    "lint/unused-state-variables": "warning",
+    "lint/visibility-modifiers": "warning",
+
+    "custom/project-naming-convention": "warning"
+  },
+  "ignorePatterns": [
+    "**/test/**",
+    "**/*.t.sol",
+    "**/mock/**",
+    "**/Mock*.sol"
+  ]
+}
+```
+
+### Rule Severity Levels
+
+| Level | Value | Description |
+|-------|-------|-------------|
+| Off | `"off"` or `0` | Disable the rule |
+| Warning | `"warning"` or `1` | Report as warning |
+| Error | `"error"` or `2` | Report as error |
 
 ### Ignoring Files
 
-Create a `.solinignore` file in your project root to exclude files from analysis:
+Create a `.solinignore` file in your project root:
 
 ```
 # Ignore test files
@@ -232,147 +255,43 @@ node_modules/**
 lib/**
 ```
 
-The file supports:
+## Output Formats
 
-- Glob patterns (`**/*.sol`, `test_*.sol`)
-- Comments starting with `#`
-- Directory patterns (`mocks/`)
+| Format | Flag | Description |
+|--------|------|-------------|
+| Stylish | `-f stylish` | Human-readable colored output (default) |
+| JSON | `-f json` | Machine-readable JSON |
+| SARIF | `-f sarif` | GitHub Code Scanning compatible |
+| Markdown | `-f markdown` | Documentation friendly |
+| HTML | `-f html` | Browser viewable report |
+| JUnit | `-f junit` | CI/CD test report format |
 
-See [examples/.solinignore](examples/.solinignore) for a complete example.
+## CI/CD Integration
 
-## Documentation
+### GitHub Actions
 
-Comprehensive documentation is available in the `docs/` directory:
+```yaml
+name: Solidity Analysis
+on: [push, pull_request]
 
-### Getting Started
-- [Quick Start Guide](QUICK_START.md) - 5-minute setup and usage guide
-- [Architecture Overview](docs/architecture.md) - System design and component overview
-
-### Development
-- [Development Guide](docs/development-guide.md) - TDD/DDD practices and contribution guidelines
-- [Design Principles](docs/design-principles.md) - SOLID principles and design patterns
-- [Rule Authoring Guide](docs/rule-authoring-guide.md) - How to create custom rules
-- [Testing Guide](docs/testing-guide.md) - Comprehensive testing documentation
-
-### Integration
-- [API Guide](docs/api-guide.md) - REST API and WebSocket server documentation
-- [gRPC Integration](docs/grpc-integration.md) - Production deployment with gRPC
-- [MCP Integration](docs/mcp-integration.md) - AI assistant integration guide
-- [AI Platform Integration](docs/ai-integration.md) - Claude, ChatGPT, Gemini setup
-- [CI/CD Integration](docs/ci-cd-integration.md) - Pipeline integration examples
-- [GitHub Action](docs/github-action.md) - GitHub Actions integration
-
-## Project Structure
-
+jobs:
+  analyze:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+      - name: Install Solin
+        run: |
+          git clone https://github.com/aspect-labs/solin.git
+          cd solin && npm install && npm run build
+      - name: Run Analysis
+        run: node solin/dist/cli.js -c .solinrc.json contracts/
 ```
-solin/
-├── docs/               # Comprehensive documentation
-│   ├── architecture.md
-│   ├── api-guide.md
-│   ├── ai-integration.md
-│   ├── grpc-integration.md
-│   ├── mcp-integration.md
-│   ├── testing-guide.md
-│   └── ...
-├── lib/                # Source code
-│   ├── api/           # API servers (REST, WebSocket)
-│   ├── grpc/          # gRPC server and encryption
-│   ├── mcp/           # MCP server for AI assistants
-│   ├── core/          # Core engine and orchestration
-│   ├── parser/        # Solidity parsing
-│   ├── rules/         # Rule implementations
-│   │   ├── lint/      # 55 lint rules
-│   │   └── security/  # 96 security detectors
-│   ├── plugins/       # Plugin system
-│   ├── formatters/    # Output formatters (7 formats)
-│   ├── fixer/         # Auto-fix system
-│   └── cli/           # Command-line interface
-├── test/              # Test suites (2,100+ tests)
-│   ├── unit/
-│   ├── integration/
-│   └── e2e/
-├── examples/          # Example configurations and plugins
-├── .github/           # CI/CD workflows
-└── package.json
-```
-
-## Development
-
-### Prerequisites
-
-- Node.js >= 18.0.0
-- npm >= 8.0.0
-
-### Setup
-
-```bash
-# Clone repository
-git clone https://github.com/0xmhha/solin.git
-cd solin
-
-# Install dependencies
-npm install
-
-# Run tests
-npm test
-
-# Run in watch mode for TDD
-npm run test:watch
-
-# Build
-npm run build
-
-# Lint
-npm run lint
-```
-
-### Testing Philosophy
-
-Solin follows a **Test-Driven Development (TDD)** approach:
-
-1. Write failing test first
-2. Implement minimal code to pass
-3. Refactor while keeping tests green
-4. Repeat
-
-See [Development Guide](docs/development-guide.md) for detailed practices.
-
-## Contributing
-
-We welcome contributions! Please see our [Contributing Guide](CONTRIBUTING.md) for details.
-
-### Quick Start
-
-1. Fork the repository
-2. Create your feature branch (`git checkout -b feature/amazing-feature`)
-3. Write tests for your changes
-4. Implement your changes
-5. Ensure all tests pass (`npm test`)
-6. Commit your changes (`git commit -m 'feat: add amazing feature'`)
-7. Push to the branch (`git push origin feature/amazing-feature`)
-8. Open a Pull Request
-
-## Related Projects
-
-- [solhint](https://github.com/protofire/solhint) - Solidity linter (inspiration for lint rules)
-- [slither](https://github.com/crytic/slither) - Security analysis tool (inspiration for detectors)
-- [tlin](https://github.com/gnolang/tlin) - Gno linter (inspiration for architecture)
 
 ## License
 
 This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
-
-**Note**: If you plan to port security detectors directly from Slither, please review Slither's AGPLv3 license requirements. The current implementation focuses on original implementations inspired by industry best practices.
-
-## Acknowledgments
-
-- Solhint team for establishing Solidity linting patterns
-- Slither/Trail of Bits for pioneering Solidity security analysis
-- Tlin team for demonstrating efficient linter architecture
-- The Ethereum and Solidity communities
-
-## Contact & Support
-
-- **Issues**: [GitHub Issues](https://github.com/0xmhha/solin/issues)
 
 ---

@@ -1,11 +1,24 @@
 {
-  "extends": "solin:recommended",
   "rules": {
     "security/tx-origin": "error",
     "security/reentrancy": "error",
+    "security/unchecked-calls": "error",
     "security/unchecked-send": "warning",
     "security/timestamp-dependence": "warning",
-    "lint/magic-numbers": "warning",
-    "security/missing-zero-check": "warning"
-  }
+    "security/missing-zero-check": "warning",
+    "security/floating-pragma": "warning",
+    "security/unprotected-ether-withdrawal": "warning",
+    "security/uninitialized-state": "warning",
+
+    "lint/unused-state-variables": "warning",
+    "lint/visibility-modifiers": "warning",
+
+    "custom/project-naming-convention": "warning"
+  },
+  "ignorePatterns": [
+    "**/test/**",
+    "**/*.t.sol",
+    "**/mock/**",
+    "**/Mock*.sol"
+  ]
 }

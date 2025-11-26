@@ -474,6 +474,8 @@ export class AnalyzeCommand {
       Rules.StatementIndentRule,
       Rules.TwoLinesTopLevelRule,
       Rules.UseCalldataOverMemory,
+      // Custom rules
+      Rules.ProjectNamingConventionRule,
     ];
 
     // Register each rule
