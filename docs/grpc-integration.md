@@ -1,5 +1,7 @@
 # gRPC Integration Guide
 
+> **Note**: gRPC server features are planned for future releases. See [roadmap.md](roadmap.md) for details. This documentation describes the planned gRPC design.
+
 This guide explains how to deploy Solin as a gRPC service for production use with encryption and security features.
 
 ## Overview

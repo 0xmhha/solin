@@ -2,238 +2,176 @@
 
 Get started with Solin in 5 minutes!
 
-## 🚀 Fastest Start (REST API)
+## Installation
+
+### From Source (Development)
 
 ```bash
-# 1. Install
+# Clone the repository
+git clone https://github.com/0xmhha/solin.git
+cd solin
+
+# Install dependencies
+npm install
+
+# Build
+npm run build
+
+# Link for local CLI usage (optional)
+npm link
+```
+
+### From npm (After Publishing)
+
+```bash
 npm install -g solin
-
-# 2. Start server
-solin server
-
-# 3. Analyze code
-curl -X POST http://localhost:3000/api/analyze \
-  -H "Content-Type: application/json" \
-  -d '{"code": "contract Test { function test() public {} }"}'
 ```
 
-That's it! ✅
+## Basic Usage
 
-## 🤖 Use with AI Assistants
-
-### Claude Desktop (Easiest)
-
-1. **Install Claude Desktop** from https://claude.ai/download
-
-2. **Start Solin MCP server:**
-
-   ```bash
-   npm run mcp-server
-   ```
-
-3. **Configure Claude Desktop:**
-
-   Edit config file:
-   - macOS: `~/Library/Application Support/Claude/claude_desktop_config.json`
-   - Windows: `%APPDATA%\Claude\claude_desktop_config.json`
-   - Linux: `~/.config/Claude/claude_desktop_config.json`
-
-   Add:
-
-   ```json
-   {
-     "mcpServers": {
-       "solin": {
-         "command": "node",
-         "args": ["/path/to/solin/dist/mcp/server.js"]
-       }
-     }
-   }
-   ```
-
-4. **Restart Claude Desktop**
-
-5. **Use Solin:**
-   ```
-   Analyze this contract: contract Test { ... }
-   ```
-
-### ChatGPT (Custom GPT)
-
-1. **Deploy Solin** (see deployment options below)
-
-2. **Create Custom GPT** at https://chat.openai.com/gpts/editor
-
-3. **Add Actions** - Copy from `chatgpt-actions.json`
-
-4. **Replace URL** with your deployed instance
-
-5. **Test:**
-   ```
-   Analyze this Solidity code: [paste code]
-   ```
-
-Full guide: [docs/ai-integration.md](docs/ai-integration.md)
-
-## 📦 Deployment Options
-
-### Railway (Click to deploy)
-
-[![Deploy on Railway](https://railway.app/button.svg)](https://railway.app/template/solin)
+### Using npm scripts (Recommended for Development)
 
 ```bash
-railway up
+# Analyze files using npm script
+npm run build && node dist/cli.js contracts/MyContract.sol
+
+# Or after npm link
+solin contracts/MyContract.sol
 ```
 
-### Render
-
-1. Push to GitHub
-2. Connect to Render
-3. `render.yaml` will auto-configure
-
-### Heroku
+### CLI Commands
 
 ```bash
-heroku create solin-analyzer
-git push heroku main
+# Analyze a single file
+node dist/cli.js contracts/MyContract.sol
+
+# Analyze a directory
+node dist/cli.js contracts/
+
+# Analyze with specific format
+node dist/cli.js contracts/ --format json
+
+# Analyze with SARIF output (for CI/CD)
+node dist/cli.js contracts/ --format sarif
+
+# Initialize configuration
+node dist/cli.js init
+
+# List available rules
+node dist/cli.js list-rules
 ```
 
-### Docker
+## Configuration
 
-```bash
-docker build -t solin .
-docker run -p 3000:3000 solin
+Create `.solinrc.json` in your project root:
+
+```json
+{
+  "rules": {
+    "security/reentrancy": "error",
+    "lint/naming-convention": "warning"
+  }
+}
 ```
 
-### Docker Compose
+Or use a preset:
 
-```bash
-docker-compose up -d
+```json
+{
+  "extends": "solin:recommended"
+}
 ```
 
-## 📚 Documentation
+## CLI Options
 
-- **API Guide**: [docs/api-guide.md](docs/api-guide.md)
-- **AI Integration**: [docs/ai-integration.md](docs/ai-integration.md)
-- **MCP Integration**: [docs/mcp-integration.md](docs/mcp-integration.md)
-- **gRPC Integration**: [docs/grpc-integration.md](docs/grpc-integration.md)
+| Option | Description |
+|--------|-------------|
+| `-c, --config <path>` | Configuration file path |
+| `-f, --format <type>` | Output format (stylish, json, sarif) |
+| `--fix` | Automatically fix issues |
+| `--cache` | Enable caching |
+| `--parallel <n>` | Number of parallel workers |
+| `-q, --quiet` | Report errors only |
 
-## 🎯 Common Use Cases
-
-### Web App Integration
-
-```javascript
-const response = await fetch('http://localhost:3000/api/analyze', {
-  method: 'POST',
-  headers: { 'Content-Type': 'application/json' },
-  body: JSON.stringify({ code: solidityCode }),
-});
-const result = await response.json();
-```
-
-### CI/CD Pipeline
+## CI/CD Integration
 
 ```yaml
-# .github/workflows/security.yml
-- name: Analyze contracts
-  run: |
-    npm install -g solin
-    solin analyze contracts/**/*.sol --format=sarif
+# .github/workflows/solin.yml
+name: Solin Analysis
+on: [push, pull_request]
+
+jobs:
+  analyze:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/checkout@v4
+        with:
+          repository: 0xmhha/solin
+          path: solin
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '18'
+      - name: Build Solin
+        run: |
+          cd solin
+          npm install
+          npm run build
+      - name: Run Analysis
+        run: node solin/dist/cli.js contracts/ --format sarif > results.sarif
+      - uses: github/codeql-action/upload-sarif@v3
+        if: always()
+        with:
+          sarif_file: results.sarif
 ```
 
-### IDE Extension
+## MCP Integration (AI Assistants)
 
-```javascript
-const ws = new WebSocket('ws://localhost:3001');
-ws.send(
-  JSON.stringify({
-    type: 'analyze',
-    data: { code: editor.getValue() },
-  })
-);
+Solin supports Model Context Protocol for AI assistant integration.
+
+### Claude Desktop
+
+1. Build Solin: `npm run build`
+
+2. Configure Claude Desktop (`~/Library/Application Support/Claude/claude_desktop_config.json`):
+
+```json
+{
+  "mcpServers": {
+    "solin": {
+      "command": "node",
+      "args": ["/absolute/path/to/solin/dist/mcp/server.js"]
+    }
+  }
+}
 ```
 
-## ⚙️ Configuration
+3. Restart Claude Desktop
 
-### Environment Variables
+See [docs/mcp-integration.md](docs/mcp-integration.md) for details.
+
+## Documentation
+
+- [CI/CD Integration](docs/ci-cd-integration.md)
+- [MCP Integration](docs/mcp-integration.md)
+- [Rule Authoring Guide](docs/rule-authoring-guide.md)
+- [Architecture](docs/architecture.md)
+- [Roadmap](docs/roadmap.md) - Planned features including REST API, WebSocket, gRPC servers
+
+## Available Commands
 
 ```bash
-# REST API (enabled by default)
-REST_ENABLED=true
-REST_PORT=3000
-CORS_ENABLED=true
-
-# WebSocket (opt-in)
-WS_ENABLED=true
-WS_PORT=3001
-
-# gRPC (opt-in)
-GRPC_ENABLED=true
-GRPC_PORT=50051
-
-# Encryption (opt-in)
-ENCRYPTION_ENABLED=true
+node dist/cli.js <files>           # Analyze files (default)
+node dist/cli.js init              # Generate configuration file
+node dist/cli.js list-rules        # List all available rules
+node dist/cli.js generate-rule     # Generate a custom rule template
 ```
 
-### Start with options
-
-```bash
-# REST only (default)
-npm run server
-
-# REST + WebSocket
-WS_ENABLED=true npm run server
-
-# All protocols
-npm run server:all
-
-# With encryption
-ENCRYPTION_ENABLED=true npm run server
-```
-
-## 🆘 Troubleshooting
-
-**Port already in use:**
-
-```bash
-REST_PORT=8080 npm run server
-```
-
-**MCP not showing in Claude:**
-
-- Check absolute path in config
-- Restart Claude Desktop
-- Run `npm run build` first
-
-**API not accessible:**
-
-- Check firewall settings
-- Verify port is open
-- Test: `curl http://localhost:3000/api/health`
-
-## 🌐 Public Registry
-
-### Smithery.ai
-
-Solin is listed on Smithery: https://smithery.ai/server/solin
-
-Install via Smithery:
-
-```bash
-npx @smithery/cli install solin
-```
-
-### npm
-
-```bash
-npm install -g solin
-```
-
-## 🤝 Support
+## Support
 
 - **GitHub**: https://github.com/0xmhha/solin
 - **Issues**: https://github.com/0xmhha/solin/issues
 
-## 📝 License
+## License
 
 MIT - see [LICENSE](LICENSE)

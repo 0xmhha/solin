@@ -1,6 +1,6 @@
 # Rule Authoring Guide
 
-This guide explains how to create custom rules for Solin to detect specific patterns in Solidity code.
+This guide explains how to create custom rules for Solin to analyze specific patterns in Solidity code.
 
 ## Table of Contents
 

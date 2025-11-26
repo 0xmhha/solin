@@ -2,6 +2,8 @@
 
 Complete guide to integrate Solin with ChatGPT, Claude, and Gemini AI assistants.
 
+> **Note**: REST API server features (ChatGPT Custom GPT, Gemini integration, cloud deployment) are planned for future releases. See [roadmap.md](roadmap.md) for details. Currently, only MCP integration with Claude Desktop is fully supported.
+
 ## Overview
 
 Solin can be integrated with major AI platforms in different ways:

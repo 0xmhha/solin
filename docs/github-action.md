@@ -2,6 +2,8 @@
 
 Run Solin static analysis on your Solidity smart contracts directly in your GitHub CI/CD pipeline.
 
+> **Note**: The `0xmhha/solin` GitHub Action is planned for future releases. Currently, use the CLI-based approach shown below. The `solin` CLI command will be available after the package is published to npm.
+
 ## Features
 
 - Automatic analysis on push and pull requests
@@ -11,42 +13,7 @@ Run Solin static analysis on your Solidity smart contracts directly in your GitH
 - Fail on errors or warnings
 - PR comments with analysis results
 
-## Quick Start (GitHub Action)
-
-Add this to your repository at `.github/workflows/solin.yml`:
-
-```yaml
-name: Solin Analysis
-
-on:
-  push:
-    branches: [main]
-  pull_request:
-    branches: [main]
-
-jobs:
-  analyze:
-    runs-on: ubuntu-latest
-    permissions:
-      contents: read
-      security-events: write
-      pull-requests: write
-
-    steps:
-      - uses: actions/checkout@v4
-
-      - name: Run Solin
-        uses: 0xmhha/solin@v0.1
-        with:
-          path: 'contracts'
-          format: 'sarif'
-          fail-on-error: 'true'
-          fail-on-warning: 'false'
-          comment-on-pr: 'true'
-          sarif-upload: 'true'
-```
-
-## Quick Start (CLI Alternative)
+## Quick Start (CLI)
 
 For local development or when the action is not yet published:
 
@@ -85,30 +52,6 @@ jobs:
         with:
           sarif_file: solin-results.sarif
 ```
-
-## GitHub Action Inputs
-
-| Input | Description | Required | Default |
-|-------|-------------|----------|---------|
-| `path` | Path to analyze (file, directory, or glob pattern) | No | `.` |
-| `config` | Path to configuration file | No | `` |
-| `format` | Output format (stylish, json, sarif, html) | No | `stylish` |
-| `fail-on-error` | Fail the action if errors are found | No | `true` |
-| `fail-on-warning` | Fail the action if warnings are found | No | `false` |
-| `comment-on-pr` | Post results as PR comment | No | `true` |
-| `sarif-upload` | Upload SARIF results to GitHub Code Scanning | No | `false` |
-| `working-directory` | Working directory for analysis | No | `.` |
-| `node-version` | Node.js version to use | No | `18` |
-
-## GitHub Action Outputs
-
-| Output | Description |
-|--------|-------------|
-| `total-issues` | Total number of issues found |
-| `errors` | Number of errors found |
-| `warnings` | Number of warnings found |
-| `info` | Number of info issues found |
-| `sarif-file` | Path to generated SARIF file (if sarif-upload is true) |
 
 ## CLI Options
 

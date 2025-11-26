@@ -88,14 +88,14 @@ class AbstractDetector {
     this.category = category;
   }
 
-  detect(ast) {
+  analyze(context) {
     throw new Error('Must be implemented by subclass');
   }
 }
 
 // Extended detector - open for extension
 class CustomReentrancyDetector extends AbstractDetector {
-  detect(ast) {
+  analyze(context) {
     // Custom implementation
   }
 }
@@ -113,16 +113,15 @@ class CustomReentrancyDetector extends AbstractDetector {
 
 ```javascript
 // All detectors must be substitutable
-interface IDetector {
-  detect(ast: AST): Issue[];
-  getSeverity(): Severity;
-  getCategory(): Category;
+interface IRule {
+  analyze(context: AnalysisContext): void;
+  metadata: RuleMetadata;
 }
 
-// Engine can use any detector without knowing specifics
+// Engine can use any rule without knowing specifics
 class Engine {
-  runDetector(detector: IDetector) {
-    return detector.detect(this.ast);
+  runRule(rule: IRule, context: AnalysisContext) {
+    return rule.analyze(context);
   }
 }
 ```
@@ -139,8 +138,8 @@ class Engine {
 
 ```javascript
 // Segregated interfaces
-interface IDetector {
-  detect(ast: AST): Issue[];
+interface IRule {
+  analyze(context: AnalysisContext): void;
 }
 
 interface IFixable {
@@ -152,12 +151,12 @@ interface IConfigurable {
 }
 
 // Rules implement only what they need
-class ReentrancyDetector implements IDetector {
-  detect(ast) { /* ... */ }
+class ReentrancyDetector implements IRule {
+  analyze(context) { /* ... */ }
 }
 
-class NamingConventionRule implements IDetector, IFixable {
-  detect(ast) { /* ... */ }
+class NamingConventionRule implements IRule, IFixable {
+  analyze(context) { /* ... */ }
   fix(issue) { /* ... */ }
 }
 ```
@@ -447,7 +446,7 @@ abstract class AbstractRule implements IRule {
     public readonly metadata: RuleMetadata
   ) {}
 
-  abstract detect(context: AnalysisContext): Issue[];
+  abstract analyze(context: AnalysisContext): void;
 
   protected createIssue(
     node: ASTNode,
@@ -483,9 +482,7 @@ class ReentrancyDetector extends AbstractRule {
     );
   }
 
-  detect(context: AnalysisContext): Issue[] {
-    const issues: Issue[] = [];
-
+  analyze(context: AnalysisContext): void {
     // Find all functions
     const functions = context.ast.findAll('FunctionDefinition');
 
@@ -495,14 +492,14 @@ class ReentrancyDetector extends AbstractRule {
       const stateChanges = this.findStateChanges(func);
 
       if (this.hasReentrancyPattern(externalCalls, stateChanges)) {
-        issues.push(this.createIssue(
-          func,
-          'Potential reentrancy vulnerability detected'
-        ));
+        context.report({
+          ruleId: this.id,
+          severity: this.severity,
+          message: 'Potential reentrancy vulnerability detected',
+          location: func.loc
+        });
       }
     }
-
-    return issues;
   }
 
   private findExternalCalls(func: ASTNode): ASTNode[] {

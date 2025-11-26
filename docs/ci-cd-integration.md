@@ -2,6 +2,8 @@
 
 This guide explains how to integrate Solin into your CI/CD pipelines for automated Solidity analysis.
 
+> **Note**: The `solin` CLI command will be available after the package is published to npm. Until then, build from source and use `node dist/cli.js` instead.
+
 ## Table of Contents
 
 - [Overview](#overview)

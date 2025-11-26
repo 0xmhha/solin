@@ -1,5 +1,7 @@
 # Solin API Guide
 
+> **Note**: REST API, WebSocket, and gRPC server features are planned for future releases. See [roadmap.md](roadmap.md) for details. This documentation describes the planned API design.
+
 Solin provides multiple API interfaces for Solidity static analysis. Choose the interface that best fits your use case.
 
 ## Quick Start
